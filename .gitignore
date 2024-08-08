@@ -1,0 +1,101 @@
+# Byte-compiled / optimized / DLL files
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyx
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+eggs-info/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg
+*.egg-info/
+*.whl
+*.tar.gz
+*.zip
+
+# PyInstaller
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# Pyre type checker
+.pyre/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyenv
+.python-version
+
+# dotenv
+.env
+.env.*
+
+# virtualenv
+venv/
+ENV/
+env/
+.venv/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# JetBrains
+*.iml
+*.ipr
+*.iws
+
+# Log files
+*.log
+
+# Python egg cache
+.eggs/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Coverage directory used by coverage.py
+.coverage
+
+# VS Code settings
+.vscode/
+
+# PyCharm
+.idea/

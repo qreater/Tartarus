@@ -1,8 +1,21 @@
 from fastapi import FastAPI
+import logging
+
+from app.utils.data.datasource import DataStore
 
 app = FastAPI()
 
+logger = logging.getLogger(__name__)
+logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
+
+data_store = DataStore()
+
 
 @app.get("/")
-def read_root():
+@app.get("/health")
+@app.get("/readiness-probe")
+def health_check():
+    """
+    Health check, Welcomes a user to the API
+    """
     return {"message": "Welcome to Tartarus API"}

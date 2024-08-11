@@ -8,6 +8,10 @@
 
 from unittest.mock import patch, MagicMock
 from app.utils.config.conf import settings
+from app.utils.config.queries import (
+    QUERY_CREATE_TABLE,
+    QUERY_CREATE_INDEX,
+)
 from app.utils.data.datasource import DataStore
 
 
@@ -31,6 +35,7 @@ class TestDataStore:
         ds = DataStore()
 
         mock_connect.assert_called_once_with(
+            dbname=settings.DB_NAME,
             user=settings.DB_USER,
             password=settings.DB_PASSWORD,
             host=settings.DB_HOST,
@@ -41,50 +46,37 @@ class TestDataStore:
         del ds
 
     @patch("app.utils.data.datasource.connect")
-    def test_if_create_database_exists(self, mock_connect):
+    def test_does_create_internal_table(self, mock_connect):
         """
-        Test that the DataStore class does not attempt to create a database
-        if it already exists.
+        Test that the DataStore class correctly creates the internal table.
 
-        This test mocks the `connect` function and simulates the scenario where
-        the database already exists. It verifies that the `CREATE DATABASE`
-        command is not executed if the database is found.
+        This test mocks the `connect` function and verifies that the internal
+        table is created with the correct schema.
         """
         mock_conn = MagicMock()
         mock_connect.return_value = mock_conn
-        mock_cursor = mock_conn.cursor.return_value
-        mock_cursor.fetchone.return_value = True
 
         ds = DataStore()
 
-        mock_cursor.execute.assert_called_with(
-            f"SELECT * FROM pg_catalog.pg_database WHERE datname = '{settings.DB_NAME}' LIMIT 1;"
-        )
-        assert mock_cursor.fetchone.called
-        assert not mock_cursor.execute.call_count == 2
+        mock_cursor = mock_conn.cursor.return_value
+        mock_cursor.execute.assert_any_call(QUERY_CREATE_TABLE)
         del ds
 
     @patch("app.utils.data.datasource.connect")
-    def test_if_create_database_not_exists(self, mock_connect):
+    def test_does_create_internal_indexes(self, mock_connect):
         """
-        Test that the DataStore class creates the database if it does not exist.
+        Test that the DataStore class correctly creates the indexes on the internal table.
 
-        This test mocks the `connect` function and simulates the scenario where
-        the database does not exist. It verifies that the `CREATE DATABASE`
-        command is executed if the database is not found.
+        This test mocks the `connect` function and verifies that the indexes
+        are created on the internal table.
         """
         mock_conn = MagicMock()
         mock_connect.return_value = mock_conn
-        mock_cursor = mock_conn.cursor.return_value
-        mock_cursor.fetchone.return_value = None
 
         ds = DataStore()
 
-        assert mock_cursor.execute.call_count == 2
-        mock_cursor.execute.assert_any_call(
-            f"SELECT * FROM pg_catalog.pg_database WHERE datname = '{settings.DB_NAME}' LIMIT 1;"
-        )
-        mock_cursor.execute.assert_any_call(f"CREATE DATABASE {settings.DB_NAME}")
+        mock_cursor = mock_conn.cursor.return_value
+        mock_cursor.execute.assert_any_call(QUERY_CREATE_INDEX)
         del ds
 
     @patch("app.utils.data.datasource.connect")

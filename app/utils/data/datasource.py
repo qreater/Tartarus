@@ -8,6 +8,10 @@
 
 from psycopg2 import connect
 from app.utils.config.conf import settings
+from app.utils.config.queries import (
+    QUERY_CREATE_TABLE,
+    QUERY_CREATE_INDEX,
+)
 import logging
 
 logger = logging.getLogger(__name__)
@@ -15,26 +19,39 @@ logger = logging.getLogger(__name__)
 
 class DataStore:
     def __init__(self):
+        self.connection = None
         self._create_connection()
+        self._initialize_table()
 
     def __del__(self):
         self._close_connection()
 
-    def _create_database(self):
+    def _execute_query(self, query):
         """
-        Create the database if it does not exist
+        Execute a SQL query using a cursor, with error handling and cleanup.
         """
+        if not self.connection:
+            raise RuntimeError("No database connection defined!")
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query)
+            cursor.close()
+        except Exception as e:
+            logger.exception(f"Query execution failed: {e}")
 
-        cursor = self.connection.cursor()
-        cursor.execute(
-            f"SELECT * FROM pg_catalog.pg_database WHERE datname = '{settings.DB_NAME}' LIMIT 1;"
-        )
-        exists = cursor.fetchone()
-        if not exists:
-            cursor.execute(f"CREATE DATABASE {settings.DB_NAME}")
-            logger.info(f"Database '{settings.DB_NAME}' created successfully!")
-        else:
-            logger.info(f"Database '{settings.DB_NAME}' already exists!")
+    def _create_internal_table(self):
+        """
+        Create the internal table to store the configuration
+        """
+        query = QUERY_CREATE_TABLE
+        self._execute_query(query)
+
+    def _create_internal_indexes(self):
+        """
+        Create the indexes on the internal table
+        """
+        query = QUERY_CREATE_INDEX
+        self._execute_query(query)
 
     def _create_connection(self):
         """
@@ -43,6 +60,7 @@ class DataStore:
 
         try:
             self.connection = connect(
+                dbname=settings.DB_NAME,
                 user=settings.DB_USER,
                 password=settings.DB_PASSWORD,
                 host=settings.DB_HOST,
@@ -50,9 +68,15 @@ class DataStore:
             )
             self.connection.autocommit = True
             logger.info("DataStore Connection Established!")
-            self._create_database()
         except Exception as e:
             logger.exception(f"DataStore set-up failed: {e}")
+
+    def _initialize_table(self):
+        """
+        Initialize the table and its indices.
+        """
+        self._create_internal_table()
+        self._create_internal_indexes()
 
     def _close_connection(self):
         """

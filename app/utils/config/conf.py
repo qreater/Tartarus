@@ -20,5 +20,7 @@ class Settings(BaseSettings):
     DB_HOST: str = "localhost"
     DB_PORT: str = "5432"
 
+    INTERNAL_TABLE: str = "tartarus_internal_cft"
+
 
 settings = Settings()

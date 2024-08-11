@@ -36,17 +36,32 @@ class TestDataStoreIntegration:
         """
         assert datastore.connection is not None
 
-    def test_create_database(self, datastore):
+    def test_create_internal_table(self, datastore):
         """
-        Test that the database is created if it does not exist.
+        Test that the internal table is created in the database.
 
-        This test verifies that the DataStore class creates the database
-        if it is not already present. It checks for the existence of the
-        database by querying the PostgreSQL catalog.
+        This test verifies that the internal table is created by checking
+        the PostgreSQL catalog for the presence of the table.
         """
         cursor = datastore.connection.cursor()
         cursor.execute(
-            f"SELECT * FROM pg_catalog.pg_database WHERE datname = '{settings.DB_NAME}' LIMIT 1;"
+            f"SELECT * FROM pg_catalog.pg_tables WHERE tablename = '{settings.INTERNAL_TABLE}' LIMIT 1;"
         )
         exists = cursor.fetchone()
         assert exists is not None
+        cursor.close()
+
+    def test_create_internal_indexes(self, datastore):
+        """
+        Test that the indexes are created on the internal table.
+
+        This test verifies that the indexes on the internal table are created
+        by checking the PostgreSQL catalog for the presence of the indexes.
+        """
+        cursor = datastore.connection.cursor()
+        cursor.execute(
+            f"SELECT * FROM pg_indexes WHERE tablename = '{settings.INTERNAL_TABLE}';"
+        )
+        indexes = cursor.fetchall()
+        assert len(indexes) == 3
+        cursor.close()

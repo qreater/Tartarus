@@ -12,6 +12,20 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """
     Settings class to store the configuration values
+
+    -- Parameters
+    DB_NAME: str
+        The name of the database.
+    DB_USER: str
+        The database user.
+    DB_PASSWORD: str
+        The database password.
+    DB_HOST: str
+        The database host.
+    DB_PORT: str
+        The database port.
+    INTERNAL_TABLE: str
+        The internal table name.
     """
 
     DB_NAME: str = "datastore"

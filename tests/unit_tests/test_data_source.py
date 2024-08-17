@@ -12,7 +12,7 @@ from app.utils.config.queries import (
     QUERY_CREATE_TABLE,
     QUERY_CREATE_INDEX,
 )
-from app.utils.data.datasource import DataStore
+from app.utils.data.data_source import DataStore
 
 
 class TestDataStore:
@@ -20,7 +20,7 @@ class TestDataStore:
     Test suite for the DataStore class.
     """
 
-    @patch("app.utils.data.datasource.connect")
+    @patch("app.utils.data.data_source.connect")
     def test_does_create_connection(self, mock_connect):
         """
         Test that the DataStore class correctly establishes a database connection.
@@ -45,7 +45,7 @@ class TestDataStore:
         assert ds.connection.autocommit is True
         del ds
 
-    @patch("app.utils.data.datasource.connect")
+    @patch("app.utils.data.data_source.connect")
     def test_does_create_internal_table(self, mock_connect):
         """
         Test that the DataStore class correctly creates the internal table.
@@ -62,7 +62,7 @@ class TestDataStore:
         mock_cursor.execute.assert_any_call(QUERY_CREATE_TABLE)
         del ds
 
-    @patch("app.utils.data.datasource.connect")
+    @patch("app.utils.data.data_source.connect")
     def test_does_create_internal_indexes(self, mock_connect):
         """
         Test that the DataStore class correctly creates the indexes on the internal table.
@@ -79,7 +79,7 @@ class TestDataStore:
         mock_cursor.execute.assert_any_call(QUERY_CREATE_INDEX)
         del ds
 
-    @patch("app.utils.data.datasource.connect")
+    @patch("app.utils.data.data_source.connect")
     def test_does_close_connection(self, mock_connect):
         """
         Test that the DataStore class correctly closes the database connection.

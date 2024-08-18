@@ -99,7 +99,3 @@ class DataStore:
         if self.connection:
             self.connection.close()
             logger.info("DataStore Connection Closed!")
-
-
-if __name__ == "__main__":
-    data_store = DataStore()

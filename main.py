@@ -9,15 +9,12 @@
 from fastapi import FastAPI
 import logging
 
-from app.utils.data.data_source import DataStore
+from app.api.v1 import api_router as api_router_v1
 
 app = FastAPI()
-data_store = DataStore()
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
-
-from app.api.v1 import api_router as api_router_v1
 
 app.include_router(api_router_v1, prefix="/api/v1")
 

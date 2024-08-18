@@ -1,3 +1,11 @@
+"""
+
+ Copyright 2024 @Qreater
+ Licensed under the Apache License, Version 2.0.
+ See: http://www.apache.org/licenses/LICENSE-2.0
+
+"""
+
 from app.utils.config_definitions.queries import (
     internal_c_definition_query,
     internal_u_definition_query,
@@ -16,7 +24,9 @@ from app.utils.config_definitions.validations import (
     validate_config_update,
 )
 
-from main import data_store
+from app.utils.data.data_source import DataStore
+
+data_store = DataStore()
 
 
 def c_config_definition(

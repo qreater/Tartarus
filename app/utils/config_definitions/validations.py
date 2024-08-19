@@ -71,7 +71,6 @@ def validate_secondary_indexes_exist(
 
     """
     for index in secondary_indexes:
-        print(index)
         if not is_valid_schema_property(index, json_schema):
             raise ValueError(
                 f"The secondary index '{index}' is not defined in the schema properties."

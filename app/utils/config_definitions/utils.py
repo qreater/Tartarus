@@ -51,20 +51,22 @@ def c_config_definition(
 
     validate_config_creation(json_schema, primary_key, secondary_indexes)
 
-    internal_query = internal_c_definition_query(
+    internal_query, internal_params = internal_c_definition_query(
         config_type_key, json_schema, primary_key, secondary_indexes
     )
-    data_store._execute_query(internal_query)
+    data_store._execute_query(internal_query, internal_params)
 
-    creation_query = c_config_definition_query(config_type_key, primary_key)
-    data_store._execute_query(creation_query)
+    creation_query, creation_params = c_config_definition_query(
+        config_type_key, primary_key
+    )
+    data_store._execute_query(creation_query, creation_params)
 
     for index in secondary_indexes:
-        index_query = c_index_query(config_type_key, index)
-        data_store._execute_query(index_query)
+        index_query, index_params = c_index_query(config_type_key, index)
+        data_store._execute_query(index_query, index_params)
 
-    index_query = c_index_query(config_type_key, primary_key)
-    data_store._execute_query(index_query)
+    index_query, index_params = c_index_query(config_type_key, primary_key)
+    data_store._execute_query(index_query, index_params)
 
     return None
 
@@ -82,8 +84,8 @@ def r_config_definition(config_type_key: str):
         The configuration definition.
     """
 
-    query = r_config_definition_query(config_type_key)
-    result = data_store._execute_query(query, mode="retrieve")
+    query, params = r_config_definition_query(config_type_key)
+    result = data_store._execute_query(query, params=params, mode="retrieve")
 
     if len(result) == 0 or result is None:
         raise Exception("Configuration definition not found.")
@@ -110,23 +112,25 @@ def u_config_definition(config_type_key: str, secondary_indexes: list):
 
     validate_config_update(json_schema, secondary_indexes)
 
-    internal_query = internal_u_definition_query(config_type_key, secondary_indexes)
-    data_store._execute_query(internal_query)
+    internal_query, internal_params = internal_u_definition_query(
+        config_type_key, secondary_indexes
+    )
+    data_store._execute_query(internal_query, internal_params)
 
-    list_query = l_index_query(config_type_key)
+    list_query, list_params = l_index_query(config_type_key)
 
-    result = data_store._execute_query(list_query, mode="retrieve")
+    result = data_store._execute_query(list_query, params=list_params, mode="retrieve")
     existing_indexes = [index["indexname"] for index in result]
 
     for index in secondary_indexes:
         if index not in existing_indexes:
-            index_query = c_index_query(config_type_key, index)
-            data_store._execute_query(index_query)
+            index_query, index_params = c_index_query(config_type_key, index)
+            data_store._execute_query(index_query, index_params)
 
     for index in existing_indexes:
         if index not in secondary_indexes:
-            index_query = d_index_query(config_type_key, index)
-            data_store._execute_query(index_query)
+            index_query, index_params = d_index_query(config_type_key, index)
+            data_store._execute_query(index_query, index_params)
 
     return None
 
@@ -142,11 +146,11 @@ def d_config_definition(config_type_key: str):
     -- Returns
     None
     """
-    internal_query = internal_d_definition_query(config_type_key)
-    data_store._execute_query(internal_query)
+    internal_query, internal_params = internal_d_definition_query(config_type_key)
+    data_store._execute_query(internal_query, internal_params)
 
-    delete_query = d_config_definition_query(config_type_key)
-    data_store._execute_query(delete_query)
+    delete_query, delete_params = d_config_definition_query(config_type_key)
+    data_store._execute_query(delete_query, delete_params)
 
     return None
 
@@ -165,7 +169,7 @@ def l_config_definition(page: int, page_size: int):
     list
         The configuration definitions.
     """
-    query = l_config_definition_query(page, page_size)
-    result = data_store._execute_query(query, mode="retrieve")
+    query, params = l_config_definition_query(page, page_size)
+    result = data_store._execute_query(query, params=params, mode="retrieve")
 
     return result

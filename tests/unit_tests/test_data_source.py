@@ -59,7 +59,7 @@ class TestDataStore:
         ds = DataStore()
 
         mock_cursor = mock_conn.cursor.return_value
-        mock_cursor.execute.assert_any_call(QUERY_CREATE_TABLE)
+        mock_cursor.execute.assert_any_call(QUERY_CREATE_TABLE, ())
         del ds
 
     @patch("app.utils.data.data_source.connect")
@@ -76,7 +76,7 @@ class TestDataStore:
         ds = DataStore()
 
         mock_cursor = mock_conn.cursor.return_value
-        mock_cursor.execute.assert_any_call(QUERY_CREATE_INDEX)
+        mock_cursor.execute.assert_any_call(QUERY_CREATE_INDEX, ())
         del ds
 
     @patch("app.utils.data.data_source.connect")

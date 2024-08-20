@@ -12,7 +12,7 @@ import json
 
 def internal_c_definition_query(
     config_type_key: str, json_schema: dict, primary_key: str, secondary_indexes: list
-) -> str:
+) -> tuple:
     """
     Insert a new configuration definition in the internal table.
 
@@ -35,13 +35,18 @@ def internal_c_definition_query(
 
     internal_query = f"""
     INSERT INTO {settings.INTERNAL_TABLE} (config_type_key, json_schema, primary_key, secondary_indexes)
-    VALUES ('{config_type_key}', '{json_schema_str}', '{primary_key}', '{secondary_indexes_str}');
+    VALUES (%s, %s, %s, %s);
     """
 
-    return internal_query
+    return internal_query, (
+        config_type_key,
+        json_schema_str,
+        primary_key,
+        secondary_indexes_str,
+    )
 
 
-def internal_u_definition_query(config_type_key: str, secondary_indexes: list) -> str:
+def internal_u_definition_query(config_type_key: str, secondary_indexes: list) -> tuple:
     """
     Update a configuration definition in the internal table.
 
@@ -52,21 +57,21 @@ def internal_u_definition_query(config_type_key: str, secondary_indexes: list) -
         The secondary indexes for the configuration type.
 
     -- Returns
-    str
-        The SQL query to update the configuration definition.
+    tuple
+        The SQL query to update the configuration definition and the parameters.
     """
     secondary_indexes = "{" + ",".join(f'"{item}"' for item in secondary_indexes) + "}"
 
     update_query = f"""
     UPDATE {settings.INTERNAL_TABLE}
-    SET secondary_indexes = '{secondary_indexes}'
-    WHERE config_type_key = '{config_type_key}';
+    SET secondary_indexes = %s
+    WHERE config_type_key = %s;
     """
 
-    return update_query
+    return update_query, (secondary_indexes, config_type_key)
 
 
-def internal_d_definition_query(config_type_key: str) -> str:
+def internal_d_definition_query(config_type_key: str) -> tuple:
     """
     Delete a configuration definition from the internal table.
 
@@ -75,18 +80,18 @@ def internal_d_definition_query(config_type_key: str) -> str:
         The key for the configuration type.
 
     -- Returns
-    str
-        The SQL query to delete the configuration definition.
+    tuple
+        The SQL query to delete the configuration definition and the parameters.
     """
     delete_query = f"""
     DELETE FROM {settings.INTERNAL_TABLE}
-    WHERE config_type_key = '{config_type_key}';
+    WHERE config_type_key = %s;
     """
 
-    return delete_query
+    return delete_query, (config_type_key,)
 
 
-def c_index_query(config_type_key: str, index: str) -> str:
+def c_index_query(config_type_key: str, index: str) -> tuple:
     """
     Create an index on a configuration type.
 
@@ -97,18 +102,18 @@ def c_index_query(config_type_key: str, index: str) -> str:
         The index to create.
 
     -- Returns
-    str
-        The SQL query to create the index.
+    tuple
+        The SQL query to create the index and the parameters.
     """
     index_query = f"""
     CREATE INDEX IF NOT EXISTS idx_{config_type_key}_{index.replace('.', '_')}
-    ON {config_type_key} USING gin ((data->'{index}'));
+    ON {config_type_key} USING gin ((data->%s));
     """
 
-    return index_query
+    return index_query, (index,)
 
 
-def d_index_query(config_type_key: str, index: str) -> str:
+def d_index_query(config_type_key: str, index: str) -> tuple:
     """
     Remove an index on a configuration type.
 
@@ -119,17 +124,17 @@ def d_index_query(config_type_key: str, index: str) -> str:
         The index to remove.
 
     -- Returns
-    str
-        The SQL query to remove the index.
+    tuple
+        The SQL query to remove the index and the parameters.
     """
     index_query = f"""
     DROP INDEX IF EXISTS idx_{config_type_key}_{index.replace('.', '_')};
     """
 
-    return index_query
+    return index_query, ()
 
 
-def l_index_query(config_type_key: str) -> str:
+def l_index_query(config_type_key: str) -> tuple:
     """
     List all indexes on a configuration type.
 
@@ -138,19 +143,19 @@ def l_index_query(config_type_key: str) -> str:
         The key for the configuration type.
 
     -- Returns
-    str
-        The SQL query to list all indexes.
+    tuple
+        The SQL query to list all indexes and the parameters.
     """
     list_query = f"""
     SELECT indexname
     FROM pg_indexes
-    WHERE tablename = '{config_type_key}';
+    WHERE tablename = %s;
     """
 
-    return list_query
+    return list_query, (config_type_key,)
 
 
-def c_config_definition_query(config_type_key: str, primary_key: str) -> str:
+def c_config_definition_query(config_type_key: str, primary_key: str) -> tuple:
     """
     Create a new configuration definition in the internal table.
 
@@ -161,8 +166,8 @@ def c_config_definition_query(config_type_key: str, primary_key: str) -> str:
         The primary key for the configuration type.
 
     -- Returns
-    str
-        The SQL query to create the configuration definition.
+    tuple
+        The SQL query to create the configuration definition and the parameters.
     """
     creation_query = f"""
     CREATE TABLE IF NOT EXISTS {config_type_key} (
@@ -173,10 +178,10 @@ def c_config_definition_query(config_type_key: str, primary_key: str) -> str:
     );
     """
 
-    return creation_query
+    return creation_query, ()
 
 
-def r_config_definition_query(config_type_key: str) -> str:
+def r_config_definition_query(config_type_key: str) -> tuple:
     """
     Get a configuration definition from the internal table.
 
@@ -185,17 +190,17 @@ def r_config_definition_query(config_type_key: str) -> str:
         The key for the configuration type.
 
     -- Returns
-    str
-        The SQL query to get the configuration definition.
+    tuple
+        The SQL query to get the configuration definition and the parameters.
     """
     get_query = f"""
     SELECT * FROM {settings.INTERNAL_TABLE}
-    WHERE config_type_key = '{config_type_key}';
+    WHERE config_type_key = %s;
     """
-    return get_query
+    return get_query, (config_type_key,)
 
 
-def d_config_definition_query(config_type_key: str) -> str:
+def d_config_definition_query(config_type_key: str) -> tuple:
     """
     Delete a configuration table.
 
@@ -204,17 +209,17 @@ def d_config_definition_query(config_type_key: str) -> str:
         The key for the configuration type.
 
     -- Returns
-    str
-        The SQL query to delete the configuration table.
+    tuple
+        The SQL query to delete the configuration table and the parameters.
     """
     delete_query = f"""
     DROP TABLE IF EXISTS {config_type_key};
     """
 
-    return delete_query
+    return delete_query, ()
 
 
-def l_config_definition_query(page: int, page_size: int) -> str:
+def l_config_definition_query(page: int, page_size: int) -> tuple:
     """
     List all configuration definitions.
 
@@ -225,12 +230,12 @@ def l_config_definition_query(page: int, page_size: int) -> str:
         The number of items per page.
 
     -- Returns
-    str
-        The SQL query to list all configuration definitions.
+    tuple
+        The SQL query to list all configuration definitions and the parameters.
     """
     list_query = f"""
     SELECT * FROM {settings.INTERNAL_TABLE}
-    LIMIT {page_size} OFFSET {page_size * (page - 1)};
+    LIMIT %s OFFSET %s;
     """
 
-    return list_query
+    return list_query, (page_size, page_size * (page - 1))

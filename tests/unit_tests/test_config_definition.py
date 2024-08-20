@@ -58,19 +58,21 @@ class TestConfigDefinitionUnit:
         secondary_index = "date"
         secondary_indexes_list = [secondary_index]
 
-        creation_query = c_config_definition_query(config_key, primary_key_field)
-        internal_query = internal_c_definition_query(
+        creation_query, creation_params = c_config_definition_query(
+            config_key, primary_key_field
+        )
+        internal_query, internal_params = internal_c_definition_query(
             config_key, schema, primary_key_field, secondary_indexes_list
         )
-        index_query = c_index_query(config_key, secondary_index)
+        index_query, index_params = c_index_query(config_key, secondary_index)
 
         c_config_definition(
             config_key, schema, primary_key_field, secondary_indexes_list
         )
 
-        mock_execute_query.assert_any_call(creation_query)
-        mock_execute_query.assert_any_call(internal_query)
-        mock_execute_query.assert_any_call(index_query)
+        mock_execute_query.assert_any_call(creation_query, creation_params)
+        mock_execute_query.assert_any_call(internal_query, internal_params)
+        mock_execute_query.assert_any_call(index_query, index_params)
 
     @patch.object(
         DataStore,
@@ -86,10 +88,12 @@ class TestConfigDefinitionUnit:
 
         config_key = "sample_config"
 
-        internal_query = r_config_definition_query(config_key)
+        internal_query, internal_params = r_config_definition_query(config_key)
         r_config_definition(config_key)
 
-        mock_execute_query.assert_called_once_with(internal_query, mode="retrieve")
+        mock_execute_query.assert_called_once_with(
+            internal_query, params=internal_params, mode="retrieve"
+        )
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
     @patch.object(DataStore, "_execute_query")
@@ -114,13 +118,19 @@ class TestConfigDefinitionUnit:
             "secondary_indexes": ["date"],
         }
 
-        internal_query = internal_u_definition_query(config_key, updated_indexes_list)
-        index_list_query = l_index_query(config_key)
-        index_creation_query = c_index_query(config_key, "name")
-        index_deletion_query = d_index_query(config_key, "date")
+        internal_query, internal_params = internal_u_definition_query(
+            config_key, updated_indexes_list
+        )
+        index_list_query, index_list_params = l_index_query(config_key)
+        index_creation_query, index_creation_params = c_index_query(config_key, "name")
+        index_deletion_query, index_deletion_params = d_index_query(config_key, "date")
 
-        def side_effect(query, mode=None):
-            if query == index_list_query and mode == "retrieve":
+        def side_effect(query, params=None, mode=None):
+            if (
+                query == index_list_query
+                and params == index_list_params
+                and mode == "retrieve"
+            ):
                 return [{"indexname": "date"}]
             return []
 
@@ -128,12 +138,14 @@ class TestConfigDefinitionUnit:
 
         u_config_definition(config_key, updated_indexes_list)
 
-        mock_execute_query.assert_any_call(index_list_query, mode="retrieve")
-        mock_execute_query.assert_any_call(index_creation_query)
-        mock_execute_query.assert_any_call(index_deletion_query)
+        mock_execute_query.assert_any_call(
+            index_list_query, params=index_list_params, mode="retrieve"
+        )
+        mock_execute_query.assert_any_call(index_creation_query, index_creation_params)
+        mock_execute_query.assert_any_call(index_deletion_query, index_deletion_params)
 
         mock_r_config_definition.assert_called_once_with(config_key)
-        mock_execute_query.assert_any_call(internal_query)
+        mock_execute_query.assert_any_call(internal_query, internal_params)
 
     @patch.object(DataStore, "_execute_query")
     def test_delete_config_definition(self, mock_execute_query):
@@ -145,12 +157,12 @@ class TestConfigDefinitionUnit:
 
         config_key = "sample_config"
 
-        delete_query = d_config_definition_query(config_key)
-        internal_query = internal_d_definition_query(config_key)
+        delete_query, delete_params = d_config_definition_query(config_key)
+        internal_query, internal_params = internal_d_definition_query(config_key)
         d_config_definition(config_key)
 
-        mock_execute_query.assert_any_call(delete_query)
-        mock_execute_query.assert_any_call(internal_query)
+        mock_execute_query.assert_any_call(delete_query, delete_params)
+        mock_execute_query.assert_any_call(internal_query, internal_params)
 
     @patch.object(
         DataStore, "_execute_query", return_value=[{"config_key": "sample_config"}]
@@ -165,7 +177,11 @@ class TestConfigDefinitionUnit:
         page_number = 1
         items_per_page = 10
 
-        internal_query = l_config_definition_query(page_number, items_per_page)
+        internal_query, internal_params = l_config_definition_query(
+            page_number, items_per_page
+        )
         l_config_definition(page_number, items_per_page)
 
-        mock_execute_query.assert_called_once_with(internal_query, mode="retrieve")
+        mock_execute_query.assert_called_once_with(
+            internal_query, params=internal_params, mode="retrieve"
+        )

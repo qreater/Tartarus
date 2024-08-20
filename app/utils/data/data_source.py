@@ -30,7 +30,7 @@ class DataStore:
     def __del__(self):
         self._close_connection()
 
-    def _execute_query(self, query, mode="submit"):
+    def _execute_query(self, query, params=(), mode="submit"):
         """
         Execute a SQL query using a cursor, with error handling and cleanup.
         """
@@ -39,7 +39,7 @@ class DataStore:
             raise RuntimeError("No database connection defined!")
         try:
             cursor = self.connection.cursor()
-            cursor.execute(query)
+            cursor.execute(query, params)
             if mode == "retrieve":
                 response = [
                     dict(zip([column[0] for column in cursor.description], row))

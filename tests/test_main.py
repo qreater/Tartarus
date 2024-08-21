@@ -16,6 +16,7 @@ def test_startup():
     """
     Test to verify that the FastAPI application starts up successfully.
     """
+
     response = client.get("/")
     assert response.status_code == 200
     assert response.json()["message"] == "Welcome to Tartarus API"

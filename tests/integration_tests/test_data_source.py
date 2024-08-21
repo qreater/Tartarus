@@ -7,7 +7,7 @@
 """
 
 import pytest
-from app.utils.data.datasource import DataStore
+from app.utils.data.data_source import DataStore
 from app.utils.config.conf import settings
 
 

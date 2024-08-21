@@ -18,6 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 class DataStore:
+    """
+    DataStore class to manage the connection to the database and the internal table.
+    """
+
     def __init__(self):
         self.connection = None
         self._create_connection()
@@ -26,18 +30,28 @@ class DataStore:
     def __del__(self):
         self._close_connection()
 
-    def _execute_query(self, query):
+    def _execute_query(self, query, params=(), mode="submit"):
         """
         Execute a SQL query using a cursor, with error handling and cleanup.
         """
+        response = None
         if not self.connection:
             raise RuntimeError("No database connection defined!")
         try:
             cursor = self.connection.cursor()
-            cursor.execute(query)
+            cursor.execute(query, params)
+            if mode == "retrieve":
+                response = [
+                    dict(zip([column[0] for column in cursor.description], row))
+                    for row in cursor.fetchall()
+                ]
             cursor.close()
+
         except Exception as e:
             logger.exception(f"Query execution failed: {e}")
+            raise e
+
+        return response
 
     def _create_internal_table(self):
         """
@@ -85,7 +99,3 @@ class DataStore:
         if self.connection:
             self.connection.close()
             logger.info("DataStore Connection Closed!")
-
-
-if __name__ == "__main__":
-    data_store = DataStore()

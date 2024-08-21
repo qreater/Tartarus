@@ -6,7 +6,7 @@
 
 """
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 from app.utils.config_definitions.utils import (
     c_config_definition,

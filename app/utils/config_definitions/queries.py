@@ -219,23 +219,25 @@ def d_config_definition_query(config_type_key: str) -> tuple:
     return delete_query, ()
 
 
-def l_config_definition_query(page: int, page_size: int) -> tuple:
+def l_config_definition_query(page: int = 1, page_size: int = 10) -> tuple:
     """
     List all configuration definitions.
 
     -- Parameters
-    page: int
-        The page number.
-    page_size: int
-        The number of items per page.
+    page: int, optional
+        The page number. Defaults to 1.
+    page_size: int, optional
+        The number of items per page. Defaults to 10.
 
     -- Returns
     tuple
         The SQL query to list all configuration definitions and the parameters.
     """
+
     list_query = f"""
     SELECT * FROM {settings.INTERNAL_TABLE}
     LIMIT %s OFFSET %s;
     """
 
-    return list_query, (page_size, page_size * (page - 1))
+    offset = page_size * (page - 1)
+    return list_query, (page_size, offset)

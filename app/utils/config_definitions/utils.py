@@ -22,6 +22,7 @@ from app.utils.config_definitions.queries import (
 from app.utils.config_definitions.validations import (
     validate_config_creation,
     validate_config_update,
+    validate_list_params,
 )
 
 from app.utils.data.data_source import DataStore
@@ -45,8 +46,6 @@ def c_config_definition(
     secondary_indexes: list
         The secondary indexes for the configuration type.
 
-    -- Returns
-    None
     """
 
     validate_config_creation(json_schema, primary_key, secondary_indexes)
@@ -88,7 +87,7 @@ def r_config_definition(config_type_key: str):
     result = data_store._execute_query(query, params=params, mode="retrieve")
 
     if len(result) == 0 or result is None:
-        raise Exception("Configuration definition not found.")
+        raise ValueError("Configuration definition not found.")
 
     return result[0]
 
@@ -103,8 +102,6 @@ def u_config_definition(config_type_key: str, secondary_indexes: list):
     secondary_indexes: list
         The secondary indexes for the configuration type.
 
-    -- Returns
-    None
     """
 
     config_definition = r_config_definition(config_type_key)
@@ -155,7 +152,7 @@ def d_config_definition(config_type_key: str):
     return None
 
 
-def l_config_definition(page: int, page_size: int):
+def l_config_definition(page: int = 1, page_size: int = 10):
     """
     List configuration definitions from the internal table.
 
@@ -169,6 +166,7 @@ def l_config_definition(page: int, page_size: int):
     list
         The configuration definitions.
     """
+    validate_list_params(page, page_size)
     query, params = l_config_definition_query(page, page_size)
     result = data_store._execute_query(query, params=params, mode="retrieve")
 

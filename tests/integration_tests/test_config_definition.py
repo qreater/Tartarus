@@ -35,16 +35,14 @@ class TestConfigDefinitionIntegration:
             "type": "object",
             "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
         }
-        primary_key = "name"
-        secondary_indexes = ["date"]
+        indexes = ["date"]
 
-        c_config_definition(config_key, schema, primary_key, secondary_indexes)
+        c_config_definition(config_key, schema, indexes)
 
         yield {
             "config_key": config_key,
             "schema": schema,
-            "primary_key": primary_key,
-            "secondary_indexes": secondary_indexes,
+            "indexes": indexes,
         }
 
         d_config_definition(config_key)
@@ -62,8 +60,7 @@ class TestConfigDefinitionIntegration:
                 "type": "object",
                 "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
             },
-            "primary_key": "name",
-            "secondary_indexes": ["date"],
+            "indexes": ["date"],
         }
 
         response = client.post("/api/v1/config_definition/", json=payload)
@@ -96,7 +93,7 @@ class TestConfigDefinitionIntegration:
         This test verifies that an existing configuration definition is updated successfully.
         """
 
-        payload = {"secondary_indexes": ["name"]}
+        payload = {"indexes": ["name"]}
 
         response = client.put(
             f"/api/v1/config_definition/{setup_data['config_key']}", json=payload

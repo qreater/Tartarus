@@ -12,8 +12,7 @@ QUERY_CREATE_TABLE = f"""
 CREATE TABLE IF NOT EXISTS {settings.INTERNAL_TABLE} (
     config_type_key VARCHAR(255) PRIMARY KEY NOT NULL,
     json_schema JSONB,
-    primary_key VARCHAR(255) NOT NULL,
-    secondary_indexes TEXT[]
+    indexes TEXT[]
 );
 """
 
@@ -21,7 +20,7 @@ QUERY_CREATE_INDEX = f"""
 CREATE INDEX IF NOT EXISTS idx_{settings.DB_NAME}_json_schema
 ON {settings.INTERNAL_TABLE} USING gin (json_schema);
 
-CREATE INDEX IF NOT EXISTS idx_{settings.DB_NAME}_secondary_indexes 
-ON {settings.INTERNAL_TABLE} USING gin (secondary_indexes);
+CREATE INDEX IF NOT EXISTS idx_{settings.DB_NAME}_indexes 
+ON {settings.INTERNAL_TABLE} USING gin (indexes);
 
 """

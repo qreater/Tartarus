@@ -30,9 +30,7 @@ from app.utils.data.data_source import DataStore
 data_store = DataStore()
 
 
-def c_config_definition(
-    config_type_key: str, json_schema: dict, primary_key: str, secondary_indexes: list
-):
+def c_config_definition(config_type_key: str, json_schema: dict, indexes: list):
     """
     Create a new configuration definition in the internal table.
 
@@ -41,30 +39,26 @@ def c_config_definition(
         The key for the configuration type.
     json_schema: dict
         The JSON schema for the configuration type.
-    primary_key: str
-        The primary key for the configuration type.
-    secondary_indexes: list
-        The secondary indexes for the configuration type.
+    indexes: list
+        The indexes for the configuration type.
 
     """
 
-    validate_config_creation(json_schema, primary_key, secondary_indexes)
+    validate_config_creation(json_schema, indexes)
 
     internal_query, internal_params = internal_c_definition_query(
-        config_type_key, json_schema, primary_key, secondary_indexes
+        config_type_key, json_schema, indexes
     )
     data_store._execute_query(internal_query, internal_params)
 
-    creation_query, creation_params = c_config_definition_query(
-        config_type_key, primary_key
-    )
+    creation_query, creation_params = c_config_definition_query(config_type_key)
     data_store._execute_query(creation_query, creation_params)
 
-    for index in secondary_indexes:
+    for index in indexes:
         index_query, index_params = c_index_query(config_type_key, index)
         data_store._execute_query(index_query, index_params)
 
-    index_query, index_params = c_index_query(config_type_key, primary_key)
+    index_query, index_params = c_index_query(config_type_key, index)
     data_store._execute_query(index_query, index_params)
 
     return None
@@ -92,25 +86,25 @@ def r_config_definition(config_type_key: str):
     return result[0]
 
 
-def u_config_definition(config_type_key: str, secondary_indexes: list):
+def u_config_definition(config_type_key: str, indexes: list):
     """
     Update a configuration definition in the internal table.
 
     -- Parameters
     config_type_key: str
         The key for the configuration type.
-    secondary_indexes: list
-        The secondary indexes for the configuration type.
+    indexes: list
+        The indexes for the configuration type.
 
     """
 
     config_definition = r_config_definition(config_type_key)
     json_schema = config_definition["json_schema"]
 
-    validate_config_update(json_schema, secondary_indexes)
+    validate_config_update(json_schema, indexes)
 
     internal_query, internal_params = internal_u_definition_query(
-        config_type_key, secondary_indexes
+        config_type_key, indexes
     )
     data_store._execute_query(internal_query, internal_params)
 
@@ -119,13 +113,13 @@ def u_config_definition(config_type_key: str, secondary_indexes: list):
     result = data_store._execute_query(list_query, params=list_params, mode="retrieve")
     existing_indexes = [index["indexname"] for index in result]
 
-    for index in secondary_indexes:
+    for index in indexes:
         if index not in existing_indexes:
             index_query, index_params = c_index_query(config_type_key, index)
             data_store._execute_query(index_query, index_params)
 
     for index in existing_indexes:
-        if index not in secondary_indexes:
+        if index not in indexes:
             index_query, index_params = d_index_query(config_type_key, index)
             data_store._execute_query(index_query, index_params)
 

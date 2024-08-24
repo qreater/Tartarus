@@ -27,70 +27,37 @@ def validate_schema_structure(json_schema: Dict[str, Any]) -> None:
         raise ValueError(f"Invalid JSON Schema provided: {e.message}")
 
 
-def validate_schema_pkey(json_schema: Dict[str, Any], primary_key: str) -> None:
-    """
-    Ensures that the primary key field exists in the schema properties.
-
-    -- Parameters
-    json_schema: Dict[str, Any]
-        The JSON Schema to validate against.
-
-    primary_key: str
-        The primary key field to validate.
-
-    """
-    if json_schema and not validate_schema_property(primary_key, json_schema):
-        raise ValueError(
-            f"The primary key '{primary_key}' is not defined in the schema properties."
-        )
-
-
-def validate_schema_sindex(
-    json_schema: Dict[str, Any], secondary_indexes: List[str]
-) -> None:
+def validate_schema_index(json_schema: Dict[str, Any], indexes: List[str]) -> None:
     """
     Ensures that each secondary index field exists in the schema properties.
 
     -- Parameters
     json_schema: Dict[str, Any]
         The JSON Schema to validate against.
-    secondary_indexes: List[str]
-        The secondary index fields to validate.
+    indexes: List[str]
+        The index fields to validate.
 
     """
     if not json_schema:
         return
 
-    for index in secondary_indexes:
+    for index in indexes:
         if not validate_schema_property(index, json_schema):
             raise ValueError(
-                f"The secondary index '{index}' is not defined in the schema properties."
+                f"The index '{index}' is not defined in the schema properties."
             )
 
 
-def validate_pkey(primary_key: str) -> None:
-    """
-    Validates the primary key field.
-
-    -- Parameters
-    primary_key: str
-        The primary key field to validate.
-
-    """
-    if not primary_key:
-        raise ValueError("Primary key cannot be empty.")
-
-
-def validate_sindex(secondary_indexes: List[str]) -> None:
+def validate_index(indexes: List[str]) -> None:
     """
     Validates the secondary index fields.
 
     -- Parameters
-    secondary_indexes: List[str]
+    indexes: List[str]
         The secondary index fields to validate.
 
     """
-    if len(secondary_indexes) != len(set(secondary_indexes)):
+    if len(indexes) != len(set(indexes)):
         raise ValueError("Duplicate secondary indexes are not allowed.")
 
 
@@ -121,47 +88,39 @@ def validate_schema_property(field_path: str, json_schema: Dict[str, Any]) -> bo
     return True
 
 
-def validate_config_creation(
-    json_schema: Dict[str, Any], primary_key: str, secondary_indexes: List[str]
-) -> None:
+def validate_config_creation(json_schema: Dict[str, Any], indexes: List[str]) -> None:
     """
     Validates the creation of a new configuration definition.
 
     -- Parameters
     json_schema: Dict[str, Any]
         The JSON Schema to validate against.
-    primary_key: str
-        The primary key field to validate.
-    secondary_indexes: List[str]
+    indexes: List[str]
         The secondary index fields to validate.
 
     """
-    validate_pkey(primary_key)
-    validate_sindex(secondary_indexes)
+    validate_index(indexes)
 
     validate_schema_structure(json_schema)
-    validate_schema_pkey(json_schema, primary_key)
-    validate_schema_sindex(json_schema, secondary_indexes)
+    validate_schema_index(json_schema, indexes)
     return None
 
 
-def validate_config_update(
-    json_schema: Dict[str, Any], secondary_indexes: List[str]
-) -> None:
+def validate_config_update(json_schema: Dict[str, Any], indexes: List[str]) -> None:
     """
     Validates the update of an existing configuration definition.
 
     -- Parameters
     json_schema: Dict[str, Any]
         The JSON Schema to validate against.
-    secondary_indexes: List[str]
-        The secondary index fields to validate.
+    indexes: List[str]
+        The index fields to validate.
 
     """
-    validate_sindex(secondary_indexes)
+    validate_index(indexes)
 
     validate_schema_structure(json_schema)
-    validate_schema_sindex(json_schema, secondary_indexes)
+    validate_schema_index(json_schema, indexes)
 
 
 def validate_list_params(page: int, page_size: int) -> None:

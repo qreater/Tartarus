@@ -8,7 +8,7 @@
 
 from psycopg2 import connect
 from app.utils.config.conf import settings
-from app.utils.config.queries import (
+from app.utils.data.queries import (
     QUERY_CREATE_TABLE,
     QUERY_CREATE_INDEX,
 )

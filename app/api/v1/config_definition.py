@@ -44,8 +44,7 @@ def create_config_definition(config_definition: CreateConfigDefinition):
         c_config_definition(
             config_definition.config_definition_key,
             config_definition.json_schema,
-            config_definition.primary_key,
-            config_definition.secondary_indexes,
+            config_definition.indexes,
         )
     except Exception as e:
         logger.exception(f"Error creating configuration definition: {e}")
@@ -97,7 +96,7 @@ def update_config_definition(
         The response for the update configuration definition request.
     """
     try:
-        u_config_definition(config_definition_key, config_definition.secondary_indexes)
+        u_config_definition(config_definition_key, config_definition.indexes)
     except Exception as e:
         logger.exception(f"Error updating configuration definition: {e}")
         raise HTTPException(status_code=500, detail=str(e))

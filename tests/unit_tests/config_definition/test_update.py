@@ -32,7 +32,7 @@ class TestConfigDefintionUpdate:
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
     @patch.object(DataStore, "_execute_query")
-    def test_update_w_sindex(self, mock_execute_query, mock_r_config_definition):
+    def test_update_w_index(self, mock_execute_query, mock_r_config_definition):
         """
         Test that the function updates a configuration definition.
 
@@ -47,8 +47,7 @@ class TestConfigDefintionUpdate:
                 "type": "object",
                 "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
             },
-            "primary_key": "name",
-            "secondary_indexes": ["date"],
+            "indexes": ["date"],
         }
 
         internal_query, internal_params = internal_u_definition_query(
@@ -82,7 +81,7 @@ class TestConfigDefintionUpdate:
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
     @patch.object(DataStore, "_execute_query")
-    def test_update_d_sindex(self, mock_execute_query, mock_r_config_definition):
+    def test_update_d_index(self, mock_execute_query, mock_r_config_definition):
         """
         Test that the function raises an exception if the secondary index is duplicated.
         """
@@ -91,8 +90,7 @@ class TestConfigDefintionUpdate:
                 "type": "object",
                 "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
             },
-            "primary_key": "name",
-            "secondary_indexes": ["date"],
+            "indexes": ["date"],
         }
 
         config_key = "sample_config"
@@ -104,7 +102,7 @@ class TestConfigDefintionUpdate:
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
     @patch.object(DataStore, "_execute_query")
-    def test_update_n_sindex(self, mock_execute_query, mock_r_config_definition):
+    def test_update_n_index(self, mock_execute_query, mock_r_config_definition):
         """
         Test that the function raises an exception if the secondary index is not found.
         """
@@ -113,8 +111,7 @@ class TestConfigDefintionUpdate:
                 "type": "object",
                 "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
             },
-            "primary_key": "name",
-            "secondary_indexes": ["date"],
+            "indexes": ["date"],
         }
 
         config_key = "sample_config"

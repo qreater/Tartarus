@@ -11,7 +11,7 @@ import json
 
 
 def internal_c_definition_query(
-    config_type_key: str, json_schema: dict, primary_key: str, secondary_indexes: list
+    config_type_key: str, json_schema: dict, indexes: list
 ) -> tuple:
     """
     Insert a new configuration definition in the internal table.
@@ -19,56 +19,54 @@ def internal_c_definition_query(
     -- Parameters
     config_type_key: str
         The key for the configuration type.
-    primary_key: str
-        The primary key for the configuration type.
-    data: dict
-        The data for the configuration type.
+    indexes: list
+        The indexes for the configuration type.
 
     -- Returns
     str
         The SQL query to insert the configuration definition.
     """
     json_schema_str = json.dumps(json_schema)
-    secondary_indexes_str = (
-        "{" + ",".join(f'"{item}"' for item in secondary_indexes) + "}"
-    )
+    indexes_str = "{" + ",".join(f'"{item}"' for item in indexes) + "}"
 
     internal_query = f"""
-    INSERT INTO {settings.INTERNAL_TABLE} (config_type_key, json_schema, primary_key, secondary_indexes)
-    VALUES (%s, %s, %s, %s);
+    INSERT INTO {settings.INTERNAL_TABLE} (config_type_key, json_schema, indexes)
+    VALUES (%s, %s, %s);
     """
 
     return internal_query, (
         config_type_key,
         json_schema_str,
-        primary_key,
-        secondary_indexes_str,
+        indexes_str,
     )
 
 
-def internal_u_definition_query(config_type_key: str, secondary_indexes: list) -> tuple:
+def internal_u_definition_query(config_type_key: str, indexes: list) -> tuple:
     """
     Update a configuration definition in the internal table.
 
     -- Parameters
     config_type_key: str
         The key for the configuration type.
-    secondary_indexes: list
-        The secondary indexes for the configuration type.
+    indexes: list
+        The indexes for the configuration type.
 
     -- Returns
     tuple
         The SQL query to update the configuration definition and the parameters.
     """
-    secondary_indexes = "{" + ",".join(f'"{item}"' for item in secondary_indexes) + "}"
+    indexes = "{" + ",".join(f'"{item}"' for item in indexes) + "}"
 
     update_query = f"""
     UPDATE {settings.INTERNAL_TABLE}
-    SET secondary_indexes = %s
+    SET indexes = %s
     WHERE config_type_key = %s;
     """
 
-    return update_query, (secondary_indexes, config_type_key)
+    return update_query, (
+        indexes,
+        config_type_key,
+    )
 
 
 def internal_d_definition_query(config_type_key: str) -> tuple:
@@ -155,15 +153,13 @@ def l_index_query(config_type_key: str) -> tuple:
     return list_query, (config_type_key,)
 
 
-def c_config_definition_query(config_type_key: str, primary_key: str) -> tuple:
+def c_config_definition_query(config_type_key: str) -> tuple:
     """
     Create a new configuration definition in the internal table.
 
     -- Parameters
     config_type_key: str
         The key for the configuration type.
-    primary_key: str
-        The primary key for the configuration type.
 
     -- Returns
     tuple
@@ -171,7 +167,7 @@ def c_config_definition_query(config_type_key: str, primary_key: str) -> tuple:
     """
     creation_query = f"""
     CREATE TABLE IF NOT EXISTS {config_type_key} (
-        {primary_key} VARCHAR(255) PRIMARY KEY NOT NULL,
+        config_key VARCHAR(255) PRIMARY KEY NOT NULL,
         data JSONB NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

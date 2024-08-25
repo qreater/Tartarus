@@ -24,23 +24,49 @@ from app.utils.config_definitions.queries import (
     d_index_query,
 )
 
+from tests.unit_tests.config_definition.payloads.payload_extractor import (
+    extract_payload,
+    extract_payload_params,
+)
 
-class TestConfigDefintionUpdate:
+
+class TestConfigDefinitionUpdate:
     """
     Unit tests for the update functions of the configuration definition module.
     """
 
-    @patch("app.utils.config_definitions.utils.r_config_definition")
-    @patch.object(DataStore, "_execute_query")
-    def test_update_w_index(self, mock_execute_query, mock_r_config_definition):
+    @pytest.fixture(scope="class")
+    def get_payload(self):
         """
-        Test that the function updates a configuration definition.
+        Extracts the test payload from the payload file for the test suite.
+        """
+        return extract_payload()["update"]
 
-        This test verifies that the function updates a configuration definition in the internal table, and also verifies the creation and deletion of indexes.
+    def _run_u_config_definition(
+        self,
+        payload_extract,
+        mock_execute_query,
+        mock_r_config_definition,
+        expect_error=False,
+    ):
+        """
+        Helper function to run u_config_definition and handle assertions.
         """
 
-        config_key = "sample_config"
-        updated_indexes_list = ["name"]
+        (
+            config_key,
+            _,
+            _,
+            updated_indexes_list,
+            _,
+            _,
+        ) = extract_payload_params(payload_extract)
+
+        if expect_error:
+            with pytest.raises(ValueError):
+                u_config_definition(config_key, updated_indexes_list)
+            mock_execute_query.assert_not_called()
+            return
 
         mock_r_config_definition.return_value = {
             "json_schema": {
@@ -81,24 +107,37 @@ class TestConfigDefintionUpdate:
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
     @patch.object(DataStore, "_execute_query")
-    def test_update_d_index(self, mock_execute_query, mock_r_config_definition):
+    def test_update_w_index(
+        self, mock_execute_query, mock_r_config_definition, get_payload
+    ):
+        """
+        Test that the function updates a configuration definition.
+        """
+        payload_extract = get_payload["test_update_w_index"]
+
+        self._run_u_config_definition(
+            payload_extract,
+            mock_execute_query,
+            mock_r_config_definition,
+            expect_error=False,
+        )
+
+    @patch("app.utils.config_definitions.utils.r_config_definition")
+    @patch.object(DataStore, "_execute_query")
+    def test_update_d_index(
+        self, mock_execute_query, mock_r_config_definition, get_payload
+    ):
         """
         Test that the function raises an exception if the secondary index is duplicated.
         """
-        mock_r_config_definition.return_value = {
-            "json_schema": {
-                "type": "object",
-                "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
-            },
-            "indexes": ["date"],
-        }
+        payload_extract = get_payload["test_update_d_index"]
 
-        config_key = "sample_config"
-        updated_indexes_list = ["name", "name"]
-
-        with pytest.raises(ValueError):
-            u_config_definition(config_key, updated_indexes_list)
-        mock_execute_query.assert_not_called()
+        self._run_u_config_definition(
+            payload_extract,
+            mock_execute_query,
+            mock_r_config_definition,
+            expect_error=True,
+        )
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
     @patch.object(DataStore, "_execute_query")
@@ -106,17 +145,11 @@ class TestConfigDefintionUpdate:
         """
         Test that the function raises an exception if the secondary index is not found.
         """
-        mock_r_config_definition.return_value = {
-            "json_schema": {
-                "type": "object",
-                "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
-            },
-            "indexes": ["date"],
-        }
+        payload_extract = extract_payload()["update"]["test_update_n_index"]
 
-        config_key = "sample_config"
-        updated_indexes_list = ["dog"]
-
-        with pytest.raises(ValueError):
-            u_config_definition(config_key, updated_indexes_list)
-        mock_execute_query.assert_not_called()
+        self._run_u_config_definition(
+            payload_extract,
+            mock_execute_query,
+            mock_r_config_definition,
+            expect_error=True,
+        )

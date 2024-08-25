@@ -8,7 +8,6 @@
 
 from unittest.mock import patch, MagicMock
 import pytest
-
 from app.utils.data.data_source import DataStore
 
 with patch("app.utils.data.data_source.connect") as mock_connect:
@@ -17,26 +16,49 @@ with patch("app.utils.data.data_source.connect") as mock_connect:
 
     from app.utils.config_definitions.utils import l_config_definition
 
-from app.utils.config_definitions.queries import (
-    l_config_definition_query,
+from app.utils.config_definitions.queries import l_config_definition_query
+
+from tests.unit_tests.config_definition.payloads.payload_extractor import (
+    extract_payload,
+    extract_payload_params,
 )
 
 
-class TestConfigDefintionList:
+class TestConfigDefinitionList:
     """
     Unit tests for the list functions of the configuration definition module.
     """
 
-    @patch.object(DataStore, "_execute_query")
-    def test_list_w_params(self, mock_execute_query):
+    @pytest.fixture(scope="class")
+    def get_payload(self):
         """
-        Test that the function lists configuration definitions with a page number.
-
-        This test verifies that the function lists configuration definitions from the internal table with a page number.
+        Extracts the test payload from the payload file for the test suite.
         """
+        return extract_payload()["list"]
 
-        page_number = 1
-        items_per_page = 10
+    def _run_l_config_definition(
+        self,
+        payload_extract,
+        mock_execute_query,
+        expect_error=False,
+    ):
+        """
+        Helper function to run l_config_definition and handle assertions.
+        """
+        (
+            _,
+            _,
+            _,
+            _,
+            page_number,
+            items_per_page,
+        ) = extract_payload_params(payload_extract)
+
+        if expect_error:
+            with pytest.raises(ValueError):
+                l_config_definition(page_number, items_per_page)
+            mock_execute_query.assert_not_called()
+            return
 
         internal_query, internal_params = l_config_definition_query(
             page_number, items_per_page
@@ -48,60 +70,41 @@ class TestConfigDefintionList:
         )
 
     @patch.object(DataStore, "_execute_query")
-    def test_list_o_params(self, mock_execute_query):
+    def test_list_w_params(self, mock_execute_query, get_payload):
         """
-        Test that the function lists configuration definitions with no parameters.
-
-        This test verifies that the function lists configuration definitions from the internal table without any parameters.
+        Test that the function lists configuration definitions with a valid page number and items per page.
         """
-        internal_query, internal_params = l_config_definition_query()
-        l_config_definition()
-
-        mock_execute_query.assert_called_once_with(
-            internal_query, params=internal_params, mode="retrieve"
+        payload_extract = get_payload["test_list_w_params"]
+        self._run_l_config_definition(
+            payload_extract, mock_execute_query, expect_error=False
         )
 
     @patch.object(DataStore, "_execute_query")
-    def test_list_n_page(self, mock_execute_query):
+    def test_list_n_page(self, mock_execute_query, get_payload):
         """
-        Test that the function lists configuration definitions with an invalid page number.
-
-        This test verifies that the function lists configuration definitions from the internal table with an invalid page number.
+        Test that the function raises an exception when given an invalid page number.
         """
-        page_number = -1
-        items_per_page = 10
-
-        with pytest.raises(ValueError):
-            l_config_definition(page_number, items_per_page)
-
-        mock_execute_query.assert_not_called()
+        payload_extract = get_payload["test_list_n_page"]
+        self._run_l_config_definition(
+            payload_extract, mock_execute_query, expect_error=True
+        )
 
     @patch.object(DataStore, "_execute_query")
-    def test_list_n_nlimit(self, mock_execute_query):
+    def test_list_n_nlimit(self, mock_execute_query, get_payload):
         """
-        Test that the function lists configuration definitions with an invalid page size.
-
-        This test verifies that the function lists configuration definitions from the internal table with an invalid page size.
+        Test that the function raises an exception when given an invalid page size.
         """
-        page_number = 1
-        items_per_page = -1
-
-        with pytest.raises(ValueError):
-            l_config_definition(page_number, items_per_page)
-
-        mock_execute_query.assert_not_called()
+        payload_extract = get_payload["test_list_n_nlimit"]
+        self._run_l_config_definition(
+            payload_extract, mock_execute_query, expect_error=True
+        )
 
     @patch.object(DataStore, "_execute_query")
-    def test_list_n_plimit(self, mock_execute_query):
+    def test_list_n_plimit(self, mock_execute_query, get_payload):
         """
-        Test that the function lists configuration definitions with an exceed page size.
-
-        This test verifies that the function lists configuration definitions from the internal table with an exceed page size.
+        Test that the function raises an exception when given an excessive page size.
         """
-        page_number = 1
-        items_per_page = 101
-
-        with pytest.raises(ValueError):
-            l_config_definition(page_number, items_per_page)
-
-        mock_execute_query.assert_not_called()
+        payload_extract = get_payload["test_list_n_plimit"]
+        self._run_l_config_definition(
+            payload_extract, mock_execute_query, expect_error=True
+        )

@@ -1,0 +1,114 @@
+{
+    "create": {
+      "test_create_w_schema": {
+        "config_key": "sample_config",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          }
+        },
+        "index": "date",
+        "indexes": ["date"]
+      },
+      "test_create_o_schema": {
+        "config_key": "sample_config",
+        "schema": null,
+        "index": "date",
+        "indexes": ["date"]
+      },
+      "test_create_n_schema": {
+        "config_key": "sample_config",
+        "schema": {
+          "type": "string"
+        },
+        "index": "date",
+        "indexes": ["date"]
+      },
+      "test_create_d_sindex": {
+        "config_key": "sample_config",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          }
+        },
+        "indexes": ["date", "date"]
+      },
+      "test_create_n_sindex": {
+        "config_key": "sample_config",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          }
+        },
+        "index": "age",
+        "indexes": ["age"]
+      }
+    },
+    "read": {
+      "test_read_w_key": {
+        "config_key": "sample_config"
+      },
+      "test_read_o_key": {
+        "config_key": ""
+      }
+    },
+    "update": {
+      "test_update_w_index": {
+        "config_key": "sample_config",
+        "indexes": ["name"]
+      },
+      "test_update_d_index": {
+        "config_key": "sample_config",
+        "indexes": ["name", "name"]
+      },
+      "test_update_n_index": {
+        "config_key": "sample_config",
+        "indexes": ["dog"]
+      }
+    },
+    "delete": {
+      "test_delete_w_key": {
+        "config_key": "sample_config"
+      },
+      "test_delete_o_key": {
+        "config_key": ""
+      }
+    },
+    "list": {
+      "test_list_w_params": {
+        "page": 1,
+        "page_size": 10
+      },
+      "test_list_n_page": {
+        "page": -1,
+        "page_size": 10
+      },
+      "test_list_n_nlimit": {
+        "page": 1,
+        "page_size": -1
+      },
+      "test_list_n_plimit": {
+        "page": 1,
+        "page_size": 101
+      }
+    }
+  }
+  

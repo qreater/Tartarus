@@ -7,7 +7,25 @@
 """
 
 import jsonschema
+import re
 from typing import Any, Dict, List
+
+
+def validate_config_type_key(config_type_key: str) -> None:
+    """
+    Validates the configuration type key.
+
+    -- Parameters
+    config_type_key: str
+        The configuration type key to validate.
+
+    """
+    if not config_type_key:
+        raise ValueError("Configuration type key must be provided.")
+    if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_type_key):
+        raise ValueError(
+            "Configuration type key must start with a letter and contain only alphanumeric characters and underscores."
+        )
 
 
 def validate_schema_structure(json_schema: Dict[str, Any]) -> None:
@@ -88,22 +106,39 @@ def validate_schema_property(field_path: str, json_schema: Dict[str, Any]) -> bo
     return True
 
 
-def validate_config_creation(json_schema: Dict[str, Any], indexes: List[str]) -> None:
+def validate_config_creation(
+    config_type_key: str, json_schema: Dict[str, Any], indexes: List[str]
+) -> None:
     """
     Validates the creation of a new configuration definition.
 
     -- Parameters
+    config_type_key: str
+        The key for the configuration type.
     json_schema: Dict[str, Any]
         The JSON Schema to validate against.
     indexes: List[str]
         The secondary index fields to validate.
 
     """
+    validate_config_type_key(config_type_key)
     validate_index(indexes)
 
     validate_schema_structure(json_schema)
     validate_schema_index(json_schema, indexes)
     return None
+
+
+def validate_config_read(config_type_key: str) -> None:
+    """
+    Validates the retrieval of a configuration definition.
+
+    -- Parameters
+    config_type_key: str
+        The key for the configuration type.
+
+    """
+    validate_config_type_key(config_type_key)
 
 
 def validate_config_update(json_schema: Dict[str, Any], indexes: List[str]) -> None:
@@ -121,6 +156,18 @@ def validate_config_update(json_schema: Dict[str, Any], indexes: List[str]) -> N
 
     validate_schema_structure(json_schema)
     validate_schema_index(json_schema, indexes)
+
+
+def validate_config_delete(config_type_key: str) -> None:
+    """
+    Validates the deletion of a configuration definition.
+
+    -- Parameters
+    config_type_key: str
+        The key for the configuration type.
+
+    """
+    validate_config_type_key(config_type_key)
 
 
 def validate_list_params(page: int, page_size: int) -> None:

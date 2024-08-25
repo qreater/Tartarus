@@ -26,102 +26,105 @@ from app.utils.config_definitions.queries import (
     c_index_query,
 )
 
+from tests.unit_tests.config_definition.payloads.payload_extractor import (
+    extract_payload_params,
+    extract_payload,
+)
+
 
 class TestConfigDefinitionCreate:
     """
     Test suite for the config definition creation functions.
     """
 
-    @patch.object(DataStore, "_execute_query")
-    def test_create_w_schema(self, mock_execute_query):
+    @pytest.fixture(scope="class")
+    def get_payload(self):
         """
-        Test that the function creates a new configuration definition.
+        Extracts the test payload from the payload file for the test suite.
         """
-        config_key = "sample_config"
-        schema = {
-            "type": "object",
-            "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
-        }
-        index = "date"
-        indexes_list = [index]
+        return extract_payload()["create"]
 
+    def _run_c_config_definition(
+        self,
+        payload_extract,
+        mock_execute_query,
+        expect_error=False,
+    ):
+        """
+        Helper function to run c_config_definition and handle assertions.
+        """
+        (
+            config_key,
+            schema,
+            index,
+            indexes,
+            _,
+            _,
+        ) = extract_payload_params(payload_extract)
+
+        if expect_error:
+            with pytest.raises(ValueError):
+                c_config_definition(config_key, schema, indexes)
+            mock_execute_query.assert_not_called()
+            return
         creation_query, creation_params = c_config_definition_query(config_key)
         internal_query, internal_params = internal_c_definition_query(
-            config_key, schema, indexes_list
+            config_key, schema, indexes
         )
         index_query, index_params = c_index_query(config_key, index)
 
-        c_config_definition(config_key, schema, indexes_list)
+        c_config_definition(config_key, schema, indexes)
 
         mock_execute_query.assert_any_call(creation_query, creation_params)
         mock_execute_query.assert_any_call(internal_query, internal_params)
         mock_execute_query.assert_any_call(index_query, index_params)
 
     @patch.object(DataStore, "_execute_query")
-    def test_create_o_schema(self, mock_execute_query):
+    def test_create_w_schema(self, mock_execute_query, get_payload):
         """
-        Test that the function creates a new configuration definition.
+        Test that the function creates a new configuration definition with a schema.
         """
-        config_key = "sample_config"
-        index = "date"
-        indexes_list = [index]
-
-        creation_query, creation_params = c_config_definition_query(config_key)
-        internal_query, internal_params = internal_c_definition_query(
-            config_key, None, indexes_list
+        payload_extract = get_payload["test_create_w_schema"]
+        self._run_c_config_definition(
+            payload_extract, mock_execute_query, expect_error=False
         )
-        index_query, index_params = c_index_query(config_key, index)
-
-        c_config_definition(config_key, None, indexes_list)
-
-        mock_execute_query.assert_any_call(creation_query, creation_params)
-        mock_execute_query.assert_any_call(internal_query, internal_params)
-        mock_execute_query.assert_any_call(index_query, index_params)
 
     @patch.object(DataStore, "_execute_query")
-    def test_create_n_schema(self, mock_execute_query):
+    def test_create_o_schema(self, mock_execute_query, get_payload):
+        """
+        Test that the function creates a new configuration definition without a schema.
+        """
+        payload_extract = get_payload["test_create_o_schema"]
+        self._run_c_config_definition(
+            payload_extract, mock_execute_query, expect_error=False
+        )
+
+    @patch.object(DataStore, "_execute_query")
+    def test_create_n_schema(self, mock_execute_query, get_payload):
         """
         Test that the function raises an exception if the schema is invalid.
         """
-        config_key = "sample_config"
-        schema = {"type": "string"}
-        index = "date"
-        indexes_list = [index]
-
-        with pytest.raises(ValueError):
-            c_config_definition(config_key, schema, indexes_list)
-        mock_execute_query.assert_not_called()
+        payload_extract = get_payload["test_create_n_schema"]
+        self._run_c_config_definition(
+            payload_extract, mock_execute_query, expect_error=True
+        )
 
     @patch.object(DataStore, "_execute_query")
-    def test_create_d_index(self, mock_execute_query):
+    def test_create_d_sindex(self, mock_execute_query, get_payload):
         """
-        Test that the function raises an exception if the index is duplicated.
+        Test that the function raises an exception if the index are duplicated.
         """
-        config_key = "sample_config"
-        schema = {
-            "type": "object",
-            "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
-        }
-        index = "date"
-        indexes_list = [index, index]
-
-        with pytest.raises(ValueError):
-            c_config_definition(config_key, schema, indexes_list)
-        mock_execute_query.assert_not_called()
+        payload_extract = get_payload["test_create_d_sindex"]
+        self._run_c_config_definition(
+            payload_extract, mock_execute_query, expect_error=True
+        )
 
     @patch.object(DataStore, "_execute_query")
-    def test_create_n_index(self, mock_execute_query):
+    def test_create_n_sindex(self, mock_execute_query, get_payload):
         """
-        Test that the function raises an exception if the index is not in the schema.
+        Test that the function raises an exception if the indexes are not in the schema.
         """
-        config_key = "sample_config"
-        schema = {
-            "type": "object",
-            "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
-        }
-        index = "age"
-        indexes_list = [index]
-
-        with pytest.raises(ValueError):
-            c_config_definition(config_key, schema, indexes_list)
-        mock_execute_query.assert_not_called()
+        payload_extract = get_payload["test_create_n_sindex"]
+        self._run_c_config_definition(
+            payload_extract, mock_execute_query, expect_error=True
+        )

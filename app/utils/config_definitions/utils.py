@@ -21,7 +21,9 @@ from app.utils.config_definitions.queries import (
 
 from app.utils.config_definitions.validations import (
     validate_config_creation,
+    validate_config_read,
     validate_config_update,
+    validate_config_delete,
     validate_list_params,
 )
 
@@ -44,7 +46,7 @@ def c_config_definition(config_type_key: str, json_schema: dict, indexes: list):
 
     """
 
-    validate_config_creation(json_schema, indexes)
+    validate_config_creation(config_type_key, json_schema, indexes)
 
     internal_query, internal_params = internal_c_definition_query(
         config_type_key, json_schema, indexes
@@ -76,6 +78,8 @@ def r_config_definition(config_type_key: str):
     dict
         The configuration definition.
     """
+
+    validate_config_read(config_type_key)
 
     query, params = r_config_definition_query(config_type_key)
     result = data_store._execute_query(query, params=params, mode="retrieve")
@@ -137,6 +141,9 @@ def d_config_definition(config_type_key: str):
     -- Returns
     None
     """
+
+    validate_config_delete(config_type_key)
+
     internal_query, internal_params = internal_d_definition_query(config_type_key)
     data_store._execute_query(internal_query, internal_params)
 
@@ -160,7 +167,9 @@ def l_config_definition(page: int = 1, page_size: int = 10):
     list
         The configuration definitions.
     """
+
     validate_list_params(page, page_size)
+
     query, params = l_config_definition_query(page, page_size)
     result = data_store._execute_query(query, params=params, mode="retrieve")
 

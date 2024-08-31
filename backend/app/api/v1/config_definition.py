@@ -6,7 +6,7 @@
 
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.utils.config_definitions.utils import (
     c_config_definition,
@@ -17,8 +17,7 @@ from app.utils.config_definitions.utils import (
 )
 
 from app.models.config_definition import CreateConfigDefinition, UpdateConfigDefinition
-
-from fastapi import HTTPException
+from app.utils.auth.middlewares import validate_api_key
 
 import logging
 
@@ -28,7 +27,10 @@ router = APIRouter()
 
 
 @router.post("/")
-def create_config_definition(config_definition: CreateConfigDefinition):
+def create_config_definition(
+    config_definition: CreateConfigDefinition,
+    x_api_key: str = Depends(validate_api_key),
+):
     """
     Create a new configuration definition.
 
@@ -54,7 +56,9 @@ def create_config_definition(config_definition: CreateConfigDefinition):
 
 
 @router.get("/{config_definition_key}")
-def get_config_definition(config_definition_key: str):
+def get_config_definition(
+    config_definition_key: str, x_api_key: str = Depends(validate_api_key)
+):
     """
     Get a configuration definition.
 
@@ -80,7 +84,9 @@ def get_config_definition(config_definition_key: str):
 
 @router.put("/{config_definition_key}")
 def update_config_definition(
-    config_definition_key: str, config_definition: UpdateConfigDefinition
+    config_definition_key: str,
+    config_definition: UpdateConfigDefinition,
+    x_api_key: str = Depends(validate_api_key),
 ):
     """
     Update a configuration definition.
@@ -105,7 +111,9 @@ def update_config_definition(
 
 
 @router.delete("/{config_definition_key}")
-def delete_config_definition(config_definition_key: str):
+def delete_config_definition(
+    config_definition_key: str, x_api_key: str = Depends(validate_api_key)
+):
     """
     Delete a configuration definition.
 
@@ -128,7 +136,9 @@ def delete_config_definition(config_definition_key: str):
 
 
 @router.get("/")
-def list_config_definition(page: int = 1, limit: int = 10):
+def list_config_definition(
+    page: int = 1, limit: int = 10, x_api_key: str = Depends(validate_api_key)
+):
     """
     List all configuration definitions.
 

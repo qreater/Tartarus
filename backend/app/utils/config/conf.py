@@ -36,5 +36,7 @@ class Settings(BaseSettings):
 
     INTERNAL_TABLE: str = "tartarus_internal_cft"
 
+    API_KEY: str = "OPEN-SESAME"
+
 
 settings = Settings()

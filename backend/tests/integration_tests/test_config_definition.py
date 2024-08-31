@@ -6,6 +6,13 @@
 
 """
 
+"""
+ Copyright 2024 @Qreater
+ Licensed under the Apache License, Version 2.0.
+ See: http://www.apache.org/licenses/LICENSE-2.0
+
+"""
+
 import pytest
 from fastapi.testclient import TestClient
 from main import app
@@ -13,6 +20,7 @@ from app.utils.config_definitions.utils import (
     c_config_definition,
     d_config_definition,
 )
+from app.utils.config.conf import settings
 
 client = TestClient(app)
 
@@ -47,13 +55,22 @@ class TestConfigDefinitionIntegration:
 
         d_config_definition(config_key)
 
+    def get_api_key_header(self):
+        """
+        Helper method to get the API key header.
+
+        This ensures the API key is a string.
+        """
+        api_key = str(settings.API_KEY)
+        return {"x-api-key": api_key}
+
     def test_create_config_definition(self):
         """
         Test the creation of a new configuration definition.
 
         This test verifies that a new configuration definition is created successfully.
         """
-
+        headers = self.get_api_key_header()
         payload = {
             "config_definition_key": "new_config",
             "json_schema": {
@@ -63,7 +80,9 @@ class TestConfigDefinitionIntegration:
             "indexes": ["date"],
         }
 
-        response = client.post("/api/v1/config_definition/", json=payload)
+        response = client.post(
+            "/api/v1/config_definition/", json=payload, headers=headers
+        )
         assert response.status_code == 200
         assert response.json() == {
             "message": "Configuration definition created successfully."
@@ -77,11 +96,14 @@ class TestConfigDefinitionIntegration:
 
         This test verifies that a configuration definition is retrieved successfully.
         """
+        headers = self.get_api_key_header()
 
-        response = client.get(f"/api/v1/config_definition/{setup_data['config_key']}")
+        response = client.get(
+            f"/api/v1/config_definition/{setup_data['config_key']}", headers=headers
+        )
         assert response.status_code == 200
         assert (
-            response.json()["message"]
+            response.json().get("message")
             == "Configuration definition retrieved successfully."
         )
         assert "data" in response.json()
@@ -92,11 +114,13 @@ class TestConfigDefinitionIntegration:
 
         This test verifies that an existing configuration definition is updated successfully.
         """
-
+        headers = self.get_api_key_header()
         payload = {"indexes": ["name"]}
 
         response = client.put(
-            f"/api/v1/config_definition/{setup_data['config_key']}", json=payload
+            f"/api/v1/config_definition/{setup_data['config_key']}",
+            json=payload,
+            headers=headers,
         )
         assert response.status_code == 200
         assert response.json() == {
@@ -109,9 +133,9 @@ class TestConfigDefinitionIntegration:
 
         This test verifies that a configuration definition is deleted successfully.
         """
-
+        headers = self.get_api_key_header()
         response = client.delete(
-            f"/api/v1/config_definition/{setup_data['config_key']}"
+            f"/api/v1/config_definition/{setup_data['config_key']}", headers=headers
         )
         assert response.status_code == 200
         assert response.json() == {
@@ -124,11 +148,13 @@ class TestConfigDefinitionIntegration:
 
         This test verifies that all configuration definitions are listed successfully.
         """
-
-        response = client.get("/api/v1/config_definition/?page=1&limit=10")
+        headers = self.get_api_key_header()
+        response = client.get(
+            "/api/v1/config_definition/?page=1&limit=10", headers=headers
+        )
         assert response.status_code == 200
         assert (
-            response.json()["message"]
+            response.json().get("message")
             == "Configuration definitions listed successfully."
         )
         assert "data" in response.json()

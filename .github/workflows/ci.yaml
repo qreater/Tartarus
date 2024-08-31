@@ -18,7 +18,11 @@ jobs:
         with:
           python-version: 3.12
 
-      - uses: pre-commit/action@v3.0.0
+      - name: Run pre-commit
+        run: |
+          cd backend
+          pip install pre-commit
+          pre-commit run --all-files
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -30,16 +34,11 @@ jobs:
         with:
           python-version: 3.12
 
-      - uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.8.0
-
-      - name: Install dependencies
+      - name: Set up Poetry, Install dependencies, and Run unit tests
         run: |
+          cd backend
+          pip install poetry
           poetry install
-
-      - name: Run tests
-        run: |
           poetry run pytest tests/unit_tests/ --disable-warnings
   
   integration-tests:
@@ -67,14 +66,9 @@ jobs:
         with:
           python-version: 3.12
 
-      - uses: abatilo/actions-poetry@v2
-        with:
-          poetry-version: 1.8.0
-
-      - name: Install dependencies
+      - name: Set up Poetry, Install dependencies, and Run integration tests
         run: |
+          cd backend
+          pip install poetry
           poetry install
-
-      - name: Run tests
-        run: |
           poetry run pytest tests/integration_tests/ --disable-warnings

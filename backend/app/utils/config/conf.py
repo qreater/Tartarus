@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     Settings class to store the configuration values
 
     -- Parameters
+    API_KEY: str
+        The API key to access the API.
     DB_NAME: str
         The name of the database.
     DB_USER: str
@@ -28,6 +30,8 @@ class Settings(BaseSettings):
         The internal table name.
     """
 
+    API_KEY: str = "OPEN_SESAME"
+
     DB_NAME: str = "datastore"
     DB_USER: str = "postgres"
     DB_PASSWORD: str = "postgres"
@@ -35,8 +39,6 @@ class Settings(BaseSettings):
     DB_PORT: str = "5432"
 
     INTERNAL_TABLE: str = "tartarus_internal_cft"
-
-    API_KEY: str = "OPEN-SESAME"
 
 
 settings = Settings()

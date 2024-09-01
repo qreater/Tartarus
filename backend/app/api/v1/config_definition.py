@@ -17,7 +17,6 @@ from app.utils.config_definitions.utils import (
 )
 
 from app.models.config_definition import CreateConfigDefinition, UpdateConfigDefinition
-from app.utils.auth.middlewares import validate_api_key
 
 import logging
 
@@ -27,10 +26,7 @@ router = APIRouter()
 
 
 @router.post("/")
-def create_config_definition(
-    config_definition: CreateConfigDefinition,
-    x_api_key: str = Depends(validate_api_key),
-):
+def create_config_definition(config_definition: CreateConfigDefinition):
     """
     Create a new configuration definition.
 
@@ -56,9 +52,7 @@ def create_config_definition(
 
 
 @router.get("/{config_definition_key}")
-def get_config_definition(
-    config_definition_key: str, x_api_key: str = Depends(validate_api_key)
-):
+def get_config_definition(config_definition_key: str):
     """
     Get a configuration definition.
 
@@ -84,9 +78,7 @@ def get_config_definition(
 
 @router.put("/{config_definition_key}")
 def update_config_definition(
-    config_definition_key: str,
-    config_definition: UpdateConfigDefinition,
-    x_api_key: str = Depends(validate_api_key),
+    config_definition_key: str, config_definition: UpdateConfigDefinition
 ):
     """
     Update a configuration definition.
@@ -111,9 +103,7 @@ def update_config_definition(
 
 
 @router.delete("/{config_definition_key}")
-def delete_config_definition(
-    config_definition_key: str, x_api_key: str = Depends(validate_api_key)
-):
+def delete_config_definition(config_definition_key: str):
     """
     Delete a configuration definition.
 
@@ -136,9 +126,7 @@ def delete_config_definition(
 
 
 @router.get("/")
-def list_config_definition(
-    page: int = 1, limit: int = 10, x_api_key: str = Depends(validate_api_key)
-):
+def list_config_definition(page: int = 1, limit: int = 10):
     """
     List all configuration definitions.
 

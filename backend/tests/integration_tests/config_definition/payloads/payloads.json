@@ -1,0 +1,62 @@
+{
+    "test_create_config_definition": {
+        "method": "POST",
+        "url": "/api/v1/config_definition/",
+        "payload": {
+            "config_definition_key": "test_config",
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string"
+                    }
+                }
+            },
+            "indexes": [
+                "date"
+            ]
+        },
+        "expected_status": 200,
+        "expected_response": {
+            "message": "Configuration definition created successfully."
+        }
+    },
+    "test_get_config_definition": {
+        "method": "GET",
+        "url": "/api/v1/config_definition/test_config",
+        "expected_status": 200
+    },
+    "test_update_config_definition": {
+        "method": "PUT",
+        "url": "/api/v1/config_definition/test_config",
+        "payload": {
+            "indexes": [
+                "name"
+            ]
+        },
+        "expected_status": 200,
+        "expected_response": {
+            "message": "Configuration definition updated successfully."
+        }
+    },
+    "test_delete_config_definition": {
+        "method": "DELETE",
+        "url": "/api/v1/config_definition/test_config",
+        "expected_status": 200,
+        "expected_response": {
+            "message": "Configuration definition deleted successfully."
+        }
+    },
+    "test_list_config_definitions": {
+        "method": "GET",
+        "url": "/api/v1/config_definition/",
+        "query": {
+            "page": 1,
+            "limit": 10
+        },
+        "expected_status": 200
+    }
+}

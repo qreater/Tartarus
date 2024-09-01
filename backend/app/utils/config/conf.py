@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     Settings class to store the configuration values
 
     -- Parameters
+    API_KEY: str
+        The API key to access the API.
     DB_NAME: str
         The name of the database.
     DB_USER: str
@@ -27,6 +29,8 @@ class Settings(BaseSettings):
     INTERNAL_TABLE: str
         The internal table name.
     """
+
+    API_KEY: str = "OPEN_SESAME"
 
     DB_NAME: str = "datastore"
     DB_USER: str = "postgres"

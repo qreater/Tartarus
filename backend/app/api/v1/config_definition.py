@@ -6,7 +6,7 @@
 
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.utils.config_definitions.utils import (
     c_config_definition,
@@ -17,8 +17,6 @@ from app.utils.config_definitions.utils import (
 )
 
 from app.models.config_definition import CreateConfigDefinition, UpdateConfigDefinition
-
-from fastapi import HTTPException
 
 import logging
 

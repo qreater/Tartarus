@@ -6,7 +6,7 @@
 
 """
 
-from app.utils.config.conf import settings
+from app.utils.settings.config import settings
 import json
 
 

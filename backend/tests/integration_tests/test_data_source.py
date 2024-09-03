@@ -8,7 +8,7 @@
 
 import pytest
 from app.utils.data.data_source import DataStore
-from app.utils.config.conf import settings
+from app.utils.settings.config import settings
 
 
 class TestDataStoreIntegration:

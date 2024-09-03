@@ -10,7 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from main import app
 
-from app.utils.config.conf import settings
+from app.utils.settings.config import settings
 
 from tests.integration_tests.config_definition.payloads.payload_extractor import (
     extract_payload_params,

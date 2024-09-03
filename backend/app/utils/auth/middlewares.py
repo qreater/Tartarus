@@ -9,7 +9,7 @@
 import secrets
 
 from fastapi import Security, HTTPException, status
-from app.utils.config.conf import settings
+from app.utils.settings.config import settings
 
 from fastapi.security import APIKeyHeader
 

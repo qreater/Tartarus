@@ -7,7 +7,7 @@
 """
 
 from unittest.mock import patch, MagicMock
-from app.utils.config.conf import settings
+from app.utils.settings.config import settings
 from app.utils.data.queries import (
     QUERY_CREATE_TABLE,
     QUERY_CREATE_INDEX,

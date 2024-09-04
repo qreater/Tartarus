@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 from main import app
 
 from app.utils.settings.config import settings
+from app.utils.config_definitions.utils import c_config_definition, d_config_definition
 
 from tests.integration_tests.payloads.payload_extractor import (
     extract_payload_params,
@@ -20,7 +21,7 @@ from tests.integration_tests.payloads.payload_extractor import (
 client = TestClient(app)
 
 
-class TestConfigDefinitionIntegration:
+class TestConfigIntegration:
     """
     Integration test suite for configuration definition endpoints.
     """
@@ -30,7 +31,12 @@ class TestConfigDefinitionIntegration:
         """
         Extracts the test payload from the payload file for the test suite.
         """
-        return extract_payload()
+        payload = extract_payload()
+        pre_payload = payload.get("pre_test_config")
+
+        c_config_definition(**pre_payload)
+        yield payload
+        d_config_definition(pre_payload.get("config_definition_key"))
 
     def _run_test(self, payload_extract):
         """
@@ -56,37 +62,9 @@ class TestConfigDefinitionIntegration:
         if expected_response:
             assert response.json() == expected_response
 
-    def test_create_config_definition(self, get_payload):
+    def test_create_config(self, get_payload):
         """
-        Test the creation of a new configuration definition.
+        Test the creation of a new configuration.
         """
-        payload_extract = get_payload["test_create_config_definition"]
-        self._run_test(payload_extract)
-
-    def test_get_config_definition(self, get_payload):
-        """
-        Test retrieval of a configuration definition.
-        """
-        payload_extract = get_payload["test_get_config_definition"]
-        self._run_test(payload_extract)
-
-    def test_update_config_definition(self, get_payload):
-        """
-        Test the update of an existing configuration definition.
-        """
-        payload_extract = get_payload["test_update_config_definition"]
-        self._run_test(payload_extract)
-
-    def test_delete_config_definition(self, get_payload):
-        """
-        Test the deletion of a configuration definition.
-        """
-        payload_extract = get_payload["test_delete_config_definition"]
-        self._run_test(payload_extract)
-
-    def test_list_config_definitions(self, get_payload):
-        """
-        Test listing of all configuration definitions.
-        """
-        payload_extract = get_payload["test_list_config_definitions"]
+        payload_extract = get_payload["test_create_config"]
         self._run_test(payload_extract)

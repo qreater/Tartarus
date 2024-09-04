@@ -1,4 +1,5 @@
 {
+    "pre_test_config_definition": {},
     "test_create_config_definition": {
         "method": "POST",
         "url": "/api/v1/config_definition/",
@@ -58,5 +59,37 @@
             "limit": 10
         },
         "expected_status": 200
+    },
+    "pre_test_config": {
+        "config_definition_key": "test_config",
+        "json_schema": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                }
+            }
+        },
+        "indexes": [
+            "date"
+        ]
+    },
+    "test_create_config": {
+        "method": "POST",
+        "url": "/api/v1/config_definition/test_config/config",
+        "payload": {
+            "config_key": "test",
+            "data": {
+                "name": "test",
+                "date": "2020-01-01"
+            }
+        },
+        "expected_status": 200,
+        "expected_response": {
+            "message": "Configuration created successfully."
+        }
     }
 }

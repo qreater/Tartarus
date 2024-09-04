@@ -10,7 +10,7 @@ from app.utils.settings.config import settings
 
 QUERY_CREATE_TABLE = f"""
 CREATE TABLE IF NOT EXISTS {settings.INTERNAL_TABLE} (
-    config_type_key VARCHAR(255) PRIMARY KEY NOT NULL,
+    config_definition_key VARCHAR(255) PRIMARY KEY NOT NULL,
     json_schema JSONB,
     indexes TEXT[]
 );

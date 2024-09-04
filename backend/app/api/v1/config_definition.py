@@ -6,7 +6,7 @@
 
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, HTTPException
 
 from app.utils.config_definitions.utils import (
     c_config_definition,

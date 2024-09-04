@@ -32,12 +32,12 @@ from app.utils.data.data_source import DataStore
 data_store = DataStore()
 
 
-def c_config_definition(config_type_key: str, json_schema: dict, indexes: list):
+def c_config_definition(config_definition_key: str, json_schema: dict, indexes: list):
     """
     Create a new configuration definition in the internal table.
 
     -- Parameters
-    config_type_key: str
+    config_definition_key: str
         The key for the configuration type.
     json_schema: dict
         The JSON schema for the configuration type.
@@ -46,32 +46,32 @@ def c_config_definition(config_type_key: str, json_schema: dict, indexes: list):
 
     """
 
-    validate_config_creation(config_type_key, json_schema, indexes)
+    validate_config_creation(config_definition_key, json_schema, indexes)
 
     internal_query, internal_params = internal_c_definition_query(
-        config_type_key, json_schema, indexes
+        config_definition_key, json_schema, indexes
     )
     data_store._execute_query(internal_query, internal_params)
 
-    creation_query, creation_params = c_config_definition_query(config_type_key)
+    creation_query, creation_params = c_config_definition_query(config_definition_key)
     data_store._execute_query(creation_query, creation_params)
 
     for index in indexes:
-        index_query, index_params = c_index_query(config_type_key, index)
+        index_query, index_params = c_index_query(config_definition_key, index)
         data_store._execute_query(index_query, index_params)
 
-    index_query, index_params = c_index_query(config_type_key, index)
+    index_query, index_params = c_index_query(config_definition_key, index)
     data_store._execute_query(index_query, index_params)
 
     return None
 
 
-def r_config_definition(config_type_key: str):
+def r_config_definition(config_definition_key: str):
     """
     Get a configuration definition from the internal table.
 
     -- Parameters
-    config_type_key: str
+    config_definition_key: str
         The key for the configuration type.
 
     -- Returns
@@ -79,9 +79,9 @@ def r_config_definition(config_type_key: str):
         The configuration definition.
     """
 
-    validate_config_read(config_type_key)
+    validate_config_read(config_definition_key)
 
-    query, params = r_config_definition_query(config_type_key)
+    query, params = r_config_definition_query(config_definition_key)
     result = data_store._execute_query(query, params=params, mode="retrieve")
 
     if len(result) == 0 or result is None:
@@ -90,64 +90,64 @@ def r_config_definition(config_type_key: str):
     return result[0]
 
 
-def u_config_definition(config_type_key: str, indexes: list):
+def u_config_definition(config_definition_key: str, indexes: list):
     """
     Update a configuration definition in the internal table.
 
     -- Parameters
-    config_type_key: str
+    config_definition_key: str
         The key for the configuration type.
     indexes: list
         The indexes for the configuration type.
 
     """
 
-    config_definition = r_config_definition(config_type_key)
+    config_definition = r_config_definition(config_definition_key)
     json_schema = config_definition["json_schema"]
 
     validate_config_update(json_schema, indexes)
 
     internal_query, internal_params = internal_u_definition_query(
-        config_type_key, indexes
+        config_definition_key, indexes
     )
     data_store._execute_query(internal_query, internal_params)
 
-    list_query, list_params = l_index_query(config_type_key)
+    list_query, list_params = l_index_query(config_definition_key)
 
     result = data_store._execute_query(list_query, params=list_params, mode="retrieve")
     existing_indexes = [index["indexname"] for index in result]
 
     for index in indexes:
         if index not in existing_indexes:
-            index_query, index_params = c_index_query(config_type_key, index)
+            index_query, index_params = c_index_query(config_definition_key, index)
             data_store._execute_query(index_query, index_params)
 
     for index in existing_indexes:
         if index not in indexes:
-            index_query, index_params = d_index_query(config_type_key, index)
+            index_query, index_params = d_index_query(config_definition_key, index)
             data_store._execute_query(index_query, index_params)
 
     return None
 
 
-def d_config_definition(config_type_key: str):
+def d_config_definition(config_definition_key: str):
     """
     Delete a configuration definition from the internal table.
 
     -- Parameters
-    config_type_key: str
+    config_definition_key: str
         The key for the configuration type.
 
     -- Returns
     None
     """
 
-    validate_config_delete(config_type_key)
+    validate_config_delete(config_definition_key)
 
-    internal_query, internal_params = internal_d_definition_query(config_type_key)
+    internal_query, internal_params = internal_d_definition_query(config_definition_key)
     data_store._execute_query(internal_query, internal_params)
 
-    delete_query, delete_params = d_config_definition_query(config_type_key)
+    delete_query, delete_params = d_config_definition_query(config_definition_key)
     data_store._execute_query(delete_query, delete_params)
 
     return None

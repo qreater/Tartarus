@@ -1,0 +1,66 @@
+{
+    "create": {
+      "test_create_w_schema": {
+        "config_definition_key": "sample_config_definition",
+        "config_key": "sample_config",
+        "data": {
+          "name": "test_create_w_schema",
+          "date": "2018-01-01"
+        },
+        "schema": {
+          "json_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "date"
+            ]
+          }
+        }
+      },
+      "test_create_o_schema": {
+        "config_definition_key": "sample_config_definition",
+        "config_key": "sample_config",
+        "data": {
+          "name": "test_create_wo_schema",
+          "date": "2018-01-01"
+        }
+      },
+      "test_create_n_schema": {
+        "config_definition_key": "sample_config_definition",
+        "config_key": "sample_config",
+        "data": {
+          "name": "test_create_n_schema"
+        },
+        "schema": {
+          "json_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "date"
+            ]
+          }
+        }
+      }
+    },
+    "read": {},
+    "update": {},
+    "delete": {},
+    "list": {}
+  }
+  

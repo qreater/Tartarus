@@ -8,9 +8,7 @@
 
 from fastapi import APIRouter, HTTPException
 
-from app.utils.configs.utils import (
-    c_config,
-)
+from app.utils.configs.utils import c_config, d_config
 
 from app.models.config import CreateConfig
 
@@ -47,3 +45,30 @@ def create_config(config_definition_key: str, config: CreateConfig):
         raise HTTPException(status_code=500, detail=str(e))
 
     return {"message": "Configuration created successfully."}
+
+
+@router.delete("/{config_key}")
+def delete_config(config_definition_key: str, config_key: str):
+    """
+    Delete a configuration.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration type.
+    config_key: str
+        The key for the configuration
+
+    -- Returns
+    DeleteConfigResponse
+        The response for the delete configuration request.
+    """
+    try:
+        d_config(
+            config_definition_key,
+            config_key,
+        )
+    except Exception as e:
+        logger.exception(f"Error deleting configuration: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return {"message": "Configuration deleted successfully."}

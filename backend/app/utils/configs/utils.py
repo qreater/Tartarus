@@ -6,12 +6,11 @@
 
 """
 
-from app.utils.configs.queries import (
-    c_config_query,
-)
+from app.utils.configs.queries import c_config_query, d_config_query
 
 from app.utils.configs.validations import (
     validate_config_creation,
+    validate_config_deletion,
 )
 
 from app.utils.data.data_source import DataStore
@@ -38,5 +37,24 @@ def c_config(config_definition_key: str, config_key: str, data: dict):
         config_definition_key, config_key, data
     )
     data_store._execute_query(creation_query, creation_params)
+
+    return None
+
+
+def d_config(config_definition_key: str, config_key: str):
+    """
+    Delete a configuration from the config definition.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration.
+    """
+
+    validate_config_deletion(config_definition_key, config_key)
+
+    deletion_query, deletion_params = d_config_query(config_definition_key, config_key)
+    data_store._execute_query(deletion_query, deletion_params)
 
     return None

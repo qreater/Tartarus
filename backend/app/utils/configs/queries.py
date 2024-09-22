@@ -44,3 +44,26 @@ def c_config_query(config_definition_key: str, config_key: str, data: dict) -> t
         created_at,
         modified_at,
     )
+
+
+def d_config_query(config_definition_key: str, config_key: str) -> tuple:
+    """
+    Delete a configuration from the configuration definition table.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration.
+
+    -- Returns
+    str
+        The SQL query to delete the configuration.
+    """
+
+    query = f"""
+    DELETE FROM {config_definition_key}
+    WHERE config_key = %s;
+    """
+
+    return query, (config_key,)

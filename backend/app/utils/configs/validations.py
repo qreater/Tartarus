@@ -9,6 +9,7 @@
 import jsonschema
 import re
 
+from app.utils.config_definitions.validations import validate_config_definition_key
 from app.utils.config_definitions.utils import r_config_definition
 
 
@@ -68,7 +69,24 @@ def validate_config_creation(
     data: dict
         The data for the configuration.
     """
+    validate_config_definition_key(config_definition_key)
     validate_config_key(config_key)
     validate_config_data(config_definition_key, data)
+
+    return None
+
+
+def validate_config_deletion(config_definition_key: str, config_key: str) -> None:
+    """
+    Validates the deletion of a configuration.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration.
+    """
+    validate_config_definition_key(config_definition_key)
+    validate_config_key(config_key)
 
     return None

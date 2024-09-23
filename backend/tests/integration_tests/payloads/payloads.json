@@ -91,5 +91,13 @@
         "expected_response": {
             "message": "Configuration created successfully."
         }
+    },
+    "test_delete_config": {
+        "method": "DELETE",
+        "url": "/api/v1/config_definition/test_config/config/test",
+        "expected_status": 200,
+        "expected_response": {
+            "message": "Configuration deleted successfully."
+        }
     }
 }

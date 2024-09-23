@@ -60,7 +60,24 @@
     },
     "read": {},
     "update": {},
-    "delete": {},
+    "delete": {
+      "test_delete_w_key": {
+        "config_key": "sample_config",
+        "config_definition_key": "sample_config_definition"
+      },
+      "test_delete_o_key": {
+        "config_key": "",
+        "config_definition_key": "sample_config_definition"
+      },
+      "test_delete_w_cd_key": {
+        "config_key": "sample_config",
+        "config_definition_key": "sample_config_definition"
+      },
+      "test_delete_o_cd_key": {
+        "config_key": "sample_config",
+        "config_definition_key": ""
+      }
+    },
     "list": {}
   }
   

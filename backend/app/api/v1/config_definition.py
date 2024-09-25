@@ -58,7 +58,7 @@ def get_config_definition(config_definition_key: str):
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     GetConfigDefinitionResponse
@@ -85,7 +85,7 @@ def update_config_definition(
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     config_definition: UpdateConfigDefinition
         The configuration definition to update.
 
@@ -109,7 +109,7 @@ def delete_config_definition(config_definition_key: str):
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     DeleteConfigDefinitionResponse

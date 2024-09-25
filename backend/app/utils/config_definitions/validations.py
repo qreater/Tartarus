@@ -13,18 +13,18 @@ from typing import Any, Dict, List
 
 def validate_config_definition_key(config_definition_key: str) -> None:
     """
-    Validates the configuration type key.
+    Validates the configuration definition key.
 
     -- Parameters
     config_definition_key: str
-        The configuration type key to validate.
+        The configuration definition key to validate.
 
     """
     if not config_definition_key:
-        raise ValueError("Configuration type key must be provided.")
+        raise ValueError("Configuration definition key must be provided.")
     if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_definition_key):
         raise ValueError(
-            "Configuration type key must start with a letter and contain only alphanumeric characters and underscores."
+            "Configuration definition key must start with a letter and contain only alphanumeric characters and underscores."
         )
 
 
@@ -114,7 +114,7 @@ def validate_config_creation(
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     json_schema: Dict[str, Any]
         The JSON Schema to validate against.
     indexes: List[str]
@@ -135,7 +135,7 @@ def validate_config_read(config_definition_key: str) -> None:
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     """
     validate_config_definition_key(config_definition_key)
@@ -164,7 +164,7 @@ def validate_config_delete(config_definition_key: str) -> None:
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     """
     validate_config_definition_key(config_definition_key)

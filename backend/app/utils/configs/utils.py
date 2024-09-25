@@ -20,11 +20,11 @@ data_store = DataStore()
 
 def c_config(config_definition_key: str, config_key: str, data: dict):
     """
-    Create a new configuration for the config definition.
+    Create a new configuration for the configuration definition.
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     config_key: str
         The key for the configuration.
     data: dict
@@ -43,7 +43,7 @@ def c_config(config_definition_key: str, config_key: str, data: dict):
 
 def d_config(config_definition_key: str, config_key: str):
     """
-    Delete a configuration from the config definition.
+    Delete a configuration from the configuration definition.
 
     -- Parameters
     config_definition_key: str

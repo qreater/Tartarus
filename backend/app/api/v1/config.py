@@ -26,7 +26,7 @@ def create_config(config_definition_key: str, config: CreateConfig):
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     config: CreateConfig
         The data for the configuration
 
@@ -54,7 +54,7 @@ def delete_config(config_definition_key: str, config_key: str):
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     config_key: str
         The key for the configuration
 

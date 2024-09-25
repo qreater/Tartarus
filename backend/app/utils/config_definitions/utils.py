@@ -38,11 +38,11 @@ def c_config_definition(config_definition_key: str, json_schema: dict, indexes: 
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     json_schema: dict
-        The JSON schema for the configuration type.
+        The JSON schema for the configuration definition.
     indexes: list
-        The indexes for the configuration type.
+        The indexes for the configuration definition.
 
     """
 
@@ -72,7 +72,7 @@ def r_config_definition(config_definition_key: str):
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     dict
@@ -96,9 +96,9 @@ def u_config_definition(config_definition_key: str, indexes: list):
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     indexes: list
-        The indexes for the configuration type.
+        The indexes for the configuration definition.
 
     """
 
@@ -136,7 +136,7 @@ def d_config_definition(config_definition_key: str):
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     None

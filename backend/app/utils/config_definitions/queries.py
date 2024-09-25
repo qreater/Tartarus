@@ -18,9 +18,9 @@ def internal_c_definition_query(
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     indexes: list
-        The indexes for the configuration type.
+        The indexes for the configuration definition.
 
     -- Returns
     str
@@ -47,9 +47,9 @@ def internal_u_definition_query(config_definition_key: str, indexes: list) -> tu
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     indexes: list
-        The indexes for the configuration type.
+        The indexes for the configuration definition.
 
     -- Returns
     tuple
@@ -75,7 +75,7 @@ def internal_d_definition_query(config_definition_key: str) -> tuple:
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     tuple
@@ -91,11 +91,11 @@ def internal_d_definition_query(config_definition_key: str) -> tuple:
 
 def c_index_query(config_definition_key: str, index: str) -> tuple:
     """
-    Create an index on a configuration type.
+    Create an index on a configuration definition.
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     index: str
         The index to create.
 
@@ -113,11 +113,11 @@ def c_index_query(config_definition_key: str, index: str) -> tuple:
 
 def d_index_query(config_definition_key: str, index: str) -> tuple:
     """
-    Remove an index on a configuration type.
+    Remove an index on a configuration definition.
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     index: str
         The index to remove.
 
@@ -134,11 +134,11 @@ def d_index_query(config_definition_key: str, index: str) -> tuple:
 
 def l_index_query(config_definition_key: str) -> tuple:
     """
-    List all indexes on a configuration type.
+    List all indexes on a configuration definition.
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     tuple
@@ -159,7 +159,7 @@ def c_config_definition_query(config_definition_key: str) -> tuple:
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     tuple
@@ -183,7 +183,7 @@ def r_config_definition_query(config_definition_key: str) -> tuple:
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     tuple
@@ -202,7 +202,7 @@ def d_config_definition_query(config_definition_key: str) -> tuple:
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
 
     -- Returns
     tuple

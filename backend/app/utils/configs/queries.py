@@ -14,11 +14,11 @@ from app.utils.settings.config import settings
 
 def c_config_query(config_definition_key: str, config_key: str, data: dict) -> tuple:
     """
-    Insert a new configuration definition in the internal table.
+    Insert a new configuration in the configuration table.
 
     -- Parameters
     config_definition_key: str
-        The key for the configuration type.
+        The key for the configuration definition.
     config_key: str
         The key for the configuration.
     data: dict
@@ -48,7 +48,7 @@ def c_config_query(config_definition_key: str, config_key: str, data: dict) -> t
 
 def d_config_query(config_definition_key: str, config_key: str) -> tuple:
     """
-    Delete a configuration from the configuration definition table.
+    Delete a configuration from the configuration table.
 
     -- Parameters
     config_definition_key: str

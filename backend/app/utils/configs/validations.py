@@ -86,6 +86,7 @@ def validate_config_deletion(config_definition_key: str, config_key: str) -> Non
     config_key: str
         The key for the configuration.
     """
+    r_config_definition(config_definition_key)
     validate_config_definition_key(config_definition_key)
     validate_config_key(config_key)
 

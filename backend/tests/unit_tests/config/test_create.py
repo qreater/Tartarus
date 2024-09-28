@@ -6,7 +6,7 @@
 
 """
 
-from unittest.mock import patch, MagicMock, ANY
+from unittest.mock import patch, MagicMock
 
 import pytest
 
@@ -19,10 +19,6 @@ with patch("app.utils.data.data_source.connect") as mock_connect:
     from app.utils.configs.utils import (
         c_config,
     )
-
-from app.utils.configs.queries import (
-    c_config_query,
-)
 
 from tests.unit_tests.config.payloads.payload_extractor import (
     extract_payload_params,
@@ -52,7 +48,7 @@ class TestConfigCreate:
         """
         Helper function to run c_config_definition and handle assertions.
         """
-        (config_definition_key, config_key, data, schema) = extract_payload_params(
+        (config_definition_key, config_key, data, schema, _) = extract_payload_params(
             payload_extract
         )
 
@@ -68,7 +64,7 @@ class TestConfigCreate:
         mock_execute_query.assert_called_once()
 
     @patch("app.utils.configs.validations.r_config_definition")
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_create_w_schema(
         self, mock_execute_query, mock_r_config_definition, get_payload
     ):
@@ -84,7 +80,7 @@ class TestConfigCreate:
         )
 
     @patch("app.utils.configs.validations.r_config_definition")
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_create_o_schema(
         self, mock_execute_query, mock_r_config_definition, get_payload
     ):
@@ -100,7 +96,7 @@ class TestConfigCreate:
         )
 
     @patch("app.utils.configs.validations.r_config_definition")
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_create_n_schema(
         self, mock_execute_query, mock_r_config_definition, get_payload
     ):

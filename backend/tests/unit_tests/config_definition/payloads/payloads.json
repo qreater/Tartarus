@@ -64,7 +64,11 @@
     },
     "read": {
       "test_read_w_key": {
-        "config_key": "sample_config"
+        "config_key": "sample_config",
+        "return_value": {
+          "rows_affected": 0, 
+          "response": [{"json_schema": "{'type': 'object'}"}]
+        }
       },
       "test_read_o_key": {
         "config_key": ""
@@ -73,29 +77,87 @@
     "update": {
       "test_update_w_index": {
         "config_key": "sample_config",
-        "indexes": ["name"]
+        "schema": {
+          "json_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              }
+            }
+          },
+          "index": ["date"]
+        },
+        "indexes": ["name"],
+        "return_value": {
+            "rows_affected": 0,
+            "response": [{"indexname": "date"}]
+        }
       },
       "test_update_d_index": {
         "config_key": "sample_config",
+        "schema": {
+          "json_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              }
+            }
+          },
+          "indexes": ["date"]
+        },
         "indexes": ["name", "name"]
       },
       "test_update_n_index": {
         "config_key": "sample_config",
+        "schema": {
+          "json_schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              }
+            }
+          },
+          "indexes": ["date"]
+        },
         "indexes": ["dog"]
       }
     },
     "delete": {
       "test_delete_w_key": {
-        "config_key": "sample_config"
+        "config_key": "sample_config",
+        "return_value": {
+            "rows_affected": 1, 
+            "response": [{}]
+        }
       },
       "test_delete_o_key": {
-        "config_key": ""
+        "config_key": "",
+        "return_value": {
+            "rows_affected": 0, 
+            "response": []
+        }
       }
     },
     "list": {
       "test_list_w_params": {
         "page": 1,
-        "page_size": 10
+        "page_size": 10,
+        "return_value": {
+          "rows_affected": 1,
+          "response": [{}]
+        }
       },
       "test_list_n_page": {
         "page": -1,

@@ -49,25 +49,25 @@ class TestConfigDefinitionRead:
             _,
             _,
             _,
+            return_value,
         ) = extract_payload_params(payload_extract)
 
         if expect_error:
             with pytest.raises(ValueError):
                 r_config_definition(config_key)
             mock_execute_query.assert_not_called()
-        else:
-            internal_query, internal_params = r_config_definition_query(config_key)
-            r_config_definition(config_key)
+            return
 
-            mock_execute_query.assert_called_once_with(
-                internal_query, params=internal_params, mode="retrieve"
-            )
+        mock_execute_query.return_value = return_value
+        internal_query, internal_params = r_config_definition_query(config_key)
 
-    @patch.object(
-        DataStore,
-        "_execute_query",
-        return_value=[{"json_schema": '{"type": "object"}'}],
-    )
+        r_config_definition(config_key)
+
+        mock_execute_query.assert_called_once_with(
+            internal_query, params=internal_params, mode="retrieve"
+        )
+
+    @patch.object(DataStore, "execute_query")
     def test_read_w_key(self, mock_execute_query, get_payload):
         """
         Test that the function retrieves a configuration definition with a given key.
@@ -77,11 +77,7 @@ class TestConfigDefinitionRead:
             payload_extract, mock_execute_query, expect_error=False
         )
 
-    @patch.object(
-        DataStore,
-        "_execute_query",
-        return_value=[{"json_schema": '{"type": "object"}'}],
-    )
+    @patch.object(DataStore, "execute_query")
     def test_read_o_key(self, mock_execute_query, get_payload):
         """
         Test that the function raises a ValueError if the config key is not given.

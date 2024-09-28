@@ -55,11 +55,12 @@ class TestConfigDefinitionUpdate:
 
         (
             config_key,
-            _,
+            schema,
             _,
             updated_indexes_list,
             _,
             _,
+            return_value,
         ) = extract_payload_params(payload_extract)
 
         if expect_error:
@@ -68,13 +69,7 @@ class TestConfigDefinitionUpdate:
             mock_execute_query.assert_not_called()
             return
 
-        mock_r_config_definition.return_value = {
-            "json_schema": {
-                "type": "object",
-                "properties": {"name": {"type": "string"}, "date": {"type": "string"}},
-            },
-            "indexes": ["date"],
-        }
+        mock_r_config_definition.return_value = schema
 
         internal_query, internal_params = internal_u_definition_query(
             config_key, updated_indexes_list
@@ -83,16 +78,7 @@ class TestConfigDefinitionUpdate:
         index_creation_query, index_creation_params = c_index_query(config_key, "name")
         index_deletion_query, index_deletion_params = d_index_query(config_key, "date")
 
-        def side_effect(query, params=None, mode=None):
-            if (
-                query == index_list_query
-                and params == index_list_params
-                and mode == "retrieve"
-            ):
-                return [{"indexname": "date"}]
-            return []
-
-        mock_execute_query.side_effect = side_effect
+        mock_execute_query.return_value = return_value
 
         u_config_definition(config_key, updated_indexes_list)
 
@@ -106,7 +92,7 @@ class TestConfigDefinitionUpdate:
         mock_execute_query.assert_any_call(internal_query, internal_params)
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_update_w_index(
         self, mock_execute_query, mock_r_config_definition, get_payload
     ):
@@ -123,7 +109,7 @@ class TestConfigDefinitionUpdate:
         )
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_update_d_index(
         self, mock_execute_query, mock_r_config_definition, get_payload
     ):
@@ -140,7 +126,7 @@ class TestConfigDefinitionUpdate:
         )
 
     @patch("app.utils.config_definitions.utils.r_config_definition")
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_update_n_index(self, mock_execute_query, mock_r_config_definition):
         """
         Test that the function raises an exception if the secondary index is not found.

@@ -30,42 +30,19 @@ class DataStore:
     def __del__(self):
         self._close_connection()
 
-    def _execute_query(self, query, params=(), mode="submit"):
-        """
-        Execute a SQL query using a cursor, with error handling and cleanup.
-        """
-        response = None
-        if not self.connection:
-            raise RuntimeError("No database connection defined!")
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(query, params)
-            if mode == "retrieve":
-                response = [
-                    dict(zip([column[0] for column in cursor.description], row))
-                    for row in cursor.fetchall()
-                ]
-            cursor.close()
-
-        except Exception as e:
-            logger.exception(f"Query execution failed: {e}")
-            raise e
-
-        return response
-
     def _create_internal_table(self):
         """
         Create the internal table to store the configuration
         """
         query = QUERY_CREATE_TABLE
-        self._execute_query(query)
+        self.execute_query(query)
 
     def _create_internal_indexes(self):
         """
         Create the indexes on the internal table
         """
         query = QUERY_CREATE_INDEX
-        self._execute_query(query)
+        self.execute_query(query)
 
     def _create_connection(self):
         """
@@ -99,3 +76,30 @@ class DataStore:
         if self.connection:
             self.connection.close()
             logger.info("DataStore Connection Closed!")
+
+    def execute_query(self, query, params=(), mode="submit") -> dict:
+        """
+        Execute a SQL query using a cursor, with error handling and cleanup.
+        """
+        response = None
+        if not self.connection:
+            raise RuntimeError("No database connection defined!")
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, params)
+            if mode == "retrieve":
+                response = [
+                    dict(zip([column[0] for column in cursor.description], row))
+                    for row in cursor.fetchall()
+                ]
+            rows_affected = cursor.rowcount
+            cursor.close()
+
+        except Exception as e:
+            logger.exception(f"Query execution failed: {e}")
+            raise e
+
+        return {
+            "rows_affected": rows_affected,
+            "response": response,
+        }

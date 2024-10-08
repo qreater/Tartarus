@@ -51,17 +51,17 @@ def c_config_definition(config_definition_key: str, json_schema: dict, indexes: 
     internal_query, internal_params = internal_c_definition_query(
         config_definition_key, json_schema, indexes
     )
-    data_store._execute_query(internal_query, internal_params)
+    data_store.execute_query(internal_query, internal_params)
 
     creation_query, creation_params = c_config_definition_query(config_definition_key)
-    data_store._execute_query(creation_query, creation_params)
+    data_store.execute_query(creation_query, creation_params)
 
     for index in indexes:
         index_query, index_params = c_index_query(config_definition_key, index)
-        data_store._execute_query(index_query, index_params)
+        data_store.execute_query(index_query, index_params)
 
     index_query, index_params = c_index_query(config_definition_key, index)
-    data_store._execute_query(index_query, index_params)
+    data_store.execute_query(index_query, index_params)
 
     return None
 
@@ -82,7 +82,7 @@ def r_config_definition(config_definition_key: str):
     validate_config_read(config_definition_key)
 
     query, params = r_config_definition_query(config_definition_key)
-    result = data_store._execute_query(query, params=params, mode="retrieve")
+    result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
     if len(result) == 0 or result is None:
         raise ValueError("Configuration definition not found.")
@@ -110,22 +110,24 @@ def u_config_definition(config_definition_key: str, indexes: list):
     internal_query, internal_params = internal_u_definition_query(
         config_definition_key, indexes
     )
-    data_store._execute_query(internal_query, internal_params)
+    data_store.execute_query(internal_query, internal_params)
 
     list_query, list_params = l_index_query(config_definition_key)
 
-    result = data_store._execute_query(list_query, params=list_params, mode="retrieve")
+    result = data_store.execute_query(list_query, params=list_params, mode="retrieve")[
+        "response"
+    ]
     existing_indexes = [index["indexname"] for index in result]
 
     for index in indexes:
         if index not in existing_indexes:
             index_query, index_params = c_index_query(config_definition_key, index)
-            data_store._execute_query(index_query, index_params)
+            data_store.execute_query(index_query, index_params)
 
     for index in existing_indexes:
         if index not in indexes:
             index_query, index_params = d_index_query(config_definition_key, index)
-            data_store._execute_query(index_query, index_params)
+            data_store.execute_query(index_query, index_params)
 
     return None
 
@@ -145,10 +147,15 @@ def d_config_definition(config_definition_key: str):
     validate_config_delete(config_definition_key)
 
     internal_query, internal_params = internal_d_definition_query(config_definition_key)
-    data_store._execute_query(internal_query, internal_params)
+    rows_affected = data_store.execute_query(internal_query, internal_params)[
+        "rows_affected"
+    ]
+
+    if rows_affected == 0:
+        raise ValueError("Configuration definition not found.")
 
     delete_query, delete_params = d_config_definition_query(config_definition_key)
-    data_store._execute_query(delete_query, delete_params)
+    data_store.execute_query(delete_query, delete_params)
 
     return None
 
@@ -171,6 +178,6 @@ def l_config_definition(page: int = 1, page_size: int = 10):
     validate_list_params(page, page_size)
 
     query, params = l_config_definition_query(page, page_size)
-    result = data_store._execute_query(query, params=params, mode="retrieve")
+    result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
     return result

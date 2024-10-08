@@ -63,19 +63,35 @@
     "delete": {
       "test_delete_w_key": {
         "config_key": "sample_config",
-        "config_definition_key": "sample_config_definition"
+        "config_definition_key": "sample_config_definition",
+        "return_value": {
+          "rows_affected": 1,
+          "response": [{}]
+        }
       },
       "test_delete_o_key": {
         "config_key": "",
-        "config_definition_key": "sample_config_definition"
+        "config_definition_key": "sample_config_definition",
+        "return_value": {
+          "rows_affected": 0,
+          "response": []
+        }
       },
       "test_delete_w_cd_key": {
         "config_key": "sample_config",
-        "config_definition_key": "sample_config_definition"
+        "config_definition_key": "sample_config_definition",
+        "return_value": {
+          "rows_affected": 1,
+          "response": [{}]
+        }
       },
       "test_delete_o_cd_key": {
         "config_key": "sample_config",
-        "config_definition_key": ""
+        "config_definition_key": "",
+        "return_value": {
+          "rows_affected": 0,
+          "response": []
+        }
       }
     },
     "list": {}

@@ -44,4 +44,6 @@ def extract_payload_params(payload):
     data = payload.get("data")
     schema = payload.get("schema", {})
 
-    return (config_definition_key, config_key, data, schema)
+    return_value = payload.get("return_value")
+
+    return (config_definition_key, config_key, data, schema, return_value)

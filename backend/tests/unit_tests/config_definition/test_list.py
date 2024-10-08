@@ -52,6 +52,7 @@ class TestConfigDefinitionList:
             _,
             page_number,
             items_per_page,
+            return_value,
         ) = extract_payload_params(payload_extract)
 
         if expect_error:
@@ -60,16 +61,18 @@ class TestConfigDefinitionList:
             mock_execute_query.assert_not_called()
             return
 
+        mock_execute_query.return_value = return_value
         internal_query, internal_params = l_config_definition_query(
             page_number, items_per_page
         )
+
         l_config_definition(page_number, items_per_page)
 
         mock_execute_query.assert_called_once_with(
             internal_query, params=internal_params, mode="retrieve"
         )
 
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_list_w_params(self, mock_execute_query, get_payload):
         """
         Test that the function lists configuration definitions with a valid page number and items per page.
@@ -79,7 +82,7 @@ class TestConfigDefinitionList:
             payload_extract, mock_execute_query, expect_error=False
         )
 
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_list_n_page(self, mock_execute_query, get_payload):
         """
         Test that the function raises an exception when given an invalid page number.
@@ -89,7 +92,7 @@ class TestConfigDefinitionList:
             payload_extract, mock_execute_query, expect_error=True
         )
 
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_list_n_nlimit(self, mock_execute_query, get_payload):
         """
         Test that the function raises an exception when given an invalid page size.
@@ -99,7 +102,7 @@ class TestConfigDefinitionList:
             payload_extract, mock_execute_query, expect_error=True
         )
 
-    @patch.object(DataStore, "_execute_query")
+    @patch.object(DataStore, "execute_query")
     def test_list_n_plimit(self, mock_execute_query, get_payload):
         """
         Test that the function raises an exception when given an excessive page size.

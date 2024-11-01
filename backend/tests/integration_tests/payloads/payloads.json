@@ -92,6 +92,11 @@
             "message": "Configuration created successfully."
         }
     },
+    "test_get_config": {
+        "method": "GET",
+        "url": "/api/v1/config_definition/test_config/config/test",
+        "expected_status": 200
+    },
     "test_delete_config": {
         "method": "DELETE",
         "url": "/api/v1/config_definition/test_config/config/test",
@@ -99,5 +104,14 @@
         "expected_response": {
             "message": "Configuration deleted successfully."
         }
+    },
+    "test_list_configs": {
+        "method": "GET",
+        "url": "/api/v1/config_definition/test_config/config",
+        "query": {
+            "page": 1,
+            "limit": 10
+        },
+        "expected_status": 200
     }
 }

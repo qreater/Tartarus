@@ -28,7 +28,7 @@ from tests.unit_tests.config.payloads.payload_extractor import (
 
 class TestConfigCreate:
     """
-    Test suite for the config definition creation functions.
+    Test suite for the config creation functions.
     """
 
     @pytest.fixture(scope="class")
@@ -38,7 +38,7 @@ class TestConfigCreate:
         """
         return extract_payload()["create"]
 
-    def _run_c_config_definition(
+    def _run_c_config(
         self,
         payload_extract,
         mock_execute_query,
@@ -46,7 +46,7 @@ class TestConfigCreate:
         expect_error=False,
     ):
         """
-        Helper function to run c_config_definition and handle assertions.
+        Helper function to run c_config and handle assertions.
         """
         (config_definition_key, config_key, data, schema, _) = extract_payload_params(
             payload_extract
@@ -69,10 +69,10 @@ class TestConfigCreate:
         self, mock_execute_query, mock_r_config_definition, get_payload
     ):
         """
-        Test that the function creates a new configuration definition with a schema.
+        Test that the function creates a new configuration with schema.
         """
         payload_extract = get_payload["test_create_w_schema"]
-        self._run_c_config_definition(
+        self._run_c_config(
             payload_extract,
             mock_execute_query,
             mock_r_config_definition,
@@ -85,10 +85,10 @@ class TestConfigCreate:
         self, mock_execute_query, mock_r_config_definition, get_payload
     ):
         """
-        Test that the function creates a new configuration definition without a schema.
+        Test that the function creates a new configuration without a schema.
         """
         payload_extract = get_payload["test_create_o_schema"]
-        self._run_c_config_definition(
+        self._run_c_config(
             payload_extract,
             mock_execute_query,
             mock_r_config_definition,
@@ -104,7 +104,7 @@ class TestConfigCreate:
         Test that the function raises an exception if the schema is invalid.
         """
         payload_extract = get_payload["test_create_n_schema"]
-        self._run_c_config_definition(
+        self._run_c_config(
             payload_extract,
             mock_execute_query,
             mock_r_config_definition,

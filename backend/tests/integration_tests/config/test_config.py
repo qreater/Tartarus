@@ -69,9 +69,23 @@ class TestConfigIntegration:
         payload_extract = get_payload["test_create_config"]
         self._run_test(payload_extract)
 
+    def test_get_config(self, get_payload):
+        """
+        Test the retrieval of a configuration.
+        """
+        payload_extract = get_payload["test_get_config"]
+        self._run_test(payload_extract)
+
     def test_delete_config(self, get_payload):
         """
         Test deletion of a configuration.
         """
         payload_extract = get_payload["test_delete_config"]
+        self._run_test(payload_extract)
+
+    def test_list_configs(self, get_payload):
+        """
+        Test listing of all configurations.
+        """
+        payload_extract = get_payload["test_list_configs"]
         self._run_test(payload_extract)

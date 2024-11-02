@@ -130,6 +130,12 @@ def list_config_definition(page: int = 1, limit: int = 10):
     """
     List all configuration definitions.
 
+    -- Parameters
+    page: int
+        The page number.
+    limit: int
+        The limit for the number of configuration definitions to return.
+
     -- Returns
     ListConfigDefinitionResponse
         The response for the list configuration definition request.

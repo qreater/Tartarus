@@ -9,7 +9,10 @@
 import jsonschema
 import re
 
-from app.utils.config_definitions.validations import validate_config_definition_key
+from app.utils.config_definitions.validations import (
+    validate_config_definition_key,
+    validate_list_params,
+)
 from app.utils.config_definitions.utils import r_config_definition
 
 
@@ -26,7 +29,7 @@ def validate_config_key(config_key: str) -> None:
         raise ValueError("Configuration key must be provided.")
     if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_key):
         raise ValueError(
-            "Configuration key must start with a letter and contain only alphanumeric characters and underscores."
+            "Configuration key must start with a letter and contain only alphanumeric characters and underscores and be at least 3 characters long."
         )
 
 
@@ -76,6 +79,22 @@ def validate_config_creation(
     return None
 
 
+def validate_config_read(config_definition_key: str, config_key: str) -> None:
+    """
+    Validates the retrieval of a configuration.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration.
+    """
+    r_config_definition(config_definition_key)
+    validate_config_key(config_key)
+
+    return None
+
+
 def validate_config_deletion(config_definition_key: str, config_key: str) -> None:
     """
     Validates the deletion of a configuration.
@@ -87,7 +106,24 @@ def validate_config_deletion(config_definition_key: str, config_key: str) -> Non
         The key for the configuration.
     """
     r_config_definition(config_definition_key)
-    validate_config_definition_key(config_definition_key)
     validate_config_key(config_key)
+
+    return None
+
+
+def validate_config_list(config_definition_key: str, page: int, page_size: int) -> None:
+    """
+    Validates the listing of configurations.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    page: int
+        The page number.
+    page_size: int
+        The number of configurations to list per page.
+    """
+    validate_list_params(page, page_size)
+    r_config_definition(config_definition_key)
 
     return None

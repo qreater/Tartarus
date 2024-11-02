@@ -19,6 +19,8 @@ def internal_c_definition_query(
     -- Parameters
     config_definition_key: str
         The key for the configuration definition.
+    json_schema: dict
+        The JSON schema for the configuration definition.
     indexes: list
         The indexes for the configuration definition.
 
@@ -191,7 +193,8 @@ def r_config_definition_query(config_definition_key: str) -> tuple:
     """
     get_query = f"""
     SELECT * FROM {settings.INTERNAL_TABLE}
-    WHERE config_definition_key = %s;
+    WHERE config_definition_key = %s
+    LIMIT 1;
     """
     return get_query, (config_definition_key,)
 

@@ -165,10 +165,10 @@ def l_config_definition(page: int = 1, page_size: int = 10):
     List configuration definitions from the internal table.
 
     -- Parameters
-    page: int
-        The page number.
-    page_size: int
-        The number of items per page.
+    page: int, optional
+        The page number. Defaults to 1.
+    page_size: int, optional
+        The number of items per page. Defaults to 10.
 
     -- Returns
     list

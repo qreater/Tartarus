@@ -24,7 +24,8 @@ def validate_config_definition_key(config_definition_key: str) -> None:
         raise ValueError("Configuration definition key must be provided.")
     if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_definition_key):
         raise ValueError(
-            "Configuration definition key must start with a letter and contain only alphanumeric characters and underscores."
+            "Configuration definition key must start with a letter and contain only alphanumeric "
+            "characters and underscores and be at least 3 characters long."
         )
 
 

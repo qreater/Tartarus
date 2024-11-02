@@ -6,11 +6,18 @@
 
 """
 
-from app.utils.configs.queries import c_config_query, d_config_query
+from app.utils.configs.queries import (
+    c_config_query,
+    r_config_query,
+    d_config_query,
+    l_config_query,
+)
 
 from app.utils.configs.validations import (
     validate_config_creation,
+    validate_config_read,
     validate_config_deletion,
+    validate_config_list,
 )
 
 from app.utils.data.data_source import DataStore
@@ -41,6 +48,32 @@ def c_config(config_definition_key: str, config_key: str, data: dict):
     return None
 
 
+def r_config(config_definition_key: str, config_key: str):
+    """
+    Retrieve a configuration from the configuration definition.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration.
+
+    -- Returns
+    dict
+        The configuration data.
+    """
+
+    validate_config_read(config_definition_key, config_key)
+
+    query, params = r_config_query(config_definition_key, config_key)
+    result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
+
+    if len(result) == 0 or result is None:
+        raise ValueError("Configuration not found.")
+
+    return result[0]
+
+
 def d_config(config_definition_key: str, config_key: str):
     """
     Delete a configuration from the configuration definition.
@@ -63,3 +96,28 @@ def d_config(config_definition_key: str, config_key: str):
         raise ValueError("Configuration not found.")
 
     return None
+
+
+def l_config(config_definition_key: str, page: int = 1, page_size: int = 10):
+    """
+    List all configurations for a configuration definition.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    page: int, optional
+        The page number. Defaults to 1.
+    page_size: int, optional
+        The number of configurations to list per page. Defaults to 10.
+
+    -- Returns
+    list
+        The configurations.
+    """
+
+    validate_config_list(config_definition_key, page, page_size)
+
+    query, params = l_config_query(config_definition_key, page, page_size)
+    result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
+
+    return result

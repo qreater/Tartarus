@@ -46,6 +46,36 @@ def c_config_query(config_definition_key: str, config_key: str, data: dict) -> t
     )
 
 
+def r_config_query(config_definition_key: str, config_key: str) -> tuple:
+    """
+    Retrieve a configuration from the configuration table.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration.
+
+    -- Returns
+    str
+        The SQL query to retrieve the configuration.
+    """
+
+    query = f"""
+    SELECT
+    config_key,
+    data AS config_data,
+    created_at,
+    modified_at
+
+    FROM {config_definition_key}
+    WHERE config_key = %s
+    LIMIT 1;
+    """
+
+    return query, (config_key,)
+
+
 def d_config_query(config_definition_key: str, config_key: str) -> tuple:
     """
     Delete a configuration from the configuration table.
@@ -67,3 +97,37 @@ def d_config_query(config_definition_key: str, config_key: str) -> tuple:
     """
 
     return query, (config_key,)
+
+
+def l_config_query(
+    config_definition_key: str, page: int = 1, page_size: int = 10
+) -> tuple:
+    """
+    List all configurations for a configuration definition.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    page: int, optional
+        The page number. Defaults to 1.
+    page_size: int, optional
+        The number of configurations to list per page. Defaults to 10.
+
+    -- Returns
+    str
+        The SQL query to list the configurations.
+    """
+
+    query = f"""
+    SELECT 
+    config_key,
+    data AS config_data,
+    created_at,
+    modified_at
+
+    FROM {config_definition_key}
+    LIMIT %s OFFSET %s;
+    """
+
+    offset = page_size * (page - 1)
+    return query, (page_size, offset)

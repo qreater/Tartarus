@@ -32,3 +32,25 @@ class CreateConfig(BaseModel):
             },
         }
     )
+
+
+class UpdateConfig(BaseModel):
+    """
+    Represents the configuration for a configuration definition.
+    """
+
+    data: Dict[str, Any] = Field(..., description="The data for the configuration.")
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "data": {
+                    "setting_string": "value",
+                    "setting_object": {
+                        "first_key": "value",
+                        "second_key": 1,
+                    },
+                },
+            },
+        }
+    )

@@ -127,3 +127,24 @@ def validate_config_list(config_definition_key: str, page: int, page_size: int) 
     r_config_definition(config_definition_key)
 
     return None
+
+
+def validate_config_update(
+    config_definition_key: str, config_key: str, data: dict
+) -> None:
+    """
+    Validates the update of an existing configuration.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration to be updated.
+    data: dict
+        The updated data for the configuration.
+    """
+    validate_config_definition_key(config_definition_key)
+    validate_config_key(config_key)
+    validate_config_data(config_definition_key, data)
+
+    return None

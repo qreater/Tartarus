@@ -131,3 +131,36 @@ def l_config_query(
 
     offset = page_size * (page - 1)
     return query, (page_size, offset)
+
+
+def u_config_query(config_definition_key: str, config_key: str, data: dict) -> tuple:
+    """
+    Update an existing configuration in the configuration table.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration to be updated.
+    data: dict
+        The updated data for the configuration.
+
+    -- Returns
+    tuple
+        The SQL query and its parameters to update the configuration.
+    """
+
+    data_str = json.dumps(data)
+    modified_at = datetime.datetime.now()
+
+    query = f"""
+    UPDATE {config_definition_key}
+    SET data = %s, modified_at = %s
+    WHERE config_key = %s;
+    """
+
+    return query, (
+        data_str,
+        modified_at,
+        config_key,
+    )

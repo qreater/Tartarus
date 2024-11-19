@@ -116,7 +116,42 @@
         "config_key": "sample_config"
       }
     },
-    "update": {},
+  
+    "update": {
+        "test_update_w_schema": {
+            "config_definition_key": "sample_config_definition",
+            "config_key": "sample_config",
+            "data": {
+              "key1": "value1", 
+              "key2": "value2"
+            },
+            "schema": {
+              "type": "object", 
+              "properties": {
+                "key1": {
+                  "type": "string"
+                  }, 
+                "key2": {
+                    "type": "string"
+                  }
+                }},
+            "rows_affected": 1
+        },
+        "test_update_o_schema": {
+            "config_definition_key": "sample_config_definition",
+            "config_key":"sample_config",
+            "data": {},
+            "schema": {},
+            "rows_affected": 0
+        },
+        "test_update_o_key": {
+            "config_definition_key": "sample_config_definition",
+            "config_key": "",
+            "data": {"key1": "value1", "key2": "value2"},
+            "schema": {"type": "object", "properties": {"key1": {"type": "string"}, "key2": {"type": "string"}}},
+            "rows_affected": 0
+        }
+    },
     "delete": {
       "test_delete_w_key": {
         "config_key": "sample_config",

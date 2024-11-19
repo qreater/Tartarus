@@ -11,6 +11,7 @@ from app.utils.configs.queries import (
     r_config_query,
     d_config_query,
     l_config_query,
+    u_config_query,
 )
 
 from app.utils.configs.validations import (
@@ -18,6 +19,7 @@ from app.utils.configs.validations import (
     validate_config_read,
     validate_config_deletion,
     validate_config_list,
+    validate_config_update,
 )
 
 from app.utils.data.data_source import DataStore
@@ -121,3 +123,29 @@ def l_config(config_definition_key: str, page: int = 1, page_size: int = 10):
     result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
     return result
+
+
+def u_config(config_definition_key: str, config_key: str, data: dict):
+    """
+    Update an existing configuration for the configuration definition.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration to be updated.
+    data: dict
+        The updated data for the configuration.
+    """
+
+    validate_config_update(config_definition_key, config_key, data)
+
+    update_query, update_params = u_config_query(
+        config_definition_key, config_key, data
+    )
+    rows_affected = data_store.execute_query(update_query, update_params)
+
+    if rows_affected == 0:
+        raise ValueError(f"Configuration with key '{config_key}' not found.")
+
+    return None

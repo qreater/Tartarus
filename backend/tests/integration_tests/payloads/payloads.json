@@ -113,5 +113,19 @@
             "limit": 10
         },
         "expected_status": 200
+    },
+    "test_update_config": {
+        "method": "PUT",
+        "url": "/api/v1/config_definition/test_config/config/test",
+        "payload": {
+            "data": {
+                "name": "test",
+                "date": "2020-02-01"
+            }
+        },
+        "expected_status": 200,
+        "expected_response": {
+            "message": "Configuration updated successfully."
+        }
     }
 }

@@ -89,3 +89,10 @@ class TestConfigIntegration:
         """
         payload_extract = get_payload["test_list_configs"]
         self._run_test(payload_extract)
+
+    def test_update_config(self, get_payload):
+        """
+        Test updating of a configuration.
+        """
+        payload_extract = get_payload["test_update_config"]
+        self._run_test(payload_extract)

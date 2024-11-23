@@ -48,11 +48,16 @@ class TestConfigUpdate:
         """
         Helper function to run u_config and handle assertions.
         """
-        (config_definition_key, config_key, data, schema, rows_affected) = (
-            extract_payload_params(payload_extract)
-        )
+        (
+            config_definition_key,
+            config_key,
+            data,
+            schema,
+            _,
+        ) = extract_payload_params(payload_extract)
 
         mock_r_config_definition.return_value = schema
+        mock_execute_query.return_value = payload_extract
 
         if expect_error:
             with pytest.raises(ValueError):

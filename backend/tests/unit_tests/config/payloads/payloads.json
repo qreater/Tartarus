@@ -134,7 +134,8 @@
                 "key2": {
                     "type": "string"
                   }
-                }},
+                }
+              },
             "rows_affected": 1
         },
         "test_update_o_schema": {

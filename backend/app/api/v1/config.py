@@ -77,6 +77,39 @@ def get_config(config_definition_key: str, config_key: str):
     }
 
 
+@router.put("/{config_key}")
+def update_config(config_definition_key: str, config_key: str, config: UpdateConfig):
+    """
+    Update an existing configuration.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration to be updated.
+    config: UpdateConfig
+        The updated data for the configuration.
+
+    -- Returns
+    dict
+        A success message.
+    """
+    try:
+        u_config(
+            config_definition_key,
+            config_key,
+            config.data,
+        )
+    except ValueError as e:
+        logger.warning(f"Configuration not found: {e}")
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        logger.exception(f"Error updating configuration: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return {"message": "Configuration updated successfully."}
+
+
 @router.delete("/{config_key}")
 def delete_config(config_definition_key: str, config_key: str):
     """
@@ -136,34 +169,3 @@ def list_configs(config_definition_key: str, page: int = 1, limit: int = 10):
         "message": "Configurations listed successfully.",
         "data": configs,
     }
-
-
-@router.put("/{config_key}")
-def update_config(config_definition_key: str, config_key: str, config: UpdateConfig):
-    """
-    Update an existing configuration.
-
-    -- Parameters
-    config_definition_key: str
-        The key for the configuration definition.
-    config: UpdateConfig
-        The updated data for the configuration.
-
-    -- Returns
-    dict
-        A success message.
-    """
-    try:
-        u_config(
-            config_definition_key,
-            config_key,
-            config.data,
-        )
-    except ValueError as e:
-        logger.warning(f"Configuration not found: {e}")
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        logger.exception(f"Error updating configuration: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-    return {"message": "Configuration updated successfully."}

@@ -57,7 +57,6 @@ class TestConfigUpdate:
         ) = extract_payload_params(payload_extract)
 
         mock_r_config_definition.return_value = schema
-        mock_execute_query.return_value = payload_extract
 
         if expect_error:
             with pytest.raises(ValueError):
@@ -65,6 +64,7 @@ class TestConfigUpdate:
             mock_execute_query.assert_not_called()
             return
 
+        mock_execute_query.return_value = payload_extract
         u_config(config_definition_key, config_key, data)
         mock_execute_query.assert_called_once()
 
@@ -109,6 +109,22 @@ class TestConfigUpdate:
         Test that the function raises an exception if the schema is invalid.
         """
         payload_extract = get_payload["test_update_o_schema"]
+        self._run_u_config(
+            payload_extract,
+            mock_execute_query,
+            mock_r_config_definition,
+            expect_error=True,
+        )
+
+    @patch("app.utils.configs.validations.r_config_definition")
+    @patch.object(DataStore, "execute_query")
+    def test_update_n_schema(
+        self, mock_execute_query, mock_r_config_definition, get_payload
+    ):
+        """
+        Test that the function updates an existing configuration with invalid schema.
+        """
+        payload_extract = get_payload["test_update_n_schema"]
         self._run_u_config(
             payload_extract,
             mock_execute_query,

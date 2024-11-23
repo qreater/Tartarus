@@ -1,252 +1,282 @@
 {
-    "create": {
-      "test_create_w_schema": {
-        "config_definition_key": "sample_config_definition",
-        "config_key": "sample_config",
-        "data": {
-          "name": "test_create_w_schema",
-          "date": "2018-01-01"
-        },
-        "schema": {
-          "json_schema": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "date": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "name",
-              "date"
-            ]
-          }
-        }
+  "create": {
+    "test_create_w_schema": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "sample_config",
+      "data": {
+        "name": "test_create_w_schema",
+        "date": "2018-01-01"
       },
-      "test_create_o_schema": {
-        "config_definition_key": "sample_config_definition",
-        "config_key": "sample_config",
-        "data": {
-          "name": "test_create_wo_schema",
-          "date": "2018-01-01"
-        }
-      },
-      "test_create_n_schema": {
-        "config_definition_key": "sample_config_definition",
-        "config_key": "sample_config",
-        "data": {
-          "name": "test_create_n_schema"
-        },
-        "schema": {
-          "json_schema": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "date": {
-                "type": "string"
-              }
+      "schema": {
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
             },
-            "required": [
-              "name",
-              "date"
-            ]
-          }
+            "date": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "date"]
         }
       }
     },
-    "read": {
-      "test_read_w_key": {
-        "config_definition_key": "sample_config_definition",
-        "config_key": "sample_config",
-        "schema": {
-          "response": [{
-            "json_schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "date": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "name",
-                "date"
-              ]
-            }
-          }],
-          "rows_affected": 0
-        },
-        "return_value": {
-          "rows_affected": 0, 
-          "response": [{"data": {"name": "test_read_w_key", "date": "2018-01-01"}}]
-        }
-      },
-      "test_read_o_key": {
-        "config_definition_key": "sample_config_definition",
-        "config_key": "",
-        "schema": {
-          "response": [{
-            "json_schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "date": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "name",
-                "date"
-              ]
-            }
-          }],
-          "rows_affected": 0
-        }
-      },
-      "test_read_o_cd_key": {
-        "config_definition_key": "",
-        "config_key": "sample_config"
+    "test_create_o_schema": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "sample_config",
+      "data": {
+        "name": "test_create_wo_schema",
+        "date": "2018-01-01"
       }
     },
-  
-    "update": {
-        "test_update_w_schema": {
-            "config_definition_key": "sample_config_definition",
-            "config_key": "sample_config",
-            "data": {
-              "key1": "value1", 
-              "key2": "value2"
+    "test_create_n_schema": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "sample_config",
+      "data": {
+        "name": "test_create_n_schema"
+      },
+      "schema": {
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
             },
-            "schema": {
-              "type": "object", 
-              "properties": {
-                "key1": {
-                  "type": "string"
-                  }, 
-                "key2": {
-                    "type": "string"
-                  }
-                }
-              },
-            "rows_affected": 1
-        },
-        "test_update_o_schema": {
-            "config_definition_key": "sample_config_definition",
-            "config_key":"sample_config",
-            "data": {},
-            "schema": {},
-            "rows_affected": 0
-        },
-        "test_update_o_key": {
-            "config_definition_key": "sample_config_definition",
-            "config_key": "",
-            "data": {"key1": "value1", "key2": "value2"},
-            "schema": {"type": "object", "properties": {"key1": {"type": "string"}, "key2": {"type": "string"}}},
-            "rows_affected": 0
-        }
-    },
-    "delete": {
-      "test_delete_w_key": {
-        "config_key": "sample_config",
-        "config_definition_key": "sample_config_definition",
-        "return_value": {
-          "rows_affected": 1,
-          "response": [{}]
-        }
-      },
-      "test_delete_o_key": {
-        "config_key": "",
-        "config_definition_key": "sample_config_definition",
-        "return_value": {
-          "rows_affected": 0,
-          "response": []
-        }
-      },
-      "test_delete_w_cd_key": {
-        "config_key": "sample_config",
-        "config_definition_key": "sample_config_definition",
-        "return_value": {
-          "rows_affected": 1,
-          "response": [{}]
-        }
-      },
-      "test_delete_o_cd_key": {
-        "config_key": "sample_config",
-        "config_definition_key": "",
-        "return_value": {
-          "rows_affected": 0,
-          "response": []
-        }
-      }
-    },
-    "list": {
-      "test_list_w_cd_key": {
-        "config_definition_key": "sample_config_definition",
-        "data": {
-          "page": 1,
-          "page_size": 10
-        },
-        "schema": {
-          "response": [{
-            "json_schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "date": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "name",
-                "date"
-              ]
+            "date": {
+              "type": "string"
             }
-          }],
-          "rows_affected": 0
-        },
-        "return_value": {
-          "rows_affected": 0,
-          "response": [{"data": {"name": "test_list_w_cd_key", "date": "2018-01-01"}}]
-        }
-      },
-      "test_list_o_cd_key": {
-        "config_definition_key": "",
-        "data": {
-          "page": 1,
-          "page_size": 10
-        }
-      },
-      "test_list_n_page": {
-        "config_definition_key": "sample_config_definition",
-        "data": {
-          "page": -1,
-          "page_size": 10
-        }
-      },
-      "test_list_n_nlimit": {
-        "config_definition_key": "sample_config_definition",
-        "data": {
-          "page": 1,
-          "page_size": -1
-        }
-      },
-      "test_list_n_plimit": {
-        "config_definition_key": "sample_config_definition",
-        "data": {
-          "page": 1,
-          "page_size": 101
+          },
+          "required": ["name", "date"]
         }
       }
     }
+  },
+  "read": {
+    "test_read_w_key": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "sample_config",
+      "schema": {
+        "response": [
+          {
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": ["name", "date"]
+            }
+          }
+        ],
+        "rows_affected": 0
+      },
+      "return_value": {
+        "rows_affected": 0,
+        "response": [
+          { "data": { "name": "test_read_w_key", "date": "2018-01-01" } }
+        ]
+      }
+    },
+    "test_read_o_key": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "",
+      "schema": {
+        "response": [
+          {
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": ["name", "date"]
+            }
+          }
+        ],
+        "rows_affected": 0
+      }
+    },
+    "test_read_o_cd_key": {
+      "config_definition_key": "",
+      "config_key": "sample_config"
+    }
+  },
+
+  "update": {
+    "test_update_w_schema": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "sample_config",
+      "data": {
+        "name": "value1",
+        "date": "value2"
+      },
+      "schema": {
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "date"]
+        }
+      },
+      "rows_affected": 1
+    },
+    "test_update_o_key": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "",
+      "data": { "name": "value1", "date": "value2" },
+      "schema": {
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "date"]
+        }
+      },
+      "rows_affected": 0
+    },
+    "test_update_o_schema": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "sample_config",
+      "data": {},
+      "schema": {},
+      "rows_affected": 0
+    },
+    "test_update_n_schema": {
+      "config_definition_key": "sample_config_definition",
+      "config_key": "sample_config",
+      "data": { "name": "value1" },
+      "schema": {
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          },
+          "required": ["name", "date"]
+        }
+      },
+      "rows_affected": 0
+    }
+  },
+  "delete": {
+    "test_delete_w_key": {
+      "config_key": "sample_config",
+      "config_definition_key": "sample_config_definition",
+      "return_value": {
+        "rows_affected": 1,
+        "response": [{}]
+      }
+    },
+    "test_delete_o_key": {
+      "config_key": "",
+      "config_definition_key": "sample_config_definition",
+      "return_value": {
+        "rows_affected": 0,
+        "response": []
+      }
+    },
+    "test_delete_w_cd_key": {
+      "config_key": "sample_config",
+      "config_definition_key": "sample_config_definition",
+      "return_value": {
+        "rows_affected": 1,
+        "response": [{}]
+      }
+    },
+    "test_delete_o_cd_key": {
+      "config_key": "sample_config",
+      "config_definition_key": "",
+      "return_value": {
+        "rows_affected": 0,
+        "response": []
+      }
+    }
+  },
+  "list": {
+    "test_list_w_cd_key": {
+      "config_definition_key": "sample_config_definition",
+      "data": {
+        "page": 1,
+        "page_size": 10
+      },
+      "schema": {
+        "response": [
+          {
+            "json_schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": ["name", "date"]
+            }
+          }
+        ],
+        "rows_affected": 0
+      },
+      "return_value": {
+        "rows_affected": 0,
+        "response": [
+          { "data": { "name": "test_list_w_cd_key", "date": "2018-01-01" } }
+        ]
+      }
+    },
+    "test_list_o_cd_key": {
+      "config_definition_key": "",
+      "data": {
+        "page": 1,
+        "page_size": 10
+      }
+    },
+    "test_list_n_page": {
+      "config_definition_key": "sample_config_definition",
+      "data": {
+        "page": -1,
+        "page_size": 10
+      }
+    },
+    "test_list_n_nlimit": {
+      "config_definition_key": "sample_config_definition",
+      "data": {
+        "page": 1,
+        "page_size": -1
+      }
+    },
+    "test_list_n_plimit": {
+      "config_definition_key": "sample_config_definition",
+      "data": {
+        "page": 1,
+        "page_size": 101
+      }
+    }
   }
-  
+}

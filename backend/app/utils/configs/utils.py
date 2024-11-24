@@ -11,6 +11,7 @@ from app.utils.configs.queries import (
     r_config_query,
     d_config_query,
     l_config_query,
+    u_config_query,
 )
 
 from app.utils.configs.validations import (
@@ -18,6 +19,7 @@ from app.utils.configs.validations import (
     validate_config_read,
     validate_config_deletion,
     validate_config_list,
+    validate_config_update,
 )
 
 from app.utils.data.data_source import DataStore
@@ -74,6 +76,34 @@ def r_config(config_definition_key: str, config_key: str):
     return result[0]
 
 
+def u_config(config_definition_key: str, config_key: str, data: dict):
+    """
+    Update an existing configuration for the configuration definition.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration to be updated.
+    data: dict
+        The updated data for the configuration.
+    """
+
+    validate_config_update(config_definition_key, config_key, data)
+
+    update_query, update_params = u_config_query(
+        config_definition_key, config_key, data
+    )
+    rows_affected = data_store.execute_query(update_query, update_params)[
+        "rows_affected"
+    ]
+
+    if rows_affected != 1:
+        raise ValueError(f"Configuration with key '{config_key}' not found.")
+
+    return None
+
+
 def d_config(config_definition_key: str, config_key: str):
     """
     Delete a configuration from the configuration definition.
@@ -92,7 +122,7 @@ def d_config(config_definition_key: str, config_key: str):
         "rows_affected"
     ]
 
-    if rows_affected == 0:
+    if rows_affected != 1:
         raise ValueError("Configuration not found.")
 
     return None

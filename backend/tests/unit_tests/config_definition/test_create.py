@@ -48,18 +48,25 @@ class TestConfigDefinitionCreate:
         self,
         payload_extract,
         mock_execute_query,
-        expect_error=False,
     ):
         """
         Helper function to run c_config_definition and handle assertions.
         """
-        (config_key, schema, index, indexes, _, _, _) = extract_payload_params(
-            payload_extract
-        )
+        (
+            config_key,
+            schema,
+            index,
+            indexes,
+            _,
+            _,
+            _,
+            expected_error,
+        ) = extract_payload_params(payload_extract)
 
-        if expect_error:
-            with pytest.raises(ValueError):
+        if expected_error:
+            with pytest.raises(ValueError) as error:
                 c_config_definition(config_key, schema, indexes)
+            assert str(error.value) == expected_error
             mock_execute_query.assert_not_called()
             return
         creation_query, creation_params = c_config_definition_query(config_key)
@@ -80,9 +87,7 @@ class TestConfigDefinitionCreate:
         Test that the function creates a new configuration definition with a schema.
         """
         payload_extract = get_payload["test_create_w_schema"]
-        self._run_c_config_definition(
-            payload_extract, mock_execute_query, expect_error=False
-        )
+        self._run_c_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_create_o_schema(self, mock_execute_query, get_payload):
@@ -90,9 +95,7 @@ class TestConfigDefinitionCreate:
         Test that the function creates a new configuration definition without a schema.
         """
         payload_extract = get_payload["test_create_o_schema"]
-        self._run_c_config_definition(
-            payload_extract, mock_execute_query, expect_error=False
-        )
+        self._run_c_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_create_n_schema(self, mock_execute_query, get_payload):
@@ -100,9 +103,7 @@ class TestConfigDefinitionCreate:
         Test that the function raises an exception if the schema is invalid.
         """
         payload_extract = get_payload["test_create_n_schema"]
-        self._run_c_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_c_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_create_d_sindex(self, mock_execute_query, get_payload):
@@ -110,9 +111,7 @@ class TestConfigDefinitionCreate:
         Test that the function raises an exception if the index are duplicated.
         """
         payload_extract = get_payload["test_create_d_sindex"]
-        self._run_c_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_c_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_create_n_sindex(self, mock_execute_query, get_payload):
@@ -120,6 +119,4 @@ class TestConfigDefinitionCreate:
         Test that the function raises an exception if the indexes are not in the schema.
         """
         payload_extract = get_payload["test_create_n_sindex"]
-        self._run_c_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_c_config_definition(payload_extract, mock_execute_query)

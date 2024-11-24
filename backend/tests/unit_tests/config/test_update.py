@@ -43,7 +43,6 @@ class TestConfigUpdate:
         payload_extract,
         mock_execute_query,
         mock_r_config_definition,
-        expect_error=False,
     ):
         """
         Helper function to run u_config and handle assertions.
@@ -54,14 +53,16 @@ class TestConfigUpdate:
             data,
             schema,
             _,
+            expected_error,
         ) = extract_payload_params(payload_extract)
 
         mock_r_config_definition.return_value = schema
 
-        if expect_error:
-            with pytest.raises(ValueError):
+        if expected_error:
+            with pytest.raises(ValueError) as error:
                 u_config(config_definition_key, config_key, data)
             mock_execute_query.assert_not_called()
+            assert str(error.value) == expected_error
             return
 
         mock_execute_query.return_value = payload_extract
@@ -81,7 +82,6 @@ class TestConfigUpdate:
             payload_extract,
             mock_execute_query,
             mock_r_config_definition,
-            expect_error=False,
         )
 
     @patch("app.utils.configs.validations.r_config_definition")
@@ -97,7 +97,6 @@ class TestConfigUpdate:
             payload_extract,
             mock_execute_query,
             mock_r_config_definition,
-            expect_error=True,
         )
 
     @patch("app.utils.configs.validations.r_config_definition")
@@ -113,7 +112,6 @@ class TestConfigUpdate:
             payload_extract,
             mock_execute_query,
             mock_r_config_definition,
-            expect_error=True,
         )
 
     @patch("app.utils.configs.validations.r_config_definition")
@@ -129,5 +127,4 @@ class TestConfigUpdate:
             payload_extract,
             mock_execute_query,
             mock_r_config_definition,
-            expect_error=True,
         )

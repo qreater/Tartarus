@@ -43,20 +43,27 @@ class TestConfigDefinitionDelete:
         self,
         payload_extract,
         mock_execute_query,
-        expect_error=False,
     ):
         """
         Helper function to run d_config_definition and handle assertions.
         """
-        (config_key, _, _, _, _, _, return_value) = extract_payload_params(
-            payload_extract
-        )
+        (
+            config_key,
+            _,
+            _,
+            _,
+            _,
+            _,
+            return_value,
+            expected_error,
+        ) = extract_payload_params(payload_extract)
 
         mock_execute_query.return_value = return_value
 
-        if expect_error:
-            with pytest.raises(ValueError):
+        if expected_error:
+            with pytest.raises(ValueError) as error:
                 d_config_definition(config_key)
+            assert str(error.value) == expected_error
             mock_execute_query.assert_not_called()
             return
 
@@ -74,9 +81,7 @@ class TestConfigDefinitionDelete:
         Test that the function deletes a configuration definition with a valid key.
         """
         payload_extract = get_payload["test_delete_w_key"]
-        self._run_d_config_definition(
-            payload_extract, mock_execute_query, expect_error=False
-        )
+        self._run_d_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_delete_o_key(self, mock_execute_query, get_payload):
@@ -84,6 +89,4 @@ class TestConfigDefinitionDelete:
         Test that the function raises an exception when trying to delete with an empty key.
         """
         payload_extract = get_payload["test_delete_o_key"]
-        self._run_d_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_d_config_definition(payload_extract, mock_execute_query)

@@ -28,7 +28,8 @@
           "type": "string"
         },
         "index": "date",
-        "indexes": ["date"]
+        "indexes": ["date"],
+        "expected_error": "The index 'date' is not defined in the schema properties."
       },
       "test_create_d_sindex": {
         "config_key": "sample_config",
@@ -43,7 +44,8 @@
             }
           }
         },
-        "indexes": ["date", "date"]
+        "indexes": ["date", "date"],
+        "expected_error": "Duplicate secondary indexes are not allowed."
       },
       "test_create_n_sindex": {
         "config_key": "sample_config",
@@ -59,7 +61,8 @@
           }
         },
         "index": "age",
-        "indexes": ["age"]
+        "indexes": ["age"],
+        "expected_error": "The index 'age' is not defined in the schema properties."
       }
     },
     "read": {
@@ -71,7 +74,8 @@
         }
       },
       "test_read_o_key": {
-        "config_key": ""
+        "config_key": "",
+        "expected_error": "Configuration definition key must be provided."
       }
     },
     "update": {
@@ -113,7 +117,8 @@
           },
           "indexes": ["date"]
         },
-        "indexes": ["name", "name"]
+        "indexes": ["name", "name"],
+        "expected_error": "Duplicate secondary indexes are not allowed."
       },
       "test_update_n_index": {
         "config_key": "sample_config",
@@ -131,7 +136,8 @@
           },
           "indexes": ["date"]
         },
-        "indexes": ["dog"]
+        "indexes": ["dog"],
+        "expected_error": "The index 'dog' is not defined in the schema properties."
       }
     },
     "delete": {
@@ -147,7 +153,8 @@
         "return_value": {
             "rows_affected": 0, 
             "response": []
-        }
+        },
+        "expected_error": "Configuration definition key must be provided."
       }
     },
     "list": {
@@ -161,15 +168,18 @@
       },
       "test_list_n_page": {
         "page": -1,
-        "page_size": 10
+        "page_size": 10,
+        "expected_error": "Page number and page size must be greater than 0."
       },
       "test_list_n_nlimit": {
         "page": 1,
-        "page_size": -1
+        "page_size": -1,
+        "expected_error": "Page number and page size must be greater than 0."
       },
       "test_list_n_plimit": {
         "page": 1,
-        "page_size": 101
+        "page_size": 101,
+        "expected_error": "Page size must not exceed 100."
       }
     }
   }

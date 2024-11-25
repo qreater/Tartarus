@@ -36,9 +36,7 @@ class TestConfigDefinitionRead:
         """
         return extract_payload()["read"]
 
-    def _run_r_config_definition(
-        self, payload_extract, mock_execute_query, expect_error=False
-    ):
+    def _run_r_config_definition(self, payload_extract, mock_execute_query):
         """
         Helper function to run r_config_definition and handle assertions.
         """
@@ -50,11 +48,13 @@ class TestConfigDefinitionRead:
             _,
             _,
             return_value,
+            expected_error,
         ) = extract_payload_params(payload_extract)
 
-        if expect_error:
-            with pytest.raises(ValueError):
+        if expected_error:
+            with pytest.raises(ValueError) as error:
                 r_config_definition(config_key)
+            assert str(error.value) == expected_error
             mock_execute_query.assert_not_called()
             return
 
@@ -73,9 +73,7 @@ class TestConfigDefinitionRead:
         Test that the function retrieves a configuration definition with a given key.
         """
         payload_extract = get_payload["test_read_w_key"]
-        self._run_r_config_definition(
-            payload_extract, mock_execute_query, expect_error=False
-        )
+        self._run_r_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_read_o_key(self, mock_execute_query, get_payload):
@@ -83,6 +81,4 @@ class TestConfigDefinitionRead:
         Test that the function raises a ValueError if the config key is not given.
         """
         payload_extract = get_payload["test_read_o_key"]
-        self._run_r_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_r_config_definition(payload_extract, mock_execute_query)

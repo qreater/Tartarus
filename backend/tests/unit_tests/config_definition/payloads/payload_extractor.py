@@ -48,5 +48,15 @@ def extract_payload_params(payload):
     page_size = payload.get("page_size")
 
     return_value = payload.get("return_value")
+    expected_error = payload.get("expected_error")
 
-    return (config_key, schema, index, indexes, page, page_size, return_value)
+    return (
+        config_key,
+        schema,
+        index,
+        indexes,
+        page,
+        page_size,
+        return_value,
+        expected_error,
+    )

@@ -40,7 +40,6 @@ class TestConfigDefinitionList:
         self,
         payload_extract,
         mock_execute_query,
-        expect_error=False,
     ):
         """
         Helper function to run l_config_definition and handle assertions.
@@ -53,11 +52,13 @@ class TestConfigDefinitionList:
             page_number,
             items_per_page,
             return_value,
+            expected_error,
         ) = extract_payload_params(payload_extract)
 
-        if expect_error:
-            with pytest.raises(ValueError):
+        if expected_error:
+            with pytest.raises(ValueError) as error:
                 l_config_definition(page_number, items_per_page)
+            assert str(error.value) == expected_error
             mock_execute_query.assert_not_called()
             return
 
@@ -78,9 +79,7 @@ class TestConfigDefinitionList:
         Test that the function lists configuration definitions with a valid page number and items per page.
         """
         payload_extract = get_payload["test_list_w_params"]
-        self._run_l_config_definition(
-            payload_extract, mock_execute_query, expect_error=False
-        )
+        self._run_l_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_list_n_page(self, mock_execute_query, get_payload):
@@ -88,9 +87,7 @@ class TestConfigDefinitionList:
         Test that the function raises an exception when given an invalid page number.
         """
         payload_extract = get_payload["test_list_n_page"]
-        self._run_l_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_l_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_list_n_nlimit(self, mock_execute_query, get_payload):
@@ -98,9 +95,7 @@ class TestConfigDefinitionList:
         Test that the function raises an exception when given an invalid page size.
         """
         payload_extract = get_payload["test_list_n_nlimit"]
-        self._run_l_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_l_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
     def test_list_n_plimit(self, mock_execute_query, get_payload):
@@ -108,6 +103,4 @@ class TestConfigDefinitionList:
         Test that the function raises an exception when given an excessive page size.
         """
         payload_extract = get_payload["test_list_n_plimit"]
-        self._run_l_config_definition(
-            payload_extract, mock_execute_query, expect_error=True
-        )
+        self._run_l_config_definition(payload_extract, mock_execute_query)

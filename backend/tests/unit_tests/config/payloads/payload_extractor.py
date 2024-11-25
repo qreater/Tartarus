@@ -45,5 +45,13 @@ def extract_payload_params(payload):
     schema = payload.get("schema", {})
 
     return_value = payload.get("return_value")
+    expected_error = payload.get("expected_error")
 
-    return (config_definition_key, config_key, data, schema, return_value)
+    return (
+        config_definition_key,
+        config_key,
+        data,
+        schema,
+        return_value,
+        expected_error,
+    )

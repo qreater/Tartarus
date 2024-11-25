@@ -42,7 +42,6 @@ class TestConfigRead:
         self,
         payload_extract,
         mock_execute_query,
-        expect_error=False,
     ):
         """
         Helper function to run r_config and handle assertions.
@@ -53,14 +52,16 @@ class TestConfigRead:
             _,
             schema,
             return_value,
+            expected_error,
         ) = extract_payload_params(payload_extract)
 
         mock_execute_query.side_effect = [schema, return_value]
 
-        if expect_error:
-            with pytest.raises(ValueError):
+        if expected_error:
+            with pytest.raises(ValueError) as error:
                 r_config(config_definition_key, config_key)
                 mock_execute_query.assert_not_called()
+            assert str(error.value) == expected_error
             return
 
         r_config(config_definition_key, config_key)
@@ -83,7 +84,6 @@ class TestConfigRead:
         self._run_r_config(
             payload_extract,
             mock_execute_query,
-            expect_error=True,
         )
 
     @patch.object(DataStore, "execute_query")
@@ -95,5 +95,4 @@ class TestConfigRead:
         self._run_r_config(
             payload_extract,
             mock_execute_query,
-            expect_error=True,
         )

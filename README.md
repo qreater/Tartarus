@@ -2,7 +2,7 @@
 
 ![](/docs/assets/banner.webp)
 
-Tartarus is your go-to solution for managing  configurations with security, flexibility, and scalability at its core. Engineered for modern software systems, it streamlines the storage and retrieval of configurations while ensuring robust data integrity.
+Tartarus is your go-to solution for managing configurations with security, flexibility, and scalability at its core. Engineered for modern software systems, it streamlines the storage and retrieval of configurations while ensuring robust data integrity.
 
 ## Contents
 
@@ -52,7 +52,7 @@ Tartarus employs a modular and well-structured database schema to efficiently ma
 
 ### Connection and Execution
 
-The [DataStore](/backend/app/utils/data/data_source.py) class is designed to manage the database connections and queries efficiently. It abstracts the database interactions, ensuring a clean, modular, and scalable codebase. The class manages all database connections through a single interface and supports broad range of queries with error handling.
+The [DataStore](../backend/app/utils/data/data_source.py) class is designed to manage the database connections and queries efficiently. It abstracts the database interactions, ensuring a clean, modular, and scalable codebase. The class manages all database connections through a single interface and supports a broad range of queries with error handling.
 
 
 ## API Documentation
@@ -143,7 +143,7 @@ poetry install
 poetry run uvicorn app.main:app --reload --host 8000
 ```
 
-[!NOTE]
+> [!NOTE]
 
 Access the FastAPI application at `http://localhost:8000/docs`.
 

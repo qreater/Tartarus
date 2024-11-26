@@ -31,7 +31,7 @@ Tartarus is your go-to solution for managing configurations with security, flexi
 - [Psycopg2](https://www.psycopg.org/docs/)
 
 
-### Devops
+### DevOps
 
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
@@ -144,8 +144,7 @@ poetry run uvicorn app.main:app --reload --host 8000
 ```
 
 > [!NOTE]
-
-Access the FastAPI application at `http://localhost:8000/docs`.
+> Access the FastAPI application at `http://localhost:8000/docs`.
 
 
 ## Testing

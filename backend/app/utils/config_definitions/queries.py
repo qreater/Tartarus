@@ -8,6 +8,7 @@
 
 from app.utils.settings.config import settings
 import json
+from fastapi import Request
 
 
 def internal_c_definition_query(
@@ -32,15 +33,11 @@ def internal_c_definition_query(
     indexes_str = "{" + ",".join(f'"{item}"' for item in indexes) + "}"
 
     internal_query = f"""
-    INSERT INTO {settings.INTERNAL_TABLE} (config_definition_key, json_schema, indexes)
-    VALUES (%s, %s, %s);
+    INSERT INTO {settings.INTERNAL_TABLE} (config_definition_key, json_schema, indexes, created_at, modified_at)
+    VALUES (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
     """
 
-    return internal_query, (
-        config_definition_key,
-        json_schema_str,
-        indexes_str,
-    )
+    return internal_query, (config_definition_key, json_schema_str, indexes_str)
 
 
 def internal_u_definition_query(config_definition_key: str, indexes: list) -> tuple:
@@ -61,7 +58,7 @@ def internal_u_definition_query(config_definition_key: str, indexes: list) -> tu
 
     update_query = f"""
     UPDATE {settings.INTERNAL_TABLE}
-    SET indexes = %s
+    SET indexes = %s, modified_at = CURRENT_TIMESTAMP
     WHERE config_definition_key = %s;
     """
 
@@ -218,25 +215,63 @@ def d_config_definition_query(config_definition_key: str) -> tuple:
     return delete_query, ()
 
 
-def l_config_definition_query(page: int = 1, page_size: int = 10) -> tuple:
+def l_config_definition_query(
+    page: int = 1,
+    limit: int = 10,
+    sort_by: str = "modified_at",
+    sort_order: str = "desc",
+    search: str = None,
+) -> tuple:
     """
     List all configuration definitions.
 
     -- Parameters
     page: int, optional
         The page number. Defaults to 1.
-    page_size: int, optional
+    limit: int, optional
         The number of items per page. Defaults to 10.
+    sort_by: str, optional
+        The field to sort by. Defaults to "modified_at".
+    sort_order: str, optional
+        The sort order. Defaults to "asc".
+    search: str, optional
+        The search term. Defaults to None.
 
     -- Returns
     tuple
         The SQL query to list all configuration definitions and the parameters.
     """
+    where_clause = f"{'WHERE config_definition_key ILIKE %s' if search else ''}".strip()
 
     list_query = f"""
     SELECT * FROM {settings.INTERNAL_TABLE}
+    {where_clause}
+    ORDER BY {sort_by} {sort_order}
     LIMIT %s OFFSET %s;
     """
 
-    offset = page_size * (page - 1)
-    return list_query, (page_size, offset)
+    offset = limit * (page - 1)
+    params = (f"%{search}%", limit, offset) if search else (limit, offset)
+    return list_query, params
+
+
+def l_config_definition_count_query(search: str = None) -> tuple:
+    """
+    Get the total number of configuration definitions for the query.
+
+    -- Parameters
+    search: str, optional
+        The search term. Defaults to None.
+
+    -- Returns
+    tuple
+        The SQL query to get the total number of configuration definitions and the parameters.
+    """
+    where_clause = f"{'WHERE config_definition_key ILIKE %s' if search else ''}".strip()
+
+    count_query = f"""
+    SELECT COUNT(*) FROM {settings.INTERNAL_TABLE} {where_clause};
+    """
+
+    params = (f"%{search}%",) if search else ()
+    return count_query, params

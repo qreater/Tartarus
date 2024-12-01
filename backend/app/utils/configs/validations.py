@@ -8,6 +8,7 @@
 
 import jsonschema
 import re
+from fastapi import Request
 
 from app.utils.config_definitions.validations import (
     validate_config_definition_key,
@@ -132,7 +133,15 @@ def validate_config_deletion(config_definition_key: str, config_key: str) -> Non
     return None
 
 
-def validate_config_list(config_definition_key: str, page: int, page_size: int) -> None:
+def validate_config_list(
+    config_definition_key: str,
+    page: int,
+    limit: int,
+    sort_by: str,
+    sort_order: str,
+    search: str,
+    request: Request,
+) -> None:
     """
     Validates the listing of configurations.
 
@@ -141,10 +150,35 @@ def validate_config_list(config_definition_key: str, page: int, page_size: int) 
         The key for the configuration definition.
     page: int
         The page number.
-    page_size: int
+    limit: int
         The number of configurations to list per page.
+    sort_by: str
+        The field to sort by.
+    sort_order: str
+        The order to sort by.
+    search: str
+        The search term to validate.
+    request: Request
+        The request object.
     """
-    validate_list_params(page, page_size)
-    r_config_definition(config_definition_key)
+    config_definition = r_config_definition(config_definition_key)
+    indexes = config_definition.get("indexes", [])
+
+    sortable_fields = {"config_key", "created_at", "modified_at", *indexes}
+    query_fields = {"page", "limit", "sort_by", "sort_order", "search"}
+
+    filterable_fields = {
+        field
+        for field in {*indexes, *sortable_fields, *query_fields}
+        if field != "config_key"
+    }
+
+    for key in request.query_params.keys():
+        if key not in filterable_fields:
+            raise ValueError(
+                f"Invalid filter field: Filter keys must be one of the indexes, or 'created_at', 'modified_at'."
+            )
+
+    validate_list_params(sortable_fields, page, limit, sort_by, sort_order, search)
 
     return None

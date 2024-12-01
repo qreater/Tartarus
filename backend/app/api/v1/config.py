@@ -6,7 +6,7 @@
 
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 
 from app.utils.configs.utils import c_config, r_config, d_config, l_config, u_config
 
@@ -138,27 +138,47 @@ def delete_config(config_definition_key: str, config_key: str):
 
 
 @router.get("/")
-def list_configs(config_definition_key: str, page: int = 1, limit: int = 10):
+def list_configs(
+    request: Request,
+    config_definition_key: str,
+    page: int = 1,
+    limit: int = 10,
+    sort_by: str = "modified_at",
+    sort_order: str = "desc",
+    search: str = None,
+):
     """
     List all configurations for a configuration definition.
 
     -- Parameters
+    request: Request
+        The request object.
     config_definition_key: str
         The key for the configuration definition.
     page: int
         The page number.
     limit: int
         The number of configurations to list per page.
+    sort_by: str
+        The field to sort by.
+    sort_order: str
+        The order to sort by.
+    search: str
+        The search term.
 
     -- Returns
     ListConfigsResponse
         The response for the list configurations request.
     """
     try:
-        configs = l_config(
+        configs, count = l_config(
             config_definition_key,
             page,
             limit,
+            sort_by,
+            sort_order,
+            search,
+            request,
         )
 
     except Exception as e:
@@ -167,5 +187,8 @@ def list_configs(config_definition_key: str, page: int = 1, limit: int = 10):
 
     return {
         "message": "Configurations listed successfully.",
-        "data": configs,
+        "data": {
+            "results": configs,
+            "meta": {"page": page, "limit": limit, "total": count},
+        },
     }

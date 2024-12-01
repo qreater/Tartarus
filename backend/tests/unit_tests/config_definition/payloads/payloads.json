@@ -1,8 +1,88 @@
 {
-    "create": {
-      "test_create_w_schema": {
-        "config_key": "sample_config",
-        "schema": {
+  "create": {
+    "test_create_w_schema": {
+      "config_key": "sample_config",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "index": "date",
+      "indexes": ["date"]
+    },
+    "test_create_o_schema": {
+      "config_key": "sample_config",
+      "schema": null,
+      "index": "date",
+      "indexes": ["date"]
+    },
+    "test_create_n_schema": {
+      "config_key": "sample_config",
+      "schema": {
+        "type": "string"
+      },
+      "index": "date",
+      "indexes": ["date"],
+      "expected_error": "The index 'date' is not defined in the schema properties."
+    },
+    "test_create_d_sindex": {
+      "config_key": "sample_config",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "indexes": ["date", "date"],
+      "expected_error": "Duplicate secondary indexes are not allowed."
+    },
+    "test_create_n_sindex": {
+      "config_key": "sample_config",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "index": "age",
+      "indexes": ["age"],
+      "expected_error": "The index 'age' is not defined in the schema properties."
+    }
+  },
+  "read": {
+    "test_read_w_key": {
+      "config_key": "sample_config",
+      "return_value": {
+        "rows_affected": 0,
+        "response": [{ "json_schema": "{'type': 'object'}" }]
+      }
+    },
+    "test_read_o_key": {
+      "config_key": "",
+      "expected_error": "Configuration definition key must be provided."
+    }
+  },
+  "update": {
+    "test_update_w_index": {
+      "config_key": "sample_config",
+      "schema": {
+        "json_schema": {
           "type": "object",
           "properties": {
             "name": {
@@ -13,174 +93,126 @@
             }
           }
         },
-        "index": "date",
+        "index": ["date"]
+      },
+      "indexes": ["name"],
+      "return_value": {
+        "rows_affected": 0,
+        "response": [{ "indexname": "date" }]
+      }
+    },
+    "test_update_d_index": {
+      "config_key": "sample_config",
+      "schema": {
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          }
+        },
         "indexes": ["date"]
       },
-      "test_create_o_schema": {
-        "config_key": "sample_config",
-        "schema": null,
-        "index": "date",
+      "indexes": ["name", "name"],
+      "expected_error": "Duplicate secondary indexes are not allowed."
+    },
+    "test_update_n_index": {
+      "config_key": "sample_config",
+      "schema": {
+        "json_schema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          }
+        },
         "indexes": ["date"]
       },
-      "test_create_n_schema": {
-        "config_key": "sample_config",
-        "schema": {
-          "type": "string"
-        },
-        "index": "date",
-        "indexes": ["date"],
-        "expected_error": "The index 'date' is not defined in the schema properties."
-      },
-      "test_create_d_sindex": {
-        "config_key": "sample_config",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "date": {
-              "type": "string"
-            }
-          }
-        },
-        "indexes": ["date", "date"],
-        "expected_error": "Duplicate secondary indexes are not allowed."
-      },
-      "test_create_n_sindex": {
-        "config_key": "sample_config",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "date": {
-              "type": "string"
-            }
-          }
-        },
-        "index": "age",
-        "indexes": ["age"],
-        "expected_error": "The index 'age' is not defined in the schema properties."
+      "indexes": ["dog"],
+      "expected_error": "The index 'dog' is not defined in the schema properties."
+    }
+  },
+  "delete": {
+    "test_delete_w_key": {
+      "config_key": "sample_config",
+      "return_value": {
+        "rows_affected": 1,
+        "response": [{}]
       }
     },
-    "read": {
-      "test_read_w_key": {
-        "config_key": "sample_config",
-        "return_value": {
-          "rows_affected": 0, 
-          "response": [{"json_schema": "{'type': 'object'}"}]
-        }
+    "test_delete_o_key": {
+      "config_key": "",
+      "return_value": {
+        "rows_affected": 0,
+        "response": []
       },
-      "test_read_o_key": {
-        "config_key": "",
-        "expected_error": "Configuration definition key must be provided."
-      }
-    },
-    "update": {
-      "test_update_w_index": {
-        "config_key": "sample_config",
-        "schema": {
-          "json_schema": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "date": {
-                "type": "string"
-              }
-            }
-          },
-          "index": ["date"]
-        },
-        "indexes": ["name"],
-        "return_value": {
-            "rows_affected": 0,
-            "response": [{"indexname": "date"}]
-        }
-      },
-      "test_update_d_index": {
-        "config_key": "sample_config",
-        "schema": {
-          "json_schema": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "date": {
-                "type": "string"
-              }
-            }
-          },
-          "indexes": ["date"]
-        },
-        "indexes": ["name", "name"],
-        "expected_error": "Duplicate secondary indexes are not allowed."
-      },
-      "test_update_n_index": {
-        "config_key": "sample_config",
-        "schema": {
-          "json_schema": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "date": {
-                "type": "string"
-              }
-            }
-          },
-          "indexes": ["date"]
-        },
-        "indexes": ["dog"],
-        "expected_error": "The index 'dog' is not defined in the schema properties."
-      }
-    },
-    "delete": {
-      "test_delete_w_key": {
-        "config_key": "sample_config",
-        "return_value": {
-            "rows_affected": 1, 
-            "response": [{}]
-        }
-      },
-      "test_delete_o_key": {
-        "config_key": "",
-        "return_value": {
-            "rows_affected": 0, 
-            "response": []
-        },
-        "expected_error": "Configuration definition key must be provided."
-      }
-    },
-    "list": {
-      "test_list_w_params": {
+      "expected_error": "Configuration definition key must be provided."
+    }
+  },
+  "list": {
+    "test_list_w_params": {
+      "params": {
         "page": 1,
-        "page_size": 10,
-        "return_value": {
-          "rows_affected": 1,
-          "response": [{}]
-        }
+        "limit": 10
       },
-      "test_list_n_page": {
-        "page": -1,
-        "page_size": 10,
-        "expected_error": "Page number and page size must be greater than 0."
-      },
-      "test_list_n_nlimit": {
-        "page": 1,
-        "page_size": -1,
-        "expected_error": "Page number and page size must be greater than 0."
-      },
-      "test_list_n_plimit": {
-        "page": 1,
-        "page_size": 101,
-        "expected_error": "Page size must not exceed 100."
+      "return_value": {
+        "rows_affected": 1,
+        "response": [{ "count": 1 }]
       }
+    },
+    "test_list_o_params": {
+      "params": {},
+      "return_value":{
+        "rows_affected": 1,
+        "response": [{ "count": 1 }]
+      }
+    },
+    "test_list_n_page": {
+      "params": {
+        "page": 0,
+        "limit": 10
+      },
+      "expected_error": "Page number and limit must be greater than 0."
+    },
+    "test_list_n_nlimit": {
+      "params": {
+        "page": 1,
+        "limit": -1
+      },
+      "expected_error": "Page number and limit must be greater than 0."
+    },
+    "test_list_n_plimit": {
+      "params": {
+        "page": 1,
+        "limit": 101
+      },
+      "expected_error": "Limit must not exceed 100."
+    },
+    "test_list_n_sort_by": {
+      "params": {
+        "sort_by": "nokey"
+      },
+      "expected_error": "Sort field must be one of ['config_definition_key', 'created_at', 'modified_at']."
+    },
+    "test_list_n_sort_order": {
+      "params": {
+        "sort_order": "nokey"
+      },
+      "expected_error": "Sort order must be one of 'asc', 'desc'."
+    },
+    "test_list_n_search": {
+      "params": {
+        "search": "123$;"
+      },
+      "expected_error": "Search term must be at least 3 characters long and contain only alphanumeric characters and underscores."
     }
   }
-  
+}

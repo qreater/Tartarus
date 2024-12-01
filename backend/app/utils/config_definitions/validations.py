@@ -171,18 +171,46 @@ def validate_config_delete(config_definition_key: str) -> None:
     validate_config_definition_key(config_definition_key)
 
 
-def validate_list_params(page: int, page_size: int) -> None:
+def validate_list_params(
+    sortable_fields: set,
+    page: int,
+    limit: int,
+    sort_by: str,
+    sort_order: str,
+    search: str,
+) -> None:
     """
     Validates the parameters for listing configuration definitions.
 
     -- Parameters
-    page_number: int
+    sortable_fields: list
+        The fields that can be sorted by.
+    page: int
         The page number to validate.
-    items_per_page: int
+    limit: int
         The items per page to validate.
+    sort_by: str
+        The field to sort by.
+    sort_order: str
+        The order to sort by.
+    search: str
+        The search term to validate.
 
     """
-    if page < 1 or page_size < 1:
-        raise ValueError("Page number and page size must be greater than 0.")
-    if page_size > 100:
-        raise ValueError("Page size must not exceed 100.")
+
+    if page < 1 or limit < 1:
+        raise ValueError("Page number and limit must be greater than 0.")
+
+    if limit > 100:
+        raise ValueError("Limit must not exceed 100.")
+
+    if sort_by not in sortable_fields:
+        raise ValueError(f"Sort field must be one of {sorted(sortable_fields)}.")
+
+    if sort_order not in ["asc", "desc"]:
+        raise ValueError("Sort order must be one of 'asc', 'desc'.")
+
+    if search and not re.match(r"^[a-zA-Z0-9_]{3,}$", search):
+        raise ValueError(
+            "Search term must be at least 3 characters long and contain only alphanumeric characters and underscores."
+        )

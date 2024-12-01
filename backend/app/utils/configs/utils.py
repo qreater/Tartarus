@@ -6,11 +6,15 @@
 
 """
 
+from fastapi import Request
+
 from app.utils.configs.queries import (
     c_config_query,
     r_config_query,
     d_config_query,
+    l_clause_query,
     l_config_query,
+    l_config_count_query,
     u_config_query,
 )
 
@@ -128,7 +132,96 @@ def d_config(config_definition_key: str, config_key: str):
     return None
 
 
-def l_config(config_definition_key: str, page: int = 1, page_size: int = 10):
+def l_c_json_path(keys: list[str]) -> str:
+    """
+    Constructs a JSON path for a given list of keys.
+
+    -- Parameters
+    keys: list[str]
+        The list of keys representing the path in a JSON object.
+
+    -- Returns
+    str
+        The JSON path string.
+    """
+    if len(keys) == 1:
+        return f"data->>'{keys[0]}'"
+    return "data->" + "->".join([f"'{key}'" for key in keys[:-1]]) + f"->>'{keys[-1]}'"
+
+
+def l_c_sort_field(sort_by: str, allowed_fields: set[str]) -> str:
+    """
+    Validates and constructs the sort field.
+
+    -- Parameters
+    sort_by: str
+        The field to sort by.
+    allowed_fields: set[str]
+        A set of allowed top-level sort fields.
+
+    -- Returns
+    str
+        The validated or constructed sort field.
+    """
+    if sort_by in allowed_fields:
+        return sort_by
+
+    keys = sort_by.split(".")
+    return l_c_json_path(keys)
+
+
+def l_util_filters(request: Request) -> dict:
+    """
+    Extracts the filters from the request query parameters.
+
+    -- Parameters
+    request: Request
+        The request object.
+
+    -- Returns
+    dict
+        The filters for the configuration.
+    """
+    request_filters = request.query_params.items()
+    query_fields = {"page", "limit", "sort_by", "sort_order", "search"}
+
+    filters = {}
+    for key, value in request_filters:
+        if key in query_fields:
+            continue
+
+        keys = key.split(".")
+        json_path = l_c_json_path(keys)
+        filters[json_path] = value
+
+    return filters
+
+
+def l_util_sort(sort_by: str) -> str:
+    """
+    Extracts the sort field from the request query parameters.
+
+    -- Parameters
+    sort_by: str
+        The field to sort by.
+
+    -- Returns
+    str
+        The field to sort by.
+    """
+    sortable_fields = {"config_key", "created_at", "modified_at"}
+    return l_c_sort_field(sort_by, sortable_fields)
+
+
+def l_config(
+    config_definition_key: str,
+    page: int = 1,
+    limit: int = 10,
+    sort_by: str = "modified_at",
+    sort_order: str = "desc",
+    search: str = None,
+    request: Request = None,
+):
     """
     List all configurations for a configuration definition.
 
@@ -137,17 +230,47 @@ def l_config(config_definition_key: str, page: int = 1, page_size: int = 10):
         The key for the configuration definition.
     page: int, optional
         The page number. Defaults to 1.
-    page_size: int, optional
+    limit: int, optional
         The number of configurations to list per page. Defaults to 10.
+    sort_by: str, optional
+        The field to sort by. Defaults to "modified_at".
+    sort_order: str, optional
+        The sort order. Defaults to "desc".
+    search: str, optional
+        The search term. Defaults to None.
+    request: Request, optional
+        The request object. Defaults to None
 
     -- Returns
-    list
-        The configurations.
+    tuple
+        The configurations and the count of configurations.
     """
+    validate_config_list(
+        config_definition_key, page, limit, sort_by, sort_order, search, request
+    )
 
-    validate_config_list(config_definition_key, page, page_size)
+    filters = l_util_filters(request)
+    sort_by = l_util_sort(sort_by)
 
-    query, params = l_config_query(config_definition_key, page, page_size)
+    clause_query, clause_params = l_clause_query(filters, search)
+
+    query, params = l_config_query(
+        config_definition_key,
+        page,
+        limit,
+        sort_by,
+        sort_order,
+        clause_query,
+        clause_params,
+    )
     result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
-    return result
+    count_query, count_params = l_config_count_query(
+        config_definition_key, clause_query, clause_params
+    )
+    count_result = data_store.execute_query(count_query, count_params, mode="retrieve")[
+        "response"
+    ]
+    count_result = count_result[0]["count"]
+
+    return result, count_result

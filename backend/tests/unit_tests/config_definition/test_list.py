@@ -49,29 +49,24 @@ class TestConfigDefinitionList:
             _,
             _,
             _,
-            page_number,
-            items_per_page,
+            params,
             return_value,
             expected_error,
         ) = extract_payload_params(payload_extract)
 
         if expected_error:
             with pytest.raises(ValueError) as error:
-                l_config_definition(page_number, items_per_page)
+                l_config_definition(**params)
             assert str(error.value) == expected_error
             mock_execute_query.assert_not_called()
             return
 
         mock_execute_query.return_value = return_value
-        internal_query, internal_params = l_config_definition_query(
-            page_number, items_per_page
-        )
+        l_config_definition_query(**params)
 
-        l_config_definition(page_number, items_per_page)
+        l_config_definition(**params)
 
-        mock_execute_query.assert_called_once_with(
-            internal_query, params=internal_params, mode="retrieve"
-        )
+        assert mock_execute_query.call_count == 2
 
     @patch.object(DataStore, "execute_query")
     def test_list_w_params(self, mock_execute_query, get_payload):
@@ -79,6 +74,14 @@ class TestConfigDefinitionList:
         Test that the function lists configuration definitions with a valid page number and items per page.
         """
         payload_extract = get_payload["test_list_w_params"]
+        self._run_l_config_definition(payload_extract, mock_execute_query)
+
+    @patch.object(DataStore, "execute_query")
+    def test_list_o_params(self, mock_execute_query, get_payload):
+        """
+        Test that the function lists configuration definitions without any parameters
+        """
+        payload_extract = get_payload["test_list_o_params"]
         self._run_l_config_definition(payload_extract, mock_execute_query)
 
     @patch.object(DataStore, "execute_query")
@@ -92,7 +95,7 @@ class TestConfigDefinitionList:
     @patch.object(DataStore, "execute_query")
     def test_list_n_nlimit(self, mock_execute_query, get_payload):
         """
-        Test that the function raises an exception when given an invalid page size.
+        Test that the function raises an exception when given an invalid limit.
         """
         payload_extract = get_payload["test_list_n_nlimit"]
         self._run_l_config_definition(payload_extract, mock_execute_query)
@@ -100,7 +103,31 @@ class TestConfigDefinitionList:
     @patch.object(DataStore, "execute_query")
     def test_list_n_plimit(self, mock_execute_query, get_payload):
         """
-        Test that the function raises an exception when given an excessive page size.
+        Test that the function raises an exception when given an excessive limit.
         """
         payload_extract = get_payload["test_list_n_plimit"]
+        self._run_l_config_definition(payload_extract, mock_execute_query)
+
+    @patch.object(DataStore, "execute_query")
+    def test_list_n_sort_by(self, mock_execute_query, get_payload):
+        """
+        Test that the function raises an exception when given an invalid sort variable.
+        """
+        payload_extract = get_payload["test_list_n_sort_by"]
+        self._run_l_config_definition(payload_extract, mock_execute_query)
+
+    @patch.object(DataStore, "execute_query")
+    def test_list_n_sort_order(self, mock_execute_query, get_payload):
+        """
+        Test that the function raises an exception when given an invalid sort order.
+        """
+        payload_extract = get_payload["test_list_n_sort_order"]
+        self._run_l_config_definition(payload_extract, mock_execute_query)
+
+    @patch.object(DataStore, "execute_query")
+    def test_list_n_search(self, mock_execute_query, get_payload):
+        """
+        Test that the function raises an exception when given an invalid search term.
+        """
+        payload_extract = get_payload["test_list_n_search"]
         self._run_l_config_definition(payload_extract, mock_execute_query)

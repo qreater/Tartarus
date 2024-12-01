@@ -53,7 +53,6 @@ class TestConfigDefinitionDelete:
             _,
             _,
             _,
-            _,
             return_value,
             expected_error,
         ) = extract_payload_params(payload_extract)

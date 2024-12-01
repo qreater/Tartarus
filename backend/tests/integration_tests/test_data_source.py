@@ -63,5 +63,5 @@ class TestDataStoreIntegration:
             f"SELECT * FROM pg_indexes WHERE tablename = '{settings.INTERNAL_TABLE}';"
         )
         indexes = cursor.fetchall()
-        assert len(indexes) == 3
+        assert len(indexes) == 5
         cursor.close()

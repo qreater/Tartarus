@@ -126,7 +126,13 @@ def delete_config_definition(config_definition_key: str):
 
 
 @router.get("/")
-def list_config_definition(page: int = 1, limit: int = 10):
+def list_config_definition(
+    page: int = 1,
+    limit: int = 10,
+    sort_by: str = "modified_at",
+    sort_order: str = "desc",
+    search: str = None,
+):
     """
     List all configuration definitions.
 
@@ -135,13 +141,21 @@ def list_config_definition(page: int = 1, limit: int = 10):
         The page number.
     limit: int
         The limit for the number of configuration definitions to return.
+    sort_by: str
+        The field to sort by.
+    sort_order: str
+        The order to sort by.
+    search: str
+        The search term.
 
     -- Returns
     ListConfigDefinitionResponse
         The response for the list configuration definition request.
     """
     try:
-        config_definitions = l_config_definition(page, limit)
+        config_definitions, count = l_config_definition(
+            page, limit, sort_by, sort_order, search
+        )
 
     except Exception as e:
         logger.exception(f"Error listing configuration definitions: {e}")
@@ -149,5 +163,8 @@ def list_config_definition(page: int = 1, limit: int = 10):
 
     return {
         "message": "Configuration definitions listed successfully.",
-        "data": config_definitions,
+        "data": {
+            "results": config_definitions,
+            "meta": {"page": page, "limit": limit, "total": count},
+        },
     }

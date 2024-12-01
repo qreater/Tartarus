@@ -44,8 +44,7 @@ def extract_payload_params(payload):
     index = payload.get("index")
     indexes = payload.get("indexes")
 
-    page = payload.get("page")
-    page_size = payload.get("page_size")
+    params = payload.get("params")
 
     return_value = payload.get("return_value")
     expected_error = payload.get("expected_error")
@@ -55,8 +54,7 @@ def extract_payload_params(payload):
         schema,
         index,
         indexes,
-        page,
-        page_size,
+        params,
         return_value,
         expected_error,
     )

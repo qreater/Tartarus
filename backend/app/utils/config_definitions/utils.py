@@ -17,6 +17,7 @@ from app.utils.config_definitions.queries import (
     r_config_definition_query,
     d_config_definition_query,
     l_config_definition_query,
+    l_config_definition_count_query,
 )
 
 from app.utils.config_definitions.validations import (
@@ -78,9 +79,7 @@ def r_config_definition(config_definition_key: str):
     dict
         The configuration definition.
     """
-
     validate_config_read(config_definition_key)
-
     query, params = r_config_definition_query(config_definition_key)
     result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
@@ -160,24 +159,43 @@ def d_config_definition(config_definition_key: str):
     return None
 
 
-def l_config_definition(page: int = 1, page_size: int = 10):
+def l_config_definition(
+    page: int = 1,
+    limit: int = 10,
+    sort_by: str = "modified_at",
+    sort_order: str = "desc",
+    search: str = None,
+):
     """
     List configuration definitions from the internal table.
 
     -- Parameters
     page: int, optional
         The page number. Defaults to 1.
-    page_size: int, optional
+    limit: int, optional
         The number of items per page. Defaults to 10.
+    sort_by: str, optional
+        The field to sort by. Defaults to "modified_at".
+    sort_order: str, optional
+        The sort order. Defaults to "desc".
+    search: str, optional
+        The search term. Defaults to None.
 
     -- Returns
-    list
-        The configuration definitions.
+    tuple
+        The configuration definitions and the count of configuration
+        definitions.
     """
+    sortable_fields = {"config_definition_key", "created_at", "modified_at"}
+    validate_list_params(sortable_fields, page, limit, sort_by, sort_order, search)
 
-    validate_list_params(page, page_size)
-
-    query, params = l_config_definition_query(page, page_size)
+    query, params = l_config_definition_query(page, limit, sort_by, sort_order, search)
     result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
-    return result
+    count_query, count_params = l_config_definition_count_query(search)
+    count_result = data_store.execute_query(
+        count_query, params=count_params, mode="retrieve"
+    )["response"]
+    count_result = count_result[0]["count"]
+
+    return result, count_result

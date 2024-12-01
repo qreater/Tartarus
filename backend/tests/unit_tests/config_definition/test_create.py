@@ -59,7 +59,6 @@ class TestConfigDefinitionCreate:
             indexes,
             _,
             _,
-            _,
             expected_error,
         ) = extract_payload_params(payload_extract)
 

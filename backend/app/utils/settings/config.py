@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     DB_NAME: str = "datastore"
     DB_USER: str = "postgres"
     DB_PASSWORD: str = "postgres"
-    DB_HOST: str = "localhost"
+    DB_HOST: str = "127.0.0.1"
     DB_PORT: str = "5432"
 
     INTERNAL_TABLE: str = "tartarus_internal_cft"

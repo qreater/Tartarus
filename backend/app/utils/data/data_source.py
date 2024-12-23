@@ -48,7 +48,7 @@ class DataStore:
         """
         Create a connection to the database
         """
-
+        logger.info("Attempting to connect to the database...")
         try:
             self.connection = connect(
                 dbname=settings.DB_NAME,
@@ -59,8 +59,10 @@ class DataStore:
             )
             self.connection.autocommit = True
             logger.info("DataStore Connection Established!")
+
         except Exception as e:
             logger.exception(f"DataStore set-up failed: {e}")
+            self.connection = None
 
     def _initialize_table(self):
         """

@@ -4,13 +4,18 @@ services:
       context: ..
       dockerfile: devops/Dockerfile
     environment:
-      DB_HOST: db
+      DB_HOST: pgbouncer
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: ${PGBOUNCER_PORT}
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - pgbouncer
     networks:
-      - app-network
+      - backend
+
   db:
     image: postgres:15
     environment:
@@ -20,11 +25,29 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - app-network
+      - backend
+
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    environment:
+      DB_HOST: db
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      ADMIN_USERS: ${POSTGRES_USER}
+      LISTEN_PORT: ${PGBOUNCER_PORT}
+      AUTH_TYPE: scram-sha-256
+      POOL_MODE: transaction
+    ports:
+      - "${PGBOUNCER_PORT}:${PGBOUNCER_PORT}"
+    depends_on:
+      - db
+    networks:
+      - backend
 
 volumes:
   postgres-data:
 
 networks:
-  app-network:
+  backend:
     driver: bridge

@@ -6,20 +6,16 @@
 
 """
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Request, status
 
 from app.utils.configs.utils import c_config, r_config, d_config, l_config, u_config
 
 from app.models.config import CreateConfig, UpdateConfig
 
-import logging
-
-logger = logging.getLogger(__name__)
-
 router = APIRouter()
 
 
-@router.post("/")
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_config(config_definition_key: str, config: CreateConfig):
     """
     Create a new configuration.
@@ -34,20 +30,19 @@ def create_config(config_definition_key: str, config: CreateConfig):
     CreateConfigResponse
         The response for the create configuration request.
     """
-    try:
-        c_config(
-            config_definition_key,
-            config.config_key,
-            config.data,
-        )
-    except Exception as e:
-        logger.exception(f"Error creating configuration: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    c_config(
+        config_definition_key,
+        config.config_key,
+        config.data,
+    )
 
-    return {"message": "Configuration created successfully."}
+    return {
+        "message": "Configuration created successfully.",
+        "data": config.data,
+    }
 
 
-@router.get("/{config_key}")
+@router.get("/{config_key}", status_code=status.HTTP_200_OK)
 def get_config(config_definition_key: str, config_key: str):
     """
     Get a configuration.
@@ -62,14 +57,10 @@ def get_config(config_definition_key: str, config_key: str):
     ReadConfigResponse
         The response for the get configuration request.
     """
-    try:
-        config = r_config(
-            config_definition_key,
-            config_key,
-        )
-    except Exception as e:
-        logger.exception(f"Error reading configuration: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    config = r_config(
+        config_definition_key,
+        config_key,
+    )
 
     return {
         "message": "Configuration retrieved successfully.",
@@ -77,7 +68,7 @@ def get_config(config_definition_key: str, config_key: str):
     }
 
 
-@router.put("/{config_key}")
+@router.put("/{config_key}", status_code=status.HTTP_200_OK)
 def update_config(config_definition_key: str, config_key: str, config: UpdateConfig):
     """
     Update an existing configuration.
@@ -94,23 +85,19 @@ def update_config(config_definition_key: str, config_key: str, config: UpdateCon
     dict
         A success message.
     """
-    try:
-        u_config(
-            config_definition_key,
-            config_key,
-            config.data,
-        )
-    except ValueError as e:
-        logger.warning(f"Configuration not found: {e}")
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        logger.exception(f"Error updating configuration: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    u_config(
+        config_definition_key,
+        config_key,
+        config.data,
+    )
 
-    return {"message": "Configuration updated successfully."}
+    return {
+        "message": "Configuration updated successfully.",
+        "data": config.data,
+    }
 
 
-@router.delete("/{config_key}")
+@router.delete("/{config_key}", status_code=status.HTTP_200_OK)
 def delete_config(config_definition_key: str, config_key: str):
     """
     Delete a configuration.
@@ -125,19 +112,21 @@ def delete_config(config_definition_key: str, config_key: str):
     DeleteConfigResponse
         The response for the delete configuration request.
     """
-    try:
-        d_config(
-            config_definition_key,
-            config_key,
-        )
-    except Exception as e:
-        logger.exception(f"Error deleting configuration: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    d_config(
+        config_definition_key,
+        config_key,
+    )
 
-    return {"message": "Configuration deleted successfully."}
+    return {
+        "message": "Configuration deleted successfully.",
+        "data": {
+            "config_definition_key": config_definition_key,
+            "config_key": config_key,
+        },
+    }
 
 
-@router.get("/")
+@router.get("/", status_code=status.HTTP_200_OK)
 def list_configs(
     request: Request,
     config_definition_key: str,
@@ -170,20 +159,15 @@ def list_configs(
     ListConfigsResponse
         The response for the list configurations request.
     """
-    try:
-        configs, count = l_config(
-            config_definition_key,
-            page,
-            limit,
-            sort_by,
-            sort_order,
-            search,
-            request,
-        )
-
-    except Exception as e:
-        logger.exception(f"Error listing configurations: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    configs, count = l_config(
+        config_definition_key,
+        page,
+        limit,
+        sort_by,
+        sort_order,
+        search,
+        request,
+    )
 
     return {
         "message": "Configurations listed successfully.",

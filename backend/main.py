@@ -6,16 +6,26 @@
 
 """
 
-from fastapi import FastAPI
 import logging
+import logging.config
+from fastapi import FastAPI
+
+from app.utils.exceptions.errors import APIError
+from app.utils.exceptions.logger import get_log_config
+from app.utils.exceptions.handler import ErrorHandlingMiddleware, api_error_handler
 
 from app.api.v1 import api_router as api_router_v1
 
-app = FastAPI()
+app = FastAPI(
+    title="Tartarus API",
+    description="Tartarus API for managing the underworld configurations",
+    version="1.0.0",
+)
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
+logging.config.dictConfig(get_log_config())
 
+app.add_exception_handler(APIError, api_error_handler)
+app.add_middleware(ErrorHandlingMiddleware)
 app.include_router(api_router_v1, prefix="/api/v1")
 
 

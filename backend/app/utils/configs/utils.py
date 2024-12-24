@@ -26,6 +26,8 @@ from app.utils.configs.validations import (
     validate_config_update,
 )
 
+from app.utils.exceptions.errors import not_found_error, conflict_error
+
 from app.utils.data.data_source import DataStore
 
 data_store = DataStore()
@@ -75,7 +77,7 @@ def r_config(config_definition_key: str, config_key: str):
     result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
     if len(result) == 0 or result is None:
-        raise ValueError("Configuration not found.")
+        raise not_found_error("configuration", config_key)
 
     return result[0]
 
@@ -103,7 +105,7 @@ def u_config(config_definition_key: str, config_key: str, data: dict):
     ]
 
     if rows_affected != 1:
-        raise ValueError(f"Configuration with key '{config_key}' not found.")
+        raise not_found_error("configuration", config_key)
 
     return None
 
@@ -127,7 +129,7 @@ def d_config(config_definition_key: str, config_key: str):
     ]
 
     if rows_affected != 1:
-        raise ValueError("Configuration not found.")
+        raise not_found_error("configuration", config_key)
 
     return None
 

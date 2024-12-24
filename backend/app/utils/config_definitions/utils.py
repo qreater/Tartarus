@@ -28,6 +28,11 @@ from app.utils.config_definitions.validations import (
     validate_list_params,
 )
 
+from app.utils.exceptions.errors import (
+    APIError,
+    not_found_error,
+)
+
 from app.utils.data.data_source import DataStore
 
 data_store = DataStore()
@@ -84,7 +89,7 @@ def r_config_definition(config_definition_key: str):
     result = data_store.execute_query(query, params=params, mode="retrieve")["response"]
 
     if len(result) == 0 or result is None:
-        raise ValueError("Configuration definition not found.")
+        raise not_found_error("definition", config_definition_key)
 
     return result[0]
 
@@ -151,7 +156,7 @@ def d_config_definition(config_definition_key: str):
     ]
 
     if rows_affected == 0:
-        raise ValueError("Configuration definition not found.")
+        raise not_found_error("definition", config_definition_key)
 
     delete_query, delete_params = d_config_definition_query(config_definition_key)
     data_store.execute_query(delete_query, delete_params)

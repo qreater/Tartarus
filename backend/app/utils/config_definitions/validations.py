@@ -10,6 +10,8 @@ import jsonschema
 import re
 from typing import Any, Dict, List
 
+from app.utils.exceptions.errors import APIError, conflict_error, validation_error
+
 
 def validate_config_definition_key(config_definition_key: str) -> None:
     """
@@ -21,12 +23,35 @@ def validate_config_definition_key(config_definition_key: str) -> None:
 
     """
     if not config_definition_key:
-        raise ValueError("Configuration definition key must be provided.")
-    if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_definition_key):
-        raise ValueError(
-            "Configuration definition key must start with a letter and contain only alphanumeric "
-            "characters and underscores and be at least 3 characters long."
+        raise validation_error(
+            field="config_definition_key",
+            extra_info="Config Definition key must be provided.",
         )
+    if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_definition_key):
+        raise validation_error(
+            field="config_definition_key",
+            extra_info="Config Definition key must start with a letter and contain only "
+            "alphanumeric characters and underscores, at least 3 characters long.",
+        )
+
+
+def validate_unique_key(config_definition_key: str) -> None:
+    """
+    Validates that a configuration definition key is unique.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+
+    """
+    from app.utils.config_definitions.utils import r_config_definition
+
+    try:
+        r_config_definition(config_definition_key)
+    except APIError:
+        return
+    else:
+        raise conflict_error("definition", config_definition_key)
 
 
 def validate_schema_structure(json_schema: Dict[str, Any]) -> None:
@@ -43,7 +68,7 @@ def validate_schema_structure(json_schema: Dict[str, Any]) -> None:
             return
         jsonschema.Draft7Validator.check_schema(json_schema)
     except jsonschema.exceptions.SchemaError as e:
-        raise ValueError(f"Invalid JSON Schema provided: {e.message}")
+        raise validation_error("json_schema", e.message.split("\n", 1)[0])
 
 
 def validate_schema_index(json_schema: Dict[str, Any], indexes: List[str]) -> None:
@@ -62,8 +87,9 @@ def validate_schema_index(json_schema: Dict[str, Any], indexes: List[str]) -> No
 
     for index in indexes:
         if not validate_schema_property(index, json_schema):
-            raise ValueError(
-                f"The index '{index}' is not defined in the schema properties."
+            raise validation_error(
+                field="indexes",
+                extra_info=f"Secondary index '{index}' does not exist in the schema properties.",
             )
 
 
@@ -77,7 +103,9 @@ def validate_index(indexes: List[str]) -> None:
 
     """
     if len(indexes) != len(set(indexes)):
-        raise ValueError("Duplicate secondary indexes are not allowed.")
+        raise validation_error(
+            field="indexes", extra_info="Secondary indexes must be unique."
+        )
 
 
 def validate_schema_property(field_path: str, json_schema: Dict[str, Any]) -> bool:
@@ -123,6 +151,7 @@ def validate_config_creation(
 
     """
     validate_config_definition_key(config_definition_key)
+    validate_unique_key(config_definition_key)
     validate_index(indexes)
 
     validate_schema_structure(json_schema)
@@ -199,18 +228,28 @@ def validate_list_params(
     """
 
     if page < 1 or limit < 1:
-        raise ValueError("Page number and limit must be greater than 0.")
+        raise validation_error(
+            field="page/limit",
+            extra_info="Page number and limit must be greater than 0.",
+        )
 
     if limit > 100:
-        raise ValueError("Limit must not exceed 100.")
+        raise validation_error(field="limit", extra_info="Limit must not exceed 100.")
 
     if sort_by not in sortable_fields:
-        raise ValueError(f"Sort field must be one of {sorted(sortable_fields)}.")
+        raise validation_error(
+            field="sort_by",
+            extra_info=f"Sort field must be one of {sorted(sortable_fields)}.",
+        )
 
     if sort_order not in ["asc", "desc"]:
-        raise ValueError("Sort order must be one of 'asc', 'desc'.")
+        raise validation_error(
+            field="sort_order", extra_info="Sort order must be one of 'asc', 'desc'."
+        )
 
     if search and not re.match(r"^[a-zA-Z0-9_]{3,}$", search):
-        raise ValueError(
-            "Search term must be at least 3 characters long and contain only alphanumeric characters and underscores."
+        raise validation_error(
+            field="search",
+            extra_info="Search term must be at least 3 characters long and "
+            "contain only alphanumeric characters and underscores.",
         )

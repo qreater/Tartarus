@@ -14,7 +14,7 @@ from app.utils.data.queries import (
 )
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("api-logger")
 
 
 class DataStore:

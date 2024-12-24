@@ -29,7 +29,7 @@
       },
       "index": "date",
       "indexes": ["date"],
-      "expected_error": "The index 'date' is not defined in the schema properties."
+      "expected_error": "Invalid Indexes! Secondary index 'date' does not exist in the schema properties."
     },
     "test_create_d_sindex": {
       "config_key": "sample_config",
@@ -45,7 +45,7 @@
         }
       },
       "indexes": ["date", "date"],
-      "expected_error": "Duplicate secondary indexes are not allowed."
+      "expected_error": "Invalid Indexes! Secondary indexes must be unique."
     },
     "test_create_n_sindex": {
       "config_key": "sample_config",
@@ -62,7 +62,7 @@
       },
       "index": "age",
       "indexes": ["age"],
-      "expected_error": "The index 'age' is not defined in the schema properties."
+      "expected_error": "Invalid Indexes! Secondary index 'age' does not exist in the schema properties."
     }
   },
   "read": {
@@ -75,7 +75,7 @@
     },
     "test_read_o_key": {
       "config_key": "",
-      "expected_error": "Configuration definition key must be provided."
+      "expected_error": "Invalid Config_definition_key! Config Definition key must be provided."
     }
   },
   "update": {
@@ -118,7 +118,7 @@
         "indexes": ["date"]
       },
       "indexes": ["name", "name"],
-      "expected_error": "Duplicate secondary indexes are not allowed."
+      "expected_error": "Invalid Indexes! Secondary indexes must be unique."
     },
     "test_update_n_index": {
       "config_key": "sample_config",
@@ -137,7 +137,7 @@
         "indexes": ["date"]
       },
       "indexes": ["dog"],
-      "expected_error": "The index 'dog' is not defined in the schema properties."
+      "expected_error": "Invalid Indexes! Secondary index 'dog' does not exist in the schema properties."
     }
   },
   "delete": {
@@ -154,7 +154,7 @@
         "rows_affected": 0,
         "response": []
       },
-      "expected_error": "Configuration definition key must be provided."
+      "expected_error": "Invalid Config_definition_key! Config Definition key must be provided."
     }
   },
   "list": {
@@ -180,39 +180,39 @@
         "page": 0,
         "limit": 10
       },
-      "expected_error": "Page number and limit must be greater than 0."
+      "expected_error": "Invalid Page/limit! Page number and limit must be greater than 0."
     },
     "test_list_n_nlimit": {
       "params": {
         "page": 1,
         "limit": -1
       },
-      "expected_error": "Page number and limit must be greater than 0."
+      "expected_error": "Invalid Page/limit! Page number and limit must be greater than 0."
     },
     "test_list_n_plimit": {
       "params": {
         "page": 1,
         "limit": 101
       },
-      "expected_error": "Limit must not exceed 100."
+      "expected_error": "Invalid Limit! Limit must not exceed 100."
     },
     "test_list_n_sort_by": {
       "params": {
         "sort_by": "nokey"
       },
-      "expected_error": "Sort field must be one of ['config_definition_key', 'created_at', 'modified_at']."
+      "expected_error": "Invalid Sort_by! Sort field must be one of ['config_definition_key', 'created_at', 'modified_at']."
     },
     "test_list_n_sort_order": {
       "params": {
         "sort_order": "nokey"
       },
-      "expected_error": "Sort order must be one of 'asc', 'desc'."
+      "expected_error": "Invalid Sort_order! Sort order must be one of 'asc', 'desc'."
     },
     "test_list_n_search": {
       "params": {
         "search": "123$;"
       },
-      "expected_error": "Search term must be at least 3 characters long and contain only alphanumeric characters and underscores."
+      "expected_error": "Invalid Search! Search term must be at least 3 characters long and contain only alphanumeric characters and underscores."
     }
   }
 }

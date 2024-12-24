@@ -23,6 +23,7 @@ with patch("app.utils.data.data_source.connect") as mock_connect:
 from app.utils.configs.queries import (
     d_config_query,
 )
+from app.utils.exceptions.errors import APIError
 
 from tests.unit_tests.config.payloads.payload_extractor import (
     extract_payload_params,
@@ -62,9 +63,10 @@ class TestConfigDelete:
         mock_execute_query.return_value = return_value
 
         if expected_error:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises(APIError) as error:
                 d_config(config_definition_key, config_key)
-            assert str(error.value) == expected_error
+            detail = error.value.detail[0]
+            assert detail["msg"] == expected_error
             return
 
         deletion_query, deletion_params = d_config_query(

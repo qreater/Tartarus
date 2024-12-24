@@ -6,7 +6,7 @@
 
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, status
 
 from app.utils.config_definitions.utils import (
     c_config_definition,
@@ -18,14 +18,10 @@ from app.utils.config_definitions.utils import (
 
 from app.models.config_definition import CreateConfigDefinition, UpdateConfigDefinition
 
-import logging
-
-logger = logging.getLogger(__name__)
-
 router = APIRouter()
 
 
-@router.post("/")
+@router.post("/", status_code=status.HTTP_201_CREATED)
 def create_config_definition(config_definition: CreateConfigDefinition):
     """
     Create a new configuration definition.
@@ -38,20 +34,19 @@ def create_config_definition(config_definition: CreateConfigDefinition):
     CreateConfigDefinitionResponse
         The response for the create configuration definition request.
     """
-    try:
-        c_config_definition(
-            config_definition.config_definition_key,
-            config_definition.json_schema,
-            config_definition.indexes,
-        )
-    except Exception as e:
-        logger.exception(f"Error creating configuration definition: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    c_config_definition(
+        config_definition.config_definition_key,
+        config_definition.json_schema,
+        config_definition.indexes,
+    )
 
-    return {"message": "Configuration definition created successfully."}
+    return {
+        "message": "Configuration definition created successfully.",
+        "data": config_definition.model_dump(),
+    }
 
 
-@router.get("/{config_definition_key}")
+@router.get("/{config_definition_key}", status_code=status.HTTP_200_OK)
 def get_config_definition(config_definition_key: str):
     """
     Get a configuration definition.
@@ -64,11 +59,7 @@ def get_config_definition(config_definition_key: str):
     GetConfigDefinitionResponse
         The response for the get configuration definition request.
     """
-    try:
-        config_definition = r_config_definition(config_definition_key)
-    except Exception as e:
-        logger.exception(f"Error retrieving configuration definition: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    config_definition = r_config_definition(config_definition_key)
 
     return {
         "message": "Configuration definition retrieved successfully.",
@@ -76,7 +67,7 @@ def get_config_definition(config_definition_key: str):
     }
 
 
-@router.put("/{config_definition_key}")
+@router.put("/{config_definition_key}", status_code=status.HTTP_200_OK)
 def update_config_definition(
     config_definition_key: str, config_definition: UpdateConfigDefinition
 ):
@@ -93,16 +84,15 @@ def update_config_definition(
     CreateConfigDefinitionResponse
         The response for the update configuration definition request.
     """
-    try:
-        u_config_definition(config_definition_key, config_definition.indexes)
-    except Exception as e:
-        logger.exception(f"Error updating configuration definition: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    u_config_definition(config_definition_key, config_definition.indexes)
 
-    return {"message": "Configuration definition updated successfully."}
+    return {
+        "message": "Configuration definition updated successfully.",
+        "data": config_definition.model_dump(),
+    }
 
 
-@router.delete("/{config_definition_key}")
+@router.delete("/{config_definition_key}", status_code=status.HTTP_200_OK)
 def delete_config_definition(config_definition_key: str):
     """
     Delete a configuration definition.
@@ -115,17 +105,15 @@ def delete_config_definition(config_definition_key: str):
     DeleteConfigDefinitionResponse
         The response for the delete configuration definition request.
     """
-    try:
-        d_config_definition(config_definition_key)
+    d_config_definition(config_definition_key)
 
-    except Exception as e:
-        logger.exception(f"Error deleting configuration definition: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-    return {"message": "Configuration definition deleted successfully."}
+    return {
+        "message": "Configuration definition deleted successfully.",
+        "data": {"config_definition_key": config_definition_key},
+    }
 
 
-@router.get("/")
+@router.get("/", status_code=status.HTTP_200_OK)
 def list_config_definition(
     page: int = 1,
     limit: int = 10,
@@ -152,14 +140,9 @@ def list_config_definition(
     ListConfigDefinitionResponse
         The response for the list configuration definition request.
     """
-    try:
-        config_definitions, count = l_config_definition(
-            page, limit, sort_by, sort_order, search
-        )
-
-    except Exception as e:
-        logger.exception(f"Error listing configuration definitions: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    config_definitions, count = l_config_definition(
+        page, limit, sort_by, sort_order, search
+    )
 
     return {
         "message": "Configuration definitions listed successfully.",

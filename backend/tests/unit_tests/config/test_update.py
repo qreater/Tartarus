@@ -20,6 +20,8 @@ with patch("app.utils.data.data_source.connect") as mock_connect:
         u_config,
     )
 
+from app.utils.exceptions.errors import APIError
+
 from tests.unit_tests.config.payloads.payload_extractor import (
     extract_payload_params,
     extract_payload,
@@ -59,10 +61,11 @@ class TestConfigUpdate:
         mock_r_config_definition.return_value = schema
 
         if expected_error:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises(APIError) as error:
                 u_config(config_definition_key, config_key, data)
             mock_execute_query.assert_not_called()
-            assert str(error.value) == expected_error
+            detail = error.value.detail[0]
+            assert detail["msg"] == expected_error
             return
 
         mock_execute_query.return_value = payload_extract

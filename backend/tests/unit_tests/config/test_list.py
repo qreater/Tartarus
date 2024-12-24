@@ -20,6 +20,8 @@ with patch("app.utils.data.data_source.connect") as mock_connect:
         l_config,
     )
 
+from app.utils.exceptions.errors import APIError
+
 from tests.unit_tests.config.payloads.payload_extractor import (
     extract_payload_params,
     extract_payload,
@@ -64,10 +66,11 @@ class TestConfigList:
         mock_request.query_params = request
 
         if expected_error:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises(APIError) as error:
                 l_config(config_definition_key, **params, request=mock_request)
                 mock_execute_query.assert_not_called()
-            assert str(error.value) == expected_error
+            detail = error.value.detail[0]
+            assert detail["msg"] == expected_error
             return
 
         l_config(config_definition_key, **params, request=mock_request)

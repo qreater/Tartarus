@@ -18,6 +18,8 @@ with patch("app.utils.data.data_source.connect") as mock_connect:
 
 from app.utils.config_definitions.queries import l_config_definition_query
 
+from app.utils.exceptions.errors import APIError
+
 from tests.unit_tests.config_definition.payloads.payload_extractor import (
     extract_payload,
     extract_payload_params,
@@ -55,9 +57,10 @@ class TestConfigDefinitionList:
         ) = extract_payload_params(payload_extract)
 
         if expected_error:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises(APIError) as error:
                 l_config_definition(**params)
-            assert str(error.value) == expected_error
+            detail = error.value.detail[0]
+            assert detail["msg"] == expected_error
             mock_execute_query.assert_not_called()
             return
 

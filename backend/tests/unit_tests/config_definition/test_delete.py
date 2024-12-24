@@ -21,6 +21,8 @@ from app.utils.config_definitions.queries import (
     internal_d_definition_query,
 )
 
+from app.utils.exceptions.errors import APIError
+
 from tests.unit_tests.config_definition.payloads.payload_extractor import (
     extract_payload,
     extract_payload_params,
@@ -60,9 +62,10 @@ class TestConfigDefinitionDelete:
         mock_execute_query.return_value = return_value
 
         if expected_error:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises(APIError) as error:
                 d_config_definition(config_key)
-            assert str(error.value) == expected_error
+            detail = error.value.detail[0]
+            assert detail["msg"] == expected_error
             mock_execute_query.assert_not_called()
             return
 

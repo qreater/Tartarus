@@ -15,6 +15,7 @@ from app.utils.config_definitions.validations import (
     validate_list_params,
 )
 from app.utils.config_definitions.utils import r_config_definition
+from app.utils.exceptions.errors import APIError, conflict_error, validation_error
 
 
 def validate_config_key(config_key: str) -> None:
@@ -27,11 +28,36 @@ def validate_config_key(config_key: str) -> None:
 
     """
     if not config_key:
-        raise ValueError("Configuration key must be provided.")
-    if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_key):
-        raise ValueError(
-            "Configuration key must start with a letter and contain only alphanumeric characters and underscores and be at least 3 characters long."
+        raise validation_error(
+            field="config_key", extra_info="Configuration key must be provided."
         )
+    if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]{2,}$", config_key):
+        raise validation_error(
+            field="config_key",
+            extra_info="Configuration key must start with a letter and contain only "
+            "alphanumeric characters and underscores, at least 3 characters long.",
+        )
+
+
+def validate_unique_key(config_definition_key: str, config_key: str) -> None:
+    """
+    Validates that a configuration key is unique.
+
+    -- Parameters
+    config_definition_key: str
+        The key for the configuration definition.
+    config_key: str
+        The key for the configuration
+
+    """
+    from app.utils.configs.utils import r_config
+
+    try:
+        r_config(config_definition_key, config_key)
+    except APIError:
+        return
+    else:
+        raise conflict_error("config", config_key)
 
 
 def validate_config_data(config_definition_key: str, data: dict) -> None:
@@ -45,7 +71,9 @@ def validate_config_data(config_definition_key: str, data: dict) -> None:
         The data for the configuration
     """
     if not data:
-        raise ValueError("Configuration data must be provided.")
+        raise validation_error(
+            field="data", extra_info="Configuration data must be provided."
+        )
 
     config_definition = r_config_definition(config_definition_key)
     json_schema = config_definition.get("json_schema")
@@ -56,7 +84,7 @@ def validate_config_data(config_definition_key: str, data: dict) -> None:
     try:
         jsonschema.validate(data, json_schema)
     except jsonschema.ValidationError as e:
-        raise ValueError(f"Configuration schema mismatch: {e.message}")
+        raise validation_error("data", e.message.split("\n", 1)[0])
 
 
 def validate_config_creation(
@@ -75,6 +103,7 @@ def validate_config_creation(
     """
     validate_config_definition_key(config_definition_key)
     validate_config_key(config_key)
+    validate_unique_key(config_definition_key, config_key)
     validate_config_data(config_definition_key, data)
 
     return None
@@ -175,8 +204,9 @@ def validate_config_list(
 
     for key in request.query_params.keys():
         if key not in filterable_fields:
-            raise ValueError(
-                f"Invalid filter field: Filter keys must be one of the indexes, or 'created_at', 'modified_at'."
+            raise validation_error(
+                field=key,
+                extra_info=f"Invalid query parameter. Must be one of: 'created_at', 'modified_at' or indexes",
             )
 
     validate_list_params(sortable_fields, page, limit, sort_by, sort_order, search)

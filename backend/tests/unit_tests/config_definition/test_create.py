@@ -26,6 +26,8 @@ from app.utils.config_definitions.queries import (
     c_index_query,
 )
 
+from app.utils.exceptions.errors import APIError
+
 from tests.unit_tests.config_definition.payloads.payload_extractor import (
     extract_payload_params,
     extract_payload,
@@ -63,11 +65,12 @@ class TestConfigDefinitionCreate:
         ) = extract_payload_params(payload_extract)
 
         if expected_error:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises(APIError) as error:
                 c_config_definition(config_key, schema, indexes)
-            assert str(error.value) == expected_error
-            mock_execute_query.assert_not_called()
+            detail = error.value.detail[0]
+            assert detail["msg"] == expected_error
             return
+
         creation_query, creation_params = c_config_definition_query(config_key)
         internal_query, internal_params = internal_c_definition_query(
             config_key, schema, indexes

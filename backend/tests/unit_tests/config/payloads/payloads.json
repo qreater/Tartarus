@@ -50,7 +50,7 @@
           "required": ["name", "date"]
         }
       },
-      "expected_error": "Configuration schema mismatch: 'date' is a required property"
+      "expected_error": "Invalid Data! 'date' is a required property"
     }
   },
   "read": {
@@ -105,12 +105,12 @@
         ],
         "rows_affected": 0
       },
-      "expected_error": "Configuration key must be provided."
+      "expected_error": "Invalid Config_key! Configuration key must be provided."
     },
     "test_read_o_cd_key": {
       "config_definition_key": "",
       "config_key": "sample_config",
-      "expected_error": "Configuration definition key must be provided."
+      "expected_error": "Invalid Config_definition_key! Config Definition key must be provided."
     }
   },
 
@@ -157,7 +157,7 @@
         }
       },
       "rows_affected": 0,
-      "expected_error": "Configuration key must be provided."
+      "expected_error": "Invalid Config_key! Configuration key must be provided."
     },
     "test_update_o_schema": {
       "config_definition_key": "sample_config_definition",
@@ -165,7 +165,7 @@
       "data": {},
       "schema": {},
       "rows_affected": 0,
-      "expected_error": "Configuration data must be provided."
+      "expected_error": "Invalid Data! Configuration data must be provided."
     },
     "test_update_n_schema": {
       "config_definition_key": "sample_config_definition",
@@ -186,7 +186,7 @@
         }
       },
       "rows_affected": 0,
-      "expected_error": "Configuration schema mismatch: 'date' is a required property"
+      "expected_error": "Invalid Data! 'date' is a required property"
     }
   },
   "delete": {
@@ -205,7 +205,7 @@
         "rows_affected": 0,
         "response": [{}]
       },
-      "expected_error": "Configuration key must be provided."
+      "expected_error": "Invalid Config_key! Configuration key must be provided."
     },
     "test_delete_w_cd_key": {
       "config_key": "sample_config",
@@ -222,7 +222,7 @@
         "rows_affected": 0,
         "response": []
       },
-      "expected_error": "Configuration definition key must be provided."
+      "expected_error": "Invalid Config_definition_key! Config Definition key must be provided."
     }
   },
   "list": {
@@ -267,7 +267,7 @@
         "page": 1,
         "limit": 10
       },
-      "expected_error": "Configuration definition key must be provided."
+      "expected_error": "Invalid Config_definition_key! Config Definition key must be provided."
     },
     "test_list_n_page": {
       "config_definition_key": "sample_config_definition",
@@ -294,7 +294,7 @@
         ],
         "rows_affected": 0
       },
-      "expected_error": "Page number and limit must be greater than 0."
+      "expected_error": "Invalid Page/limit! Page number and limit must be greater than 0."
     },
     "test_list_n_nlimit": {
       "config_definition_key": "sample_config_definition",
@@ -321,7 +321,7 @@
         ],
         "rows_affected": 0
       },
-      "expected_error": "Page number and limit must be greater than 0."
+      "expected_error": "Invalid Page/limit! Page number and limit must be greater than 0."
     },
     "test_list_n_plimit": {
       "config_definition_key": "sample_config_definition",
@@ -348,7 +348,7 @@
         ],
         "rows_affected": 0
       },
-      "expected_error": "Limit must not exceed 100."
+      "expected_error": "Invalid Limit! Limit must not exceed 100."
     },
     "test_list_n_sort_by": {
       "config_definition_key": "sample_config_definition",
@@ -370,7 +370,7 @@
         ],
         "rows_affected": 0
       },
-      "expected_error": "Sort field must be one of ['config_key', 'created_at', 'modified_at']."
+      "expected_error": "Invalid Sort_by! Sort field must be one of ['config_key', 'created_at', 'modified_at']."
     },
     "test_list_n_sort_order": {
       "config_definition_key": "sample_config_definition",
@@ -392,7 +392,7 @@
         ],
         "rows_affected": 0
       },
-      "expected_error": "Sort order must be one of 'asc', 'desc'."
+      "expected_error": "Invalid Sort_order! Sort order must be one of 'asc', 'desc'."
     },
     "test_list_n_search": {
       "config_definition_key": "sample_config_definition",
@@ -414,7 +414,7 @@
         ],
         "rows_affected": 0
       },
-      "expected_error": "Search term must be at least 3 characters long and contain only alphanumeric characters and underscores."
+      "expected_error": "Invalid Search! Search term must be at least 3 characters long and contain only alphanumeric characters and underscores."
     },
     "test_list_filters": {
       "config_definition_key": "sample_config_definition",
@@ -473,7 +473,7 @@
           }
         ]
       },
-      "expected_error": "Invalid filter field: Filter keys must be one of the indexes, or 'created_at', 'modified_at'."
+      "expected_error": "Invalid Setting_object.setting_two! Invalid query parameter. Must be one of: 'created_at', 'modified_at' or indexes"
     }
   }
 }

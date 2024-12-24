@@ -11,6 +11,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from app.utils.data.data_source import DataStore
+from app.utils.exceptions.errors import APIError
 
 with patch("app.utils.data.data_source.connect") as mock_connect:
     mock_conn = MagicMock()
@@ -56,14 +57,14 @@ class TestConfigCreate:
         mock_r_config_definition.return_value = schema
 
         if expected_error:
-            with pytest.raises(ValueError) as error:
+            with pytest.raises(APIError) as error:
                 c_config(config_definition_key, config_key, data)
-                mock_execute_query.assert_not_called()
-            assert str(error.value) == expected_error
+            detail = error.value.detail[0]
+            assert detail["msg"] == expected_error
             return
 
         c_config(config_definition_key, config_key, data)
-        mock_execute_query.assert_called_once()
+        assert mock_execute_query.call_count == 2
 
     @patch("app.utils.configs.validations.r_config_definition")
     @patch.object(DataStore, "execute_query")

@@ -29,7 +29,6 @@ from app.utils.config_definitions.validations import (
 )
 
 from app.utils.exceptions.errors import (
-    APIError,
     not_found_error,
 )
 

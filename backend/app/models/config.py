@@ -8,49 +8,106 @@
 
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Dict, Any
+from datetime import datetime
+
+from app.models.common import (
+    CreateResponse,
+    ReadResponse,
+    UpdateResponse,
+    DeleteResponse,
+    ListResponse,
+)
 
 
-class CreateConfig(BaseModel):
+class ConfigEditable(BaseModel):
     """
-    Represents the configuration for a configuration definition.
+    Represents the mutable fields for a configuration.
+    """
+
+    data: Dict[str, Any] = Field(..., description="The data for the configuration.")
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "data": {
+                    "setting_string": "value",
+                    "setting_object": {
+                        "first_key": "value",
+                        "second_key": 1,
+                    },
+                },
+            },
+        }
+    )
+
+
+class Config(ConfigEditable):
+    """
+    Represents the configuration.
     """
 
     config_key: str = Field(..., description="The unique identifier for the config.")
-    data: Dict[str, Any] = Field(..., description="The data for the configuration.")
 
-    model_config = ConfigDict(
-        json_schema_extra={
-            "example": {
-                "config_key": "qreate",
-                "data": {
-                    "setting_string": "value",
-                    "setting_object": {
-                        "first_key": "value",
-                        "second_key": 1,
-                    },
-                },
-            },
-        }
+
+class ConfigIdentity(BaseModel):
+    """
+    Represents the identity for a configuration.
+    """
+
+    config_definition_key: str = Field(
+        ..., description="The unique identifier for the config definition."
+    )
+    config_key: str = Field(..., description="The unique identifier for the config.")
+
+
+class ConfigRetrievable(Config):
+    """
+    Represents the configuration with the key.
+    """
+
+    created_at: datetime = Field(
+        ..., description="The time the configuration was created."
+    )
+    modified_at: datetime = Field(
+        ..., description="The time the configuration was last updated."
     )
 
 
-class UpdateConfig(BaseModel):
+class CreateConfigResponse(CreateResponse[Dict[str, Any]]):
     """
-    Represents the configuration for a configuration definition.
+    Represents the response for creating a configuration.
     """
 
-    data: Dict[str, Any] = Field(..., description="The data for the configuration.")
+    pass
 
-    model_config = ConfigDict(
-        json_schema_extra={
-            "example": {
-                "data": {
-                    "setting_string": "value",
-                    "setting_object": {
-                        "first_key": "value",
-                        "second_key": 1,
-                    },
-                },
-            },
-        }
-    )
+
+class ReadConfigResponse(ReadResponse[ConfigRetrievable]):
+    """
+    Represents the response for getting a configuration.
+    """
+
+    pass
+
+
+class UpdateConfigResponse(UpdateResponse[Dict[str, Any]]):
+    """
+    Represents the response for updating a configuration.
+    """
+
+    pass
+
+
+class DeleteConfigResponse(DeleteResponse[ConfigIdentity]):
+    """
+    Represents the response for deleting a configuration.
+    """
+
+    pass
+
+
+class ListConfigResponse(ListResponse[ConfigRetrievable]):
+    """
+    Represents the response for listing configurations.
+    """
+
+    pass

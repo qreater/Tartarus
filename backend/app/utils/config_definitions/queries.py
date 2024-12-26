@@ -8,7 +8,6 @@
 
 from app.utils.settings.config import settings
 import json
-from fastapi import Request
 
 
 def internal_c_definition_query(

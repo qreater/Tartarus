@@ -10,13 +10,26 @@ from fastapi import APIRouter, Request, status
 
 from app.utils.configs.utils import c_config, r_config, d_config, l_config, u_config
 
-from app.models.config import CreateConfig, UpdateConfig
+from app.models.config import (
+    Config,
+    ConfigEditable,
+    CreateConfigResponse,
+    ReadConfigResponse,
+    UpdateConfigResponse,
+    DeleteConfigResponse,
+    ListConfigResponse,
+)
 
 router = APIRouter()
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
-def create_config(config_definition_key: str, config: CreateConfig):
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=CreateConfigResponse,
+    response_model_exclude_none=True,
+)
+def create_config(config_definition_key: str, config: Config):
     """
     Create a new configuration.
 
@@ -42,7 +55,12 @@ def create_config(config_definition_key: str, config: CreateConfig):
     }
 
 
-@router.get("/{config_key}", status_code=status.HTTP_200_OK)
+@router.get(
+    "/{config_key}",
+    status_code=status.HTTP_200_OK,
+    response_model=ReadConfigResponse,
+    response_model_exclude_none=True,
+)
 def get_config(config_definition_key: str, config_key: str):
     """
     Get a configuration.
@@ -68,8 +86,13 @@ def get_config(config_definition_key: str, config_key: str):
     }
 
 
-@router.put("/{config_key}", status_code=status.HTTP_200_OK)
-def update_config(config_definition_key: str, config_key: str, config: UpdateConfig):
+@router.put(
+    "/{config_key}",
+    status_code=status.HTTP_200_OK,
+    response_model=UpdateConfigResponse,
+    response_model_exclude_none=True,
+)
+def update_config(config_definition_key: str, config_key: str, config: ConfigEditable):
     """
     Update an existing configuration.
 
@@ -82,8 +105,8 @@ def update_config(config_definition_key: str, config_key: str, config: UpdateCon
         The updated data for the configuration.
 
     -- Returns
-    dict
-        A success message.
+    UpdateConfigResponse
+        The response for the update configuration request.
     """
     u_config(
         config_definition_key,
@@ -97,7 +120,12 @@ def update_config(config_definition_key: str, config_key: str, config: UpdateCon
     }
 
 
-@router.delete("/{config_key}", status_code=status.HTTP_200_OK)
+@router.delete(
+    "/{config_key}",
+    status_code=status.HTTP_200_OK,
+    response_model=DeleteConfigResponse,
+    response_model_exclude_none=True,
+)
 def delete_config(config_definition_key: str, config_key: str):
     """
     Delete a configuration.
@@ -126,7 +154,12 @@ def delete_config(config_definition_key: str, config_key: str):
     }
 
 
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_model=ListConfigResponse,
+    response_model_exclude_none=True,
+)
 def list_configs(
     request: Request,
     config_definition_key: str,
@@ -156,7 +189,7 @@ def list_configs(
         The search term.
 
     -- Returns
-    ListConfigsResponse
+    ListConfigResponse
         The response for the list configurations request.
     """
     configs, count = l_config(

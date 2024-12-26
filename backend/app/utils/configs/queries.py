@@ -62,7 +62,7 @@ def r_config_query(config_definition_key: str, config_key: str) -> tuple:
     query = f"""
     SELECT
     config_key,
-    data AS config_data,
+    data,
     created_at,
     modified_at
 
@@ -194,7 +194,7 @@ def l_config_query(
     query = f"""
     SELECT 
         config_key,
-        data AS config_data,
+        data,
         created_at,
         modified_at
     FROM {config_definition_key}

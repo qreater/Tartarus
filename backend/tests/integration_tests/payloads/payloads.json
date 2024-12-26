@@ -22,6 +22,7 @@
         },
         "expected_status": 201,
         "expected_response": {
+            "status": "SUCCESS",
             "message": "Configuration definition created successfully.",
             "data": {
                 "config_definition_key": "test_config",
@@ -57,6 +58,7 @@
         },
         "expected_status": 200,
         "expected_response": {
+            "status": "SUCCESS",
             "message": "Configuration definition updated successfully.",
             "data": {
                 "indexes": [
@@ -70,6 +72,7 @@
         "url": "/api/v1/config_definition/test_config",
         "expected_status": 200,
         "expected_response": {
+            "status": "SUCCESS",
             "message": "Configuration definition deleted successfully.",
             "data": {
                 "config_definition_key": "test_config"
@@ -114,6 +117,7 @@
         },
         "expected_status": 201,
         "expected_response": {
+            "status": "SUCCESS",
             "message": "Configuration created successfully.",
             "data": {
                 "name": "test",
@@ -131,6 +135,7 @@
         "url": "/api/v1/config_definition/test_config/config/test",
         "expected_status": 200,
         "expected_response": {
+            "status": "SUCCESS",
             "message": "Configuration deleted successfully.",
             "data": {
                 "config_definition_key": "test_config",
@@ -158,6 +163,7 @@
         },
         "expected_status": 200,
         "expected_response": {
+            "status": "SUCCESS",
             "message": "Configuration updated successfully.",
             "data": {
                 "name": "test",

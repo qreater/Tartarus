@@ -26,7 +26,7 @@ from app.utils.configs.validations import (
     validate_config_update,
 )
 
-from app.utils.exceptions.errors import not_found_error, conflict_error
+from app.utils.exceptions.errors import not_found_error
 
 from app.utils.data.data_source import DataStore
 

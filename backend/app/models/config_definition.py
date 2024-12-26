@@ -8,9 +8,18 @@
 
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, Dict, Any, List
+from datetime import datetime
+
+from app.models.common import (
+    CreateResponse,
+    ReadResponse,
+    UpdateResponse,
+    DeleteResponse,
+    ListResponse,
+)
 
 
-class CreateConfigDefinition(BaseModel):
+class ConfigDefinition(BaseModel):
     """
     Represents a new configuration definition to be created in the internal table.
     """
@@ -51,7 +60,7 @@ class CreateConfigDefinition(BaseModel):
     )
 
 
-class UpdateConfigDefinition(BaseModel):
+class ConfigDefinitionEditable(BaseModel):
     """
     Represents an existing configuration definition to be updated in the internal table.
     """
@@ -60,3 +69,66 @@ class UpdateConfigDefinition(BaseModel):
         default_factory=list,
         description="List of field names to be indexed. Each must exist in the schema properties.",
     )
+
+
+class ConfigDefinitionIdentity(BaseModel):
+    """
+    Represents the identity for a configuration definition.
+    """
+
+    config_definition_key: str = Field(
+        ..., description="The unique identifier for the config definition."
+    )
+
+
+class ConfigDefinitionRetrievable(ConfigDefinition):
+    """
+    Represents the configuration definition with the key.
+    """
+
+    created_at: datetime = Field(
+        ..., description="The time the configuration definition was created."
+    )
+    modified_at: datetime = Field(
+        ..., description="The time the configuration definition was last updated."
+    )
+
+
+class CreateConfigDefinitionResponse(CreateResponse[ConfigDefinition]):
+    """
+    Represents the response for the create configuration definition request.
+    """
+
+    pass
+
+
+class ReadConfigDefinitionResponse(ReadResponse[ConfigDefinitionRetrievable]):
+    """
+    Represents the response for getting a configuration definition.
+    """
+
+    pass
+
+
+class UpdateConfigDefinitionResponse(UpdateResponse[ConfigDefinitionEditable]):
+    """
+    Represents the response for updating a configuration definition.
+    """
+
+    pass
+
+
+class DeleteConfigDefinitionResponse(DeleteResponse[ConfigDefinitionIdentity]):
+    """
+    Represents the response for deleting a configuration definition.
+    """
+
+    pass
+
+
+class ListConfigDefinitionResponse(ListResponse[ConfigDefinitionRetrievable]):
+    """
+    Represents the response for listing configuration definitions.
+    """
+
+    pass

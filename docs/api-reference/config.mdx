@@ -1,0 +1,15 @@
+The Configurations, defined under their associated Config Definitions, stores the actual configuration values linked with the configuration keys for storing runtime configuration details used by the application. 
+
+
+The table is named after the associated `config_definition_key` in the internal table and each entry represents an individual configuration.
+
+## Schema
+
+| **Field**      | **Description**                                    |
+|:---------------|:----------------------------------------------------|
+| `config_key`   | The unique identifier for the configuration key.   |
+| `data`         | The JSON schema associated with the configuration key. |
+| `created_at`   | The timestamp when the configuration key was created. |
+| `modified_at`  | The timestamp when the configuration key was last modified. |
+
+

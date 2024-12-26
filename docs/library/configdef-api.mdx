@@ -1,0 +1,147 @@
+---
+title: "ConfigDefinitionAPI"
+---
+
+Class for CRUDL of Configuration Definitions.
+
+#### Initialization
+
+```py
+from tartarus_lib import TartarusAPIClient
+
+tartarus = TartarusAPIClient(
+    base_url="<BASE_URL>",
+    api_key="<API_KEY>"
+)
+
+cd_client = tartarus.config_definitions
+```
+
+#### Methods
+
+<Accordion icon="c" title="reate Config Definition">
+
+Create a new configuration definition.
+
+```py
+cd_create = cd_client.create(
+    config_definition_key="test_config_definition",
+    json_schema= <SCHEMA>,
+    indexes= <INDEXES>
+)
+```
+
+<Icon icon="scroll" /> **Parameters**:  
+<ParamField  body="config_definition_key" type="string" required>
+   The key for the config definition.
+ </ParamField>
+ <ParamField  body="json_schema" type="JSON" default="None">
+   The JSON schema for the config definition.
+ </ParamField>
+ <ParamField  body="indexes" type="JSON" default="None">
+   The list of indexes for the config definition.
+ </ParamField>      
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Success response with dictionary of the config-def data.
+
+
+</Accordion>
+
+<Accordion icon="r" title="ead Config Definition">
+
+Read a configuration definition.
+
+```py
+cd_read = cd_client.retrieve(
+    config_definition_key="test_config_definition",
+)
+```
+
+<Icon icon="scroll" /> **Parameters**:  
+<ParamField  body="config_definition_key" type="string" required>
+   The key for the config definition.
+ </ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Dictionary of the config-def data.
+
+
+</Accordion>
+
+<Accordion icon="u" title="pdate Config Definition">
+
+Update a configuration definition.
+
+```py
+cd_update = cd_client.update(
+    config_definition_key="test_config_definition",
+    indexes=<INDEXES>
+)
+```
+
+<Icon icon="scroll" /> **Parameters**:  
+<ParamField  body="config_definition_key" type="string" required>
+   The key for the config definition.
+ </ParamField>
+ <ParamField  body="indexes" type="string" required>
+   The list of indexes for the config definition.
+ </ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Dictionary of the config-def data.
+
+
+</Accordion>
+
+<Accordion icon="d" title="elete Config Definition">
+
+Delete a configuration definition.
+
+```py
+cd_delete = cd_client.delete(
+    config_definition_key="test_config_definition",
+)
+```
+
+<Icon icon="scroll" /> **Parameters**:  
+<ParamField  body="config_definition_key" type="string" required>
+   The key for the config definition.
+ </ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Successful response.
+
+
+</Accordion>
+
+<Accordion icon="l" title="ist Config Definition">
+
+List a configuration.
+
+```py
+cd_list = cd_client.list(
+    page = 1,
+    limit = 10,
+    sort_by = "modified_at",
+    sort_order = "desc",
+    search = None
+)
+```
+<Icon icon="scroll" /> **Parameters**: 
+<ParamField  body="page" type="int" default= "1">
+   Number of pages.
+ </ParamField> 
+ <ParamField  body="limit" type="int" default= "10" >
+   Number of configs in each page.
+ </ParamField> 
+ <ParamField  body="sort_by" type="string" default="modified_at">
+   Sorting condition.
+ </ParamField>
+ <ParamField  body="sort_order" type="string" default="desc">
+   The order to sort by.
+ </ParamField> 
+<ParamField  body="search" type="string" default="None">
+   Search by keywords.
+ </ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: List of Dictionary of the config-def data.
+
+
+</Accordion>

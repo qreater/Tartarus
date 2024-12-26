@@ -1,0 +1,21 @@
+<Note> Ensure [Docker](https://docs.docker.com/engine/install/) , [Docker Compose](https://docs.docker.com/compose/install/), and [Git](https://git-scm.com/downloads) are installed on your system.</Note>
+
+<Steps>
+  <Step title="Clone Repository" icon="clone" iconType="duotone">
+    ```bash
+    git clone https://www.github.com/qreater/tartarus.git
+    ```
+  </Step>
+  <Step title="Direct to Directory" icon="folder" iconType="duotone">
+    ```bash
+    cd tartarus/devops
+    ```
+  </Step>
+  <Step title="Set-up Deployment" icon="rocket" iconType="duotone">
+    ```docker
+    docker-compose up --build
+    ```
+  </Step>
+</Steps>
+
+<Info> Once the steps are done, the API Docs can be viewed [here](http://localhost:8000/docs) </Info>

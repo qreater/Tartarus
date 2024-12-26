@@ -1,0 +1,38 @@
+---
+title: Getting Started
+---
+
+The `tartarus-lib` library is a Python client designed to simplify interactions with the Tartarus configuration store API. The developers can seamlessly integrate Tartarus into their Python applications without worrying about low-level API calls.
+
+To install the library, use `pip`
+
+```bash
+pip install tartarus-lib
+```
+---
+## TartarusAPIClient
+
+The primary class to interact with Tartarus.
+
+#### Initialization
+
+```py
+from tartarus_lib import TartarusAPIClient
+
+tartarus = TartarusAPIClient(
+    base_url="BASE_URL",
+    api_key="API_KEY"
+)
+```
+<ParamField path="base_url" type="string" required="true" >
+  Base URL of your Tartarus instance.
+</ParamField>
+<ParamField path="api_key" type="string" required="true" >
+  API key for authentication.
+</ParamField>
+
+
+
+
+
+

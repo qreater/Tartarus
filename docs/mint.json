@@ -1,0 +1,117 @@
+{
+    "name": "Tartarus",
+    "logo": "/assets/logo.svg",
+    "favicon": "/assets/favicon.svg",
+    "colors": {
+      "primary": "#2F7D1C",
+      "dark": "#4CFF20",
+      "background": {
+        "dark": "#111614"
+      }
+    },
+    "modeToggle": {
+      "default": "dark",
+      "isHidden": true
+    },
+    "api": {
+      "playground": {
+        "disableProxy": true
+      }
+    },
+    "background":{
+      "style": "grid"
+    },
+    "topbarCtaButton": {
+      "name": "Star Us!",
+      "url": "https://www.github.com/qreater/tartarus"
+    },
+    "tabs": [
+      {
+        "name": "API Documentation",
+        "openapi": "/api-reference/openapi.json",
+        "url": "api-reference"
+      },
+      {
+        "name": "Testing",
+        "url": "/testing/"
+      },
+      {
+        "name": "Deployment",
+        "url": "/deployment/"
+      },
+      {
+        "name": "Additional Information",
+        "url": "/additional-info/"
+      },
+      {
+        "name": "SDK",
+        "url": "/library/"
+      }
+    ],
+    "anchors": [
+      {
+        "name": "Qreater ORG",
+        "icon": "q",
+        "color": "#800080",
+        "iconType": "solid",
+        "url": "https://www.github.com/qreater"
+      },
+      {
+        "name": "GitHub Issues",
+        "icon": "github",
+        "url": "https://www.github.com/qreater/tartarus/issues"
+      }
+    ],
+    "navigation": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quick-start"
+        ]
+      },
+      {
+        "group": "API Documentation",
+        "pages": [
+          "api-reference/authorization",
+          "api-reference/config-definition",
+          "api-reference/config"
+        ]
+      },
+      {
+        "group": "Testing",
+        "pages": [
+          "testing/introduction",
+          "testing/testing-approach"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/introduction",
+          "deployment/docker",
+          "deployment/kubernetes"
+        ]
+      },
+      {
+        "group": "Additional Information",
+        "pages": [
+          "additional-info/error-handling",
+          "additional-info/database-design",
+          "additional-info/tech-stack",
+          "additional-info/cicd"
+        ]
+      },
+      {
+        "group":"tartarus-lib",
+        "pages":[
+          "library/introduction",
+          "library/config-api",
+          "library/configdef-api"
+        ]
+      }
+    ],
+    "footerSocials": {
+      "github": "https://github.com/qreater/tartarus"
+    }
+  }

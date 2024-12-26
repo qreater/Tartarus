@@ -1,0 +1,55 @@
+Tartarus APIs require authentication to ensure secure access. Authentication is handled via an API Key, which must be included in every request.
+
+To authenticate, add the following to request's header
+
+```bash
+Authorization: Bearer <YOUR_API_KEY>
+```
+
+---
+
+### Sample Request
+For *listing config_definitions*, with query parameters:
+
+| **Parameter** | **Type** | **Description**                                      |
+|:--------------|:----------|:------------------------------------------------------|
+| `page`        | `int`    | The page number.                                     |
+| `limit`       | `int`    | The limit for the number of configuration definitions to return. |
+| `sort_by`     | `str`    | The field to sort by.                                |
+| `sort_order`  | `str`    | The order to sort by.                                |
+| `search`      | `str`    | The search term.                                     |
+
+
+
+<Accordion title="API Request">
+```bash
+curl -X 'GET' \
+  '<BASE_URL>/api/v1/config_definition/?page=1&limit=10&sort_by=modified_at&sort_order=desc' \
+  -H 'accept: application/json' \
+  -H 'Authorization: <YOUR_API_KEY>'
+```
+</Accordion>
+
+<Accordion title="API Response">
+```json
+{
+  "message": "Configuration definitions listed successfully.",
+  "data": {
+    "results": [],
+    "meta": {
+      "page": 1,
+      "limit": 10,
+      "total": 0
+    }
+  }
+}
+```
+</Accordion>
+
+---
+
+### Interactive API Testing with Swagger
+
+Tartarus comes with **Swagger UI** to explore and test API endpoints. Authentication can be done in the UI, thus requiring less effort. 
+
+Visit [`http://localhost:8000/docs`](http://localhost:8000/docs) after starting your Tartarus server.

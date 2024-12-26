@@ -37,7 +37,7 @@ def create_config(config_definition_key: str, config: Config):
     config_definition_key: str
         The key for the configuration definition.
     config: CreateConfig
-        The data for the configuration
+        The data for the configuration.
 
     -- Returns
     CreateConfigResponse

@@ -1,0 +1,25 @@
+## Containerization and Orchestration
+
+Tartarus leverages modern containerization and orchestration technologies to ensure scalable, reliable, and efficient deployment across environments.
+
+### Docker
+Docker is used to encapsulate Tartarus and its dependencies in lightweight, portable containers. This approach guarantees consistent behavior across different environments, simplifying the deployment process and ensuring reliability.
+
+### Docker Compose
+Docker Compose is utilized to manage multi-container setups, allowing for easy configuration and orchestration of services such as Tartarus and PostgreSQL. With a single `docker-compose.yml` file, developers can quickly spin up and manage all required services.
+
+### Kubernetes
+Tartarus is designed to work seamlessly with Kubernetes for enterprise-grade orchestration. Key features include
+
+<CardGroup>
+<Card title="Automated Deployment and Scaling"> 
+  Kubernetes ensures that Tartarus can scale based on traffic demands, with minimal manual intervention.
+</Card>
+<Card title="High Availability and Load Balancing">
+  It provides built-in load balancing and automatic failover to maintain service uptime and reliability.
+</Card>
+<Card title="Self-Healing">
+  Kubernetes automatically replaces failed containers, ensuring that the application remains resilient.
+</Card>
+</CardGroup>  
+

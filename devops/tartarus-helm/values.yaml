@@ -1,0 +1,81 @@
+backend:
+  # Replica count for the backend API server. Set this to the number of replicas you want.
+  # A higher replica count will provide higher availability and load balancing.
+  replicaCount: 2
+
+  image:
+    # The Docker image repository for the backend service.
+    # Make sure to set the appropriate repository where your application image is stored.
+    repository: 'tartarus'
+    
+    # The Docker image tag to be used for the deployment.
+    # 'latest' is typically used for development, but for production use a specific version tag.
+    tag: latest
+    
+    # The pull policy to define when to pull the Docker image.
+    # 'Never' means no image will be pulled; you should use this when you're managing images locally.
+    pullPolicy: Never
+
+  # The port that the backend service will expose. This should match the port your app is listening on.
+  port: 8000
+
+  readinessProbe:
+    # Endpoint for the readiness probe to check if the service is healthy.
+    # The path should correspond to an actual health check endpoint in your API.
+    path: "/readiness-probe"
+    
+    # Initial delay before starting the readiness probe to avoid failure during app startup.
+    initialDelaySeconds: 10
+    
+    # How often the readiness probe will check the service after the initial delay.
+    periodSeconds: 30
+
+  resources:
+    # Resource requests are the minimum amount of resources Kubernetes will allocate for the container.
+    # Ensure your app has enough resources to run under normal conditions.
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    
+    # Resource limits define the maximum amount of resources the container can consume.
+    # This helps to prevent the container from consuming excessive resources.
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+
+  service:
+    # The service configuration that exposes the backend API to the cluster or externally.
+    type: NodePort  # Exposes the service on a node port that can be accessed outside the cluster.
+    protocol: TCP   # The protocol to use for communication, TCP is most common for HTTP APIs.
+    port: 8000      # The port that will be exposed.
+    targetPort: 8000  # The container port to which traffic will be forwarded.
+
+  config:
+    # API_KEY is a required configuration for authentication.
+    # Ensure that this key is unique and securely stored.
+    API_KEY: "OPEN_SESAME"
+
+    # Postgres Configuration:
+    # ------------------------
+    # If you're using the built-in Postgres, leave the following values as is.
+    # If you have a separate PostgreSQL database, modify these values accordingly.
+    
+    DB_HOST: ""  # The hostname of the Postgres database. If you're using the self-contained Postgres, this will be set automatically.
+    DB_PORT: ""  # The port for the Postgres database. Default is 5432.
+    DB_NAME: ""  # The name of the Postgres database. Default is "datastore".
+    DB_USER: ""  # The Postgres username. Default is "postgres".
+    DB_PASSWORD: ""  # The Postgres password. Set this securely.
+
+global:
+  postgresql:
+    enabled: true  # Whether the Postgres database should be enabled as part of this deployment.
+    
+    auth:
+      # The default username for the Postgres database. Modify this if you're using a custom username.
+      username: "postgres"
+      
+      # The default password for the Postgres database. Ensure this is a secure password, especially in production.
+      password: "postgres"
+      
+      # The default name of the database to be created. You can modify this to suit your application.
+      database: "datastore"

@@ -16,13 +16,26 @@ from app.utils.config_definitions.utils import (
     l_config_definition,
 )
 
-from app.models.config_definition import CreateConfigDefinition, UpdateConfigDefinition
+from app.models.config_definition import (
+    ConfigDefinition,
+    ConfigDefinitionEditable,
+    CreateConfigDefinitionResponse,
+    ReadConfigDefinitionResponse,
+    UpdateConfigDefinitionResponse,
+    DeleteConfigDefinitionResponse,
+    ListConfigDefinitionResponse,
+)
 
 router = APIRouter()
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
-def create_config_definition(config_definition: CreateConfigDefinition):
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=CreateConfigDefinitionResponse,
+    response_model_exclude_none=True,
+)
+def create_config_definition(config_definition: ConfigDefinition):
     """
     Create a new configuration definition.
 
@@ -46,7 +59,12 @@ def create_config_definition(config_definition: CreateConfigDefinition):
     }
 
 
-@router.get("/{config_definition_key}", status_code=status.HTTP_200_OK)
+@router.get(
+    "/{config_definition_key}",
+    status_code=status.HTTP_200_OK,
+    response_model=ReadConfigDefinitionResponse,
+    response_model_exclude_none=True,
+)
 def get_config_definition(config_definition_key: str):
     """
     Get a configuration definition.
@@ -56,7 +74,7 @@ def get_config_definition(config_definition_key: str):
         The key for the configuration definition.
 
     -- Returns
-    GetConfigDefinitionResponse
+    ReadConfigDefinitionResponse
         The response for the get configuration definition request.
     """
     config_definition = r_config_definition(config_definition_key)
@@ -67,9 +85,14 @@ def get_config_definition(config_definition_key: str):
     }
 
 
-@router.put("/{config_definition_key}", status_code=status.HTTP_200_OK)
+@router.put(
+    "/{config_definition_key}",
+    status_code=status.HTTP_200_OK,
+    response_model=UpdateConfigDefinitionResponse,
+    response_model_exclude_none=True,
+)
 def update_config_definition(
-    config_definition_key: str, config_definition: UpdateConfigDefinition
+    config_definition_key: str, config_definition: ConfigDefinitionEditable
 ):
     """
     Update a configuration definition.
@@ -81,7 +104,7 @@ def update_config_definition(
         The configuration definition to update.
 
     -- Returns
-    CreateConfigDefinitionResponse
+    UpdateConfigDefinitionResponse
         The response for the update configuration definition request.
     """
     u_config_definition(config_definition_key, config_definition.indexes)
@@ -92,7 +115,12 @@ def update_config_definition(
     }
 
 
-@router.delete("/{config_definition_key}", status_code=status.HTTP_200_OK)
+@router.delete(
+    "/{config_definition_key}",
+    status_code=status.HTTP_200_OK,
+    response_model=DeleteConfigDefinitionResponse,
+    response_model_exclude_none=True,
+)
 def delete_config_definition(config_definition_key: str):
     """
     Delete a configuration definition.
@@ -113,7 +141,12 @@ def delete_config_definition(config_definition_key: str):
     }
 
 
-@router.get("/", status_code=status.HTTP_200_OK)
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_model=ListConfigDefinitionResponse,
+    response_model_exclude_none=True,
+)
 def list_config_definition(
     page: int = 1,
     limit: int = 10,

@@ -7,15 +7,44 @@
 """
 
 import time
-from fastapi import Request
+from fastapi import Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from logging import getLogger
+
+from app.models.common import BaseResponse, Status
 
 from app.utils.exceptions.errors import APIError, handle_exception
 from app.utils.exceptions.logger import logger_utility
 
 logger = getLogger("api-logger")
+
+
+async def api_response_handler(request: Request, response: dict):
+    """
+    Custom response handler for JSONResponse
+
+    -- Parameters
+    request: Request
+        The request object.
+
+    response: dict
+        The response dictionary.
+
+    -- Returns
+    JSONResponse
+        The response for the JSONResponse object.
+    """
+    response = JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=response,
+        headers={
+            "X-Request-ID": request.state.request_id,
+            "X-Correlation-ID": request.state.correlation_id,
+        },
+    )
+
+    return response
 
 
 async def api_error_handler(request: Request, exc: APIError):
@@ -34,9 +63,15 @@ async def api_error_handler(request: Request, exc: APIError):
         The response for the APIError exception.
     """
     request.state.traceback = exc.detail
+
+    response = BaseResponse(
+        status=Status.error,
+        errors=exc.detail,
+    ).model_dump(exclude_none=True)
+
     return JSONResponse(
         status_code=exc.status_code,
-        content={"errors": exc.detail},
+        content=response,
         headers={
             "X-Request-ID": request.state.request_id,
             "X-Correlation-ID": request.state.correlation_id,
@@ -61,8 +96,8 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
 
         try:
             start_time = time.perf_counter_ns()
+
             response = await call_next(request)
-            end_time = time.perf_counter_ns()
 
             response.headers["X-Request-ID"] = request.state.request_id
             response.headers["X-Correlation-ID"] = request.state.correlation_id
@@ -71,16 +106,20 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
 
         except Exception as e:
             error = handle_exception(e)
+
             request.state.traceback = error.detail
             logger.exception(f"Unhandled Exception: {str(e)}", exc_info=True)
 
             return self.json_response(
+                Status.error,
                 error.status_code,
                 error.detail,
                 request.state.request_id,
                 request.state.correlation_id,
             )
         finally:
+            end_time = time.perf_counter_ns()
+
             logger_utility.log(
                 request_id=request.state.request_id,
                 correlation_id=request.state.correlation_id,
@@ -90,7 +129,7 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
                     "query": dict(request.query_params),
                 },
                 response={
-                    "status": response.status_code if response else 500,
+                    "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
                     "traceback": (
                         request.state.traceback
                         if hasattr(request.state, "traceback")
@@ -101,7 +140,12 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
             )
 
     def json_response(
-        self, status_code: int, detail: str, request_id: str, correlation_id: str
+        self,
+        status: str,
+        status_code: int,
+        detail: str,
+        request_id: str,
+        correlation_id: str,
     ):
         """
         Return a JSON response with the error message and set custom headers.
@@ -121,8 +165,13 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
             "X-Correlation-ID": correlation_id,
         }
 
+        response = BaseResponse(
+            status=status,
+            errors=detail,
+        ).model_dump(exclude_none=True)
+
         return JSONResponse(
             status_code=status_code,
-            content={"errors": detail},
+            content=response,
             headers=headers,
         )

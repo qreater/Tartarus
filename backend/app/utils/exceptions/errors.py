@@ -105,5 +105,5 @@ def unauthorized_error():
     return APIError(
         status_code=status.HTTP_401_UNAUTHORIZED,
         error_type="unauthorized_error",
-        detail="You are not authorized!",
+        detail="Please provide a valid API key.",
     )

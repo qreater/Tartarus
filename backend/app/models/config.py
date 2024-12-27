@@ -48,6 +48,15 @@ class Config(ConfigEditable):
 
     config_key: str = Field(..., description="The unique identifier for the config.")
 
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "config_key": "qreate",
+                **ConfigEditable.model_config["json_schema_extra"]["example"],
+            },
+        }
+    )
+
 
 class ConfigIdentity(BaseModel):
     """

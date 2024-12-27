@@ -19,7 +19,26 @@ from app.models.common import (
 )
 
 
-class ConfigDefinition(BaseModel):
+class ConfigDefinitionEditable(BaseModel):
+    """
+    Represents an existing configuration definition to be updated in the internal table.
+    """
+
+    indexes: List[str] = Field(
+        default_factory=list,
+        description="List of field names to be indexed. Each must exist in the schema properties.",
+    )
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "indexes": ["setting_object.first_key"],
+            }
+        }
+    )
+
+
+class ConfigDefinition(ConfigDefinitionEditable):
     """
     Represents a new configuration definition to be created in the internal table.
     """
@@ -30,10 +49,6 @@ class ConfigDefinition(BaseModel):
     json_schema: Optional[Dict[str, Any]] = Field(
         default=None,
         description="JSON Schema for validating configs belonging to this config definition.",
-    )
-    indexes: Optional[List[str]] = Field(
-        default_factory=list,
-        description="List of field names to be indexed. Each must exist in the schema properties.",
     )
 
     model_config = ConfigDict(
@@ -54,20 +69,9 @@ class ConfigDefinition(BaseModel):
                     },
                     "required": ["setting_string", "setting_object"],
                 },
-                "indexes": ["setting_object.first_key"],
+                **ConfigDefinitionEditable.model_config["json_schema_extra"]["example"],
             }
         }
-    )
-
-
-class ConfigDefinitionEditable(BaseModel):
-    """
-    Represents an existing configuration definition to be updated in the internal table.
-    """
-
-    indexes: List[str] = Field(
-        default_factory=list,
-        description="List of field names to be indexed. Each must exist in the schema properties.",
     )
 
 

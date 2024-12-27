@@ -9,7 +9,9 @@
 import secrets
 
 from fastapi import Security, HTTPException, status
+
 from app.utils.settings.config import settings
+from app.utils.exceptions.errors import unauthorized_error
 
 from fastapi.security import APIKeyHeader
 
@@ -31,8 +33,4 @@ def check_api_key(api_key=Security(request_api_key)):
 
     correct_api_key = secrets.compare_digest(api_key, settings.API_KEY)
     if not correct_api_key:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect API key",
-            headers={"WWW-Authenticate": "Basic"},
-        )
+        raise unauthorized_error()

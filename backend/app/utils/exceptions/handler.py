@@ -119,6 +119,9 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
             )
         finally:
             end_time = time.perf_counter_ns()
+            status_code = (
+                getattr(response, "status_code", 500) if "response" in locals() else 500
+            )
 
             logger_utility.log(
                 request_id=request.state.request_id,
@@ -129,7 +132,7 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
                     "query": dict(request.query_params),
                 },
                 response={
-                    "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    "status": status_code,
                     "traceback": (
                         request.state.traceback
                         if hasattr(request.state, "traceback")

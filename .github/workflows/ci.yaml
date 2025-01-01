@@ -18,10 +18,15 @@ jobs:
         with:
           python-version: 3.12
 
-      - name: Run pre-commit
+      - name: Run pre-commit in backend
         run: |
           cd backend
           pip install pre-commit
+          pre-commit run --all-files
+
+      - name: Run pre-commit in library
+        run: |
+          cd library
           pre-commit run --all-files
 
   unit-tests:
@@ -72,3 +77,59 @@ jobs:
           pip install poetry
           poetry install
           poetry run pytest tests/integration_tests/ --disable-warnings
+
+  library-tests:
+    runs-on: ubuntu-latest
+    needs: integration-tests
+
+    services:
+      postgres:
+        image: postgres:15.8-alpine3.19
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.12
+
+      - name: Start Uvicorn Server in Background
+        run: |
+          cd backend
+          pip install poetry
+          poetry install
+          nohup poetry run uvicorn main:app --host 0.0.0.0 --port 8000 &
+
+      - name: Wait for Server to Start
+        run: |
+          MAX_RETRIES=5
+          RETRY_INTERVAL=1
+          
+          for i in $(seq 1 $MAX_RETRIES); do
+            if curl -s -f http://localhost:8000/health > /dev/null 2>&1; then
+              echo "Server is healthy!"
+              exit 0
+            fi
+            echo "Attempt $i/$MAX_RETRIES: Server not ready, waiting ${RETRY_INTERVAL}s..."
+            sleep $RETRY_INTERVAL
+          done
+          
+          echo "Error: Server failed to become healthy after $MAX_RETRIES attempts"
+          curl -v http://localhost:8000/health
+          exit 1
+
+      - name: Run library tests
+        run: |
+          cd library
+          pip install pytest requests
+          pytest tests/ --disable-warnings

@@ -65,9 +65,6 @@ def c_config_definition(config_definition_key: str, json_schema: dict, indexes: 
         index_query, index_params = c_index_query(config_definition_key, index)
         data_store.execute_query(index_query, index_params)
 
-    index_query, index_params = c_index_query(config_definition_key, index)
-    data_store.execute_query(index_query, index_params)
-
     return None
 
 

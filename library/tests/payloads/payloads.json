@@ -1,0 +1,162 @@
+{
+    "pre_cd_test": {},
+    "test_cd_create": {
+        "method": "create",
+        "payload": {
+            "config_definition_key": "library_test_config",
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number"
+                    }
+                },
+                "required": ["name", "age"]
+            },
+            "indexes": ["name"]
+        },
+        "response": {
+            "config_definition_key": "library_test_config",
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number"
+                    }
+                },
+                "required": ["name", "age"]
+            },
+            "indexes": ["name"]
+        }
+    },
+    "test_cd_retrieve": {
+        "method": "retrieve",
+        "payload": {
+            "config_definition_key": "library_test_config"
+        },
+        "response": {
+            "config_definition_key": "library_test_config",
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number"
+                    }
+                },
+                "required": ["name", "age"]
+            },
+            "indexes": ["name"]
+        }
+    },
+    "test_cd_update": {
+        "method": "update",
+        "payload": {
+            "config_definition_key": "library_test_config",
+            "indexes": ["name", "age"]
+        },
+        "response": {
+            "indexes": ["name", "age"]
+        }
+    },
+    "test_cd_list": {
+        "method": "list"
+    },
+    "test_cd_delete": {
+        "method": "delete",
+        "payload": {
+            "config_definition_key": "library_test_config"
+        },
+        "response": {
+            "config_definition_key": "library_test_config"
+        }
+    },
+    "pre_c_test": {
+        "method": "create",
+        "payload": {
+            "config_definition_key": "library_test_config",
+            "json_schema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "age": {
+                        "type": "number"
+                    }
+                },
+                "required": ["name", "age"]
+            },
+            "indexes": ["name"]
+        }
+    },
+    "test_c_create": {
+        "method": "create",
+        "payload": {
+            "config_definition_key": "library_test_config",
+            "config_key": "library_test_config_key",
+            "data": {
+                "name": "John Doe",
+                "age": 30
+            }
+        },
+        "response": {
+            "name": "John Doe",
+            "age": 30
+        }
+    },
+    "test_c_retrieve": {
+        "method": "retrieve",
+        "payload": {
+            "config_definition_key": "library_test_config",
+            "config_key": "library_test_config_key"
+        },
+        "response": {
+            "config_key": "library_test_config_key",
+            "data": {
+                "name": "John Doe",
+                "age": 30
+            }
+        }
+    },
+    "test_c_update": {
+        "method": "update",
+        "payload": {
+            "config_definition_key": "library_test_config",
+            "config_key": "library_test_config_key",
+            "data": {
+                "name": "Jane Doe",
+                "age": 25
+            }
+        },
+        "response": {
+            "name": "Jane Doe",
+            "age": 25
+        }
+    },
+    "test_c_list": {
+        "method": "list",
+        "payload": {
+            "config_definition_key": "library_test_config"
+        }
+    },
+    "test_c_delete": {
+        "method": "delete",
+        "payload": {
+            "config_definition_key": "library_test_config",
+            "config_key": "library_test_config_key"
+        },
+        "response": {
+            "config_definition_key": "library_test_config",
+            "config_key": "library_test_config_key"
+        }
+    }
+}

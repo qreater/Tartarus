@@ -1,0 +1,31 @@
+---
+title: Quick Start
+---
+Tartarus is designed to make configuration management seamless, secure, and incredibly efficient. Setting it up on your local machine is straightforward and can be done in just a few steps. This quickstart guide will walk you through the process to ensure you’re up and running in no time.
+
+<Steps>
+  <Step title="Clone Repository" icon="clone" iconType="duotone">
+    ```bash
+    git clone https://www.github.com/qreater/tartarus.git
+    ```
+  </Step>
+  <Step title="Direct to Directory" icon="folder" iconType="duotone">
+    ```bash
+    cd tartarus/backend
+    ```
+  </Step>
+  <Step title="Install Dependencies" icon="download" iconType="duotone">
+   ```bash
+   poetry install
+   ```
+  </Step>
+  <Step title="Spin-up Server" icon="rocket" iconType="duotone">
+    ```bash
+    poetry run uvicorn main:app
+    ```
+  </Step>
+</Steps>
+
+<Info> Once the steps are done, the API Docs can be viewed [here](http://localhost:8000/docs) </Info>
+
+To know more about Docker Deployment set up, check it out [here](https://www.qreater.mintlify.app/deployment/docker)

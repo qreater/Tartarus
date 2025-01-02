@@ -1,0 +1,40 @@
+---
+title: Quick Start
+---
+
+## Running in Local
+
+The test suite is executed using the following command
+
+```bash
+poetry run pytest
+```
+
+## Running in Docker
+
+Check the Container ID of the build image through
+
+```bash
+docker ps
+```
+Copy the Container ID and execute a shell command
+
+```bash
+docker exec -it <CONTAINER_ID> sh
+```
+
+Install dependencies and run `pytest`
+
+```bash
+poetry install
+poetry run pytest
+```
+
+<Note> To run either unit or integration tests, use \
+`poetry run pytest ./tests/unit_tests` \
+or `poetry run pytest ./tests/integration_tests` \
+respectively. </Note>
+
+
+
+

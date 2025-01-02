@@ -1,0 +1,18 @@
+---
+title: Config Definition
+---
+
+The `config_definition` table serves as a blueprint for `config`, defining structure, constraints, and behavior to ensure consistent, rule-adherent configurations across the application.
+
+
+## Schema
+
+| Field          | Description                                        |
+|-----------------|----------------------------------------------------|
+| `config_key`    | The unique identifier for the configuration key.   |
+| `data`          | The JSON schema associated with the configuration key. |
+| `created_at`    | The timestamp when the configuration key was created. |
+| `modified_at`   | The timestamp when the configuration key was last modified. |
+
+
+

@@ -1,0 +1,117 @@
+{
+    "name": "Tartarus",
+    "openapi": "/endpoints/openapi.json",
+    "logo": "/assets/dark.svg",
+    "favicon": "/assets/favicon.svg",
+    "colors": {
+      "primary": "#2F7D1C",
+      "dark": "#4CFF20",
+      "background": {
+        "dark": "#111614"
+      }
+    },
+    "background":{
+      "style": "grid"
+    },
+    "topbarLinks": [
+      {
+        "name": "Support",
+        "url": "vaishnavimr2403@gmail.com"
+      }
+    ],
+    "topbarCtaButton": {
+      "name": "Star Us!",
+      "url": "https://www.github.com/qreater/tartarus"
+    },
+    "tabs": [
+      {
+        "name": "API Reference",
+        "openapi": "/api-reference/openapi.json",
+        "url": "api-reference",
+        "icon": "square-terminal"
+      },
+      {
+        "name": "Testing",
+        "url": "/testing/"
+      },
+      {
+        "name": "Deployment",
+        "url": "/deployment/"
+      },
+      {
+        "name": "Additional Information",
+        "url": "/additional-info/"
+      }
+    ],
+    "anchors": [
+      {
+        "name": "Documentation",
+        "icon": "book-open-cover",
+        "url": "https://www.qreater.mintlify.app/docs"
+      }
+    ],
+    "navigation": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quick-start"
+        ]
+      },
+      {
+        "group": "API Documentation",
+        "pages": [
+          "api-reference/introduction",
+          "api-reference/config",
+          "api-reference/config-definition"
+        ]
+      },
+      {
+        "group": "Config APIs",
+        "pages": [
+          "api-reference/endpoints/config/create",
+          "api-reference/endpoints/config/list",
+          "api-reference/endpoints/config/read",
+          "api-reference/endpoints/config/update",
+          "api-reference/endpoints/config/delete"
+        ]
+      },
+      {
+        "group": "Config Definition APIs",
+        "pages": [
+          "api-reference/endpoints/config_definition/create",
+          "api-reference/endpoints/config_definition/list",
+          "api-reference/endpoints/config_definition/read",
+          "api-reference/endpoints/config_definition/update",
+          "api-reference/endpoints/config_definition/delete"
+        ]
+      },
+      {
+        "group": "Testing",
+        "pages": [
+          "testing/introduction",
+          "testing/quickstart"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/introduction",
+          "deployment/docker",
+          "deployment/kubernetes"
+        ]
+      },
+      {
+        "group": "Additional Information",
+        "pages": [
+          "additional-info/error-handling",
+          "additional-info/database-design",
+          "additional-info/tech-stack",
+          "additional-info/cicd"
+        ]
+      }
+    ],
+    "footerSocials": {
+      "github": "https://github.com/qreater/tartarus"
+    }
+  }

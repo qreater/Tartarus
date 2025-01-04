@@ -40,7 +40,7 @@ class ConfigDefinitionAPI:
             "json_schema": json_schema,
             "indexes": indexes or [],
         }
-        return self.base_client._make_request("POST", "config_definition", json=data)
+        return self.base_client._make_request("POST", "config_definition/", json=data)
 
     def retrieve(self, config_definition_key: str):
         """

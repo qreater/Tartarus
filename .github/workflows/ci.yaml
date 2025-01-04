@@ -43,7 +43,7 @@ jobs:
         run: |
           cd backend
           pip install poetry
-          poetry install
+          poetry install --no-root
           poetry run pytest tests/unit_tests/ --disable-warnings
   
   integration-tests:
@@ -75,7 +75,7 @@ jobs:
         run: |
           cd backend
           pip install poetry
-          poetry install
+          poetry install --no-root
           poetry run pytest tests/integration_tests/ --disable-warnings
 
   library-tests:
@@ -107,7 +107,7 @@ jobs:
         run: |
           cd backend
           pip install poetry
-          poetry install
+          poetry install --no-root
           nohup poetry run uvicorn main:app --host 0.0.0.0 --port 8000 &
 
       - name: Wait for Server to Start

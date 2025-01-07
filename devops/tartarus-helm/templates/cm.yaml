@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+  namespace: {{ .Release.Namespace }}
+data:
+  DB_HOST: {{ .Values.backend.config.DB_HOST | default (printf "%s-postgresql.%s" .Release.Name .Release.Namespace) | quote }}
+  DB_PORT: {{ .Values.backend.config.DB_PORT | default "5432" | quote }}
+  DB_NAME: {{ .Values.backend.config.DB_NAME | default "datastore" | quote }}
+  DB_USER: {{ .Values.backend.config.DB_USER | default "postgres" | quote }}
+  DB_PASSWORD: {{ .Values.backend.config.DB_PASSWORD | default "postgres" | quote }}
+
+  API_KEY: {{ .Values.backend.config.API_KEY | required "Please provide an API key" | quote }}

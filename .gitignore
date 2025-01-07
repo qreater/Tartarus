@@ -99,3 +99,7 @@ Desktop.ini
 
 # PyCharm
 .idea/
+
+# Helm files
+*.tgz
+Chart.lock

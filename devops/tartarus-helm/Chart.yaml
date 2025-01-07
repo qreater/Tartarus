@@ -1,0 +1,17 @@
+apiVersion: v2
+name: tartarus-helm
+description: A Helm chart for Tartarus
+
+type: application
+
+version: 1.0.0
+appVersion: 1.0.0
+
+dependencies:
+- name: postgresql
+  version: "16.3.5"
+  repository: "https://charts.bitnami.com/bitnami"
+  condition: postgresql.enabled
+  tags:
+    - tartarus
+    - postgresql

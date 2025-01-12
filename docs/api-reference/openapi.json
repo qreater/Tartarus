@@ -1,29 +1,1504 @@
 {
-    "openapi": "3.0.1",
+    "openapi": "3.1.0",
     "info": {
-      "title": "Tartarus API"
+        "title": "Tartarus API",
+        "description": "Tartarus API for managing the underworld configurations",
+        "version": "1.0.0"
     },
     "paths": {
-      "/sample": {
-        "get": {
-          "responses": {
-            "200": {
-              "description": "Sample API Response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string"
-                      }
+        "/api/v1/config_definition/": {
+            "post": {
+                "tags": [
+                    "Config Definition"
+                ],
+                "summary": "Create Config Definition",
+                "operationId": "create_config_definition_api_v1_config_definition__post",
+                "security": [
+                    {
+                        "Bearer": []
                     }
-                  }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfigDefinition"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateConfigDefinitionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
                 }
-              }
+            },
+            "get": {
+                "tags": [
+                    "Config Definition"
+                ],
+                "summary": "List Config Definition",
+                "operationId": "list_config_definition_api_v1_config_definition__get",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "modified_at",
+                            "title": "Sort By"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "desc",
+                            "title": "Sort Order"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Search"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListConfigDefinitionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
             }
-          }
+        },
+        "/api/v1/config_definition/{config_definition_key}": {
+            "get": {
+                "tags": [
+                    "Config Definition"
+                ],
+                "summary": "Get Config Definition",
+                "operationId": "get_config_definition_api_v1_config_definition__config_definition_key__get",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReadConfigDefinitionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Config Definition"
+                ],
+                "summary": "Update Config Definition",
+                "operationId": "update_config_definition_api_v1_config_definition__config_definition_key__put",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfigDefinitionEditable"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateConfigDefinitionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Config Definition"
+                ],
+                "summary": "Delete Config Definition",
+                "operationId": "delete_config_definition_api_v1_config_definition__config_definition_key__delete",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteConfigDefinitionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/config_definition/{config_definition_key}/config/": {
+            "post": {
+                "tags": [
+                    "Config"
+                ],
+                "summary": "Create Config",
+                "operationId": "create_config_api_v1_config_definition__config_definition_key__config__post",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Config"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Config"
+                ],
+                "summary": "List Configs",
+                "operationId": "list_configs_api_v1_config_definition__config_definition_key__config__get",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "modified_at",
+                            "title": "Sort By"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "desc",
+                            "title": "Sort Order"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Search"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/config_definition/{config_definition_key}/config/{config_key}": {
+            "get": {
+                "tags": [
+                    "Config"
+                ],
+                "summary": "Get Config",
+                "operationId": "get_config_api_v1_config_definition__config_definition_key__config__config_key__get",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    },
+                    {
+                        "name": "config_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Key"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReadConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Config"
+                ],
+                "summary": "Update Config",
+                "operationId": "update_config_api_v1_config_definition__config_definition_key__config__config_key__put",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    },
+                    {
+                        "name": "config_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Key"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfigEditable"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Config"
+                ],
+                "summary": "Delete Config",
+                "operationId": "delete_config_api_v1_config_definition__config_definition_key__config__config_key__delete",
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "config_definition_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Definition Key"
+                        }
+                    },
+                    {
+                        "name": "config_key",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Config Key"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteConfigResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/readiness-probe": {
+            "get": {
+                "summary": "Health Check",
+                "operationId": "health_check_readiness_probe_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/health": {
+            "get": {
+                "summary": "Health Check",
+                "operationId": "health_check_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Health Check",
+                "operationId": "health_check__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
+    },
+    "components": {
+        "schemas": {
+            "Config": {
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "The data for the configuration."
+                    },
+                    "config_key": {
+                        "type": "string",
+                        "title": "Config Key",
+                        "description": "The unique identifier for the config."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data",
+                    "config_key"
+                ],
+                "title": "Config",
+                "description": "Represents the configuration.",
+                "example": {
+                    "config_key": "qreate",
+                    "data": {
+                        "setting_object": {
+                            "first_key": "value",
+                            "second_key": 1
+                        },
+                        "setting_string": "value"
+                    }
+                }
+            },
+            "ConfigDefinition": {
+                "properties": {
+                    "indexes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Indexes",
+                        "description": "List of field names to be indexed. Each must exist in the schema properties."
+                    },
+                    "config_definition_key": {
+                        "type": "string",
+                        "title": "Config Definition Key",
+                        "description": "The unique identifier for the config definition."
+                    },
+                    "json_schema": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Json Schema",
+                        "description": "JSON Schema for validating configs belonging to this config definition."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "config_definition_key"
+                ],
+                "title": "ConfigDefinition",
+                "description": "Represents a new configuration definition to be created in the internal table.",
+                "example": {
+                    "config_definition_key": "app_config",
+                    "indexes": [
+                        "setting_object.first_key"
+                    ],
+                    "json_schema": {
+                        "properties": {
+                            "setting_string": {
+                                "type": "string"
+                            },
+                            "setting_object": {
+                                "properties": {
+                                    "first_key": {
+                                        "type": "string"
+                                    },
+                                    "second_key": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "setting_string",
+                            "setting_object"
+                        ],
+                        "type": "object"
+                    }
+                }
+            },
+            "ConfigDefinitionEditable": {
+                "properties": {
+                    "indexes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Indexes",
+                        "description": "List of field names to be indexed. Each must exist in the schema properties."
+                    }
+                },
+                "type": "object",
+                "title": "ConfigDefinitionEditable",
+                "description": "Represents an existing configuration definition to be updated in the internal table.",
+                "example": {
+                    "indexes": [
+                        "setting_object.first_key"
+                    ]
+                }
+            },
+            "ConfigDefinitionIdentity": {
+                "properties": {
+                    "config_definition_key": {
+                        "type": "string",
+                        "title": "Config Definition Key",
+                        "description": "The unique identifier for the config definition."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "config_definition_key"
+                ],
+                "title": "ConfigDefinitionIdentity",
+                "description": "Represents the identity for a configuration definition."
+            },
+            "ConfigDefinitionRetrievable": {
+                "properties": {
+                    "indexes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Indexes",
+                        "description": "List of field names to be indexed. Each must exist in the schema properties."
+                    },
+                    "config_definition_key": {
+                        "type": "string",
+                        "title": "Config Definition Key",
+                        "description": "The unique identifier for the config definition."
+                    },
+                    "json_schema": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Json Schema",
+                        "description": "JSON Schema for validating configs belonging to this config definition."
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "description": "The time the configuration definition was created."
+                    },
+                    "modified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Modified At",
+                        "description": "The time the configuration definition was last updated."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "config_definition_key",
+                    "created_at",
+                    "modified_at"
+                ],
+                "title": "ConfigDefinitionRetrievable",
+                "description": "Represents the configuration definition with the key.",
+                "example": {
+                    "config_definition_key": "app_config",
+                    "indexes": [
+                        "setting_object.first_key"
+                    ],
+                    "json_schema": {
+                        "properties": {
+                            "setting_string": {
+                                "type": "string"
+                            },
+                            "setting_object": {
+                                "properties": {
+                                    "first_key": {
+                                        "type": "string"
+                                    },
+                                    "second_key": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "required": [
+                            "setting_string",
+                            "setting_object"
+                        ],
+                        "type": "object"
+                    }
+                }
+            },
+            "ConfigEditable": {
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "The data for the configuration."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ConfigEditable",
+                "description": "Represents the mutable fields for a configuration.",
+                "example": {
+                    "data": {
+                        "setting_object": {
+                            "first_key": "value",
+                            "second_key": 1
+                        },
+                        "setting_string": "value"
+                    }
+                }
+            },
+            "ConfigIdentity": {
+                "properties": {
+                    "config_definition_key": {
+                        "type": "string",
+                        "title": "Config Definition Key",
+                        "description": "The unique identifier for the config definition."
+                    },
+                    "config_key": {
+                        "type": "string",
+                        "title": "Config Key",
+                        "description": "The unique identifier for the config."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "config_definition_key",
+                    "config_key"
+                ],
+                "title": "ConfigIdentity",
+                "description": "Represents the identity for a configuration."
+            },
+            "ConfigRetrievable": {
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "title": "Data",
+                        "description": "The data for the configuration."
+                    },
+                    "config_key": {
+                        "type": "string",
+                        "title": "Config Key",
+                        "description": "The unique identifier for the config."
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "description": "The time the configuration was created."
+                    },
+                    "modified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Modified At",
+                        "description": "The time the configuration was last updated."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data",
+                    "config_key",
+                    "created_at",
+                    "modified_at"
+                ],
+                "title": "ConfigRetrievable",
+                "description": "Represents the configuration with the key.",
+                "example": {
+                    "config_key": "qreate",
+                    "data": {
+                        "setting_object": {
+                            "first_key": "value",
+                            "second_key": 1
+                        },
+                        "setting_string": "value"
+                    }
+                }
+            },
+            "CreateConfigDefinitionResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ConfigDefinition"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "CreateConfigDefinitionResponse",
+                "description": "Represents the response for the create configuration definition request."
+            },
+            "CreateConfigResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "CreateConfigResponse",
+                "description": "Represents the response for creating a configuration."
+            },
+            "DeleteConfigDefinitionResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ConfigDefinitionIdentity"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "DeleteConfigDefinitionResponse",
+                "description": "Represents the response for deleting a configuration definition."
+            },
+            "DeleteConfigResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ConfigIdentity"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "DeleteConfigResponse",
+                "description": "Represents the response for deleting a configuration."
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ListConfigDefinitionResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ListData_ConfigDefinitionRetrievable_"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ListConfigDefinitionResponse",
+                "description": "Represents the response for listing configuration definitions."
+            },
+            "ListConfigResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ListData_ConfigRetrievable_"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ListConfigResponse",
+                "description": "Represents the response for listing configurations."
+            },
+            "ListData_ConfigDefinitionRetrievable_": {
+                "properties": {
+                    "results": {
+                        "items": {
+                            "$ref": "#/components/schemas/ConfigDefinitionRetrievable"
+                        },
+                        "type": "array",
+                        "title": "Results",
+                        "description": "The list of items."
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/MetaData",
+                        "description": "The metadata for the list."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "results",
+                    "meta"
+                ],
+                "title": "ListData[ConfigDefinitionRetrievable]"
+            },
+            "ListData_ConfigRetrievable_": {
+                "properties": {
+                    "results": {
+                        "items": {
+                            "$ref": "#/components/schemas/ConfigRetrievable"
+                        },
+                        "type": "array",
+                        "title": "Results",
+                        "description": "The list of items."
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/MetaData",
+                        "description": "The metadata for the list."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "results",
+                    "meta"
+                ],
+                "title": "ListData[ConfigRetrievable]"
+            },
+            "MetaData": {
+                "properties": {
+                    "page": {
+                        "type": "integer",
+                        "title": "Page",
+                        "description": "The current page number."
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "title": "Limit",
+                        "description": "The limit for the number of items to return."
+                    },
+                    "total": {
+                        "type": "integer",
+                        "title": "Total",
+                        "description": "The total number of items."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "page",
+                    "limit",
+                    "total"
+                ],
+                "title": "MetaData",
+                "description": "Metadata class"
+            },
+            "ReadConfigDefinitionResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ConfigDefinitionRetrievable"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ReadConfigDefinitionResponse",
+                "description": "Represents the response for getting a configuration definition."
+            },
+            "ReadConfigResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ConfigRetrievable"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "ReadConfigResponse",
+                "description": "Represents the response for getting a configuration."
+            },
+            "Status": {
+                "type": "string",
+                "enum": [
+                    "SUCCESS",
+                    "FAILURE"
+                ],
+                "title": "Status",
+                "description": "Enum class for status"
+            },
+            "UpdateConfigDefinitionResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "$ref": "#/components/schemas/ConfigDefinitionEditable"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "UpdateConfigDefinitionResponse",
+                "description": "Represents the response for updating a configuration definition."
+            },
+            "UpdateConfigResponse": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/Status",
+                        "description": "The status of the response.",
+                        "default": "SUCCESS"
+                    },
+                    "message": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Message",
+                        "description": "The message for the response."
+                    },
+                    "data": {
+                        "type": "object",
+                        "title": "Data"
+                    },
+                    "errors": {
+                        "anyOf": [
+                            {},
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Errors",
+                        "description": "The errors for the response."
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "data"
+                ],
+                "title": "UpdateConfigResponse",
+                "description": "Represents the response for updating a configuration."
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "Bearer": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization"
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local development server"
+        }
+    ]
 }

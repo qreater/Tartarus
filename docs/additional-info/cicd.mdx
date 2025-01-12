@@ -1,0 +1,22 @@
+---
+title: CI/CD
+---
+
+The Tartarus application is integrated with GitHub Actions to automate the testing, building, and deployment processes. The CI/CD pipeline ensures that the application is thoroughly tested, packaged, and deployed to the target environment seamlessly.
+
+The CI/CD pipeline includes the following stages:
+
+<Steps>
+  <Step title="Style Check" icon="pen-fancy">
+    Run <code>black</code> to ensure the code follows consistent formatting and adheres to style guidelines.
+  </Step>
+  <Step title="Run Unit Tests" icon="vial-circle-check">
+    Execute the unit tests to validate the functionality of individual components and ensure they work as expected in isolation.
+  </Step>
+  <Step title="Run Integration Tests" icon="merge">
+    Test the interactions between different components to verify that they function cohesively in the application.
+  </Step>
+  <Step title="Run Library Tests" icon="book">
+   Test the `tartarus-lib` library.
+   </Step>
+</Steps>

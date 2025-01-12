@@ -1,0 +1,161 @@
+---
+title: "ConfigAPI"
+---
+
+Class for CRUDL of Configurations.
+
+#### Initialization
+
+```py
+from tartarus_lib import TartarusAPIClient
+
+tartarus = TartarusAPIClient(
+    base_url="<BASE_URL>",
+    api_key="<API_KEY>"
+)
+
+c_client = tartarus.configs
+```
+
+#### Methods
+
+<Accordion icon="c" title="reate Config">
+
+Create a new configuration.
+
+```py
+c_create = c_client.create(
+    config_definition_key="test_config_definition",
+    config_key="test_config",
+    data={"test": "data"}
+)
+```
+
+<Icon icon="scroll" /> **Parameters**: 
+<ParamField path="config_definition_key" type="string" required>
+   Name of the Configuration table.
+</ParamField> 
+<ParamField path="config_key" type="string" required>
+   Name of the configuration.
+</ParamField>
+<ParamField path="data" type="json" required>
+   Schema of config.
+</ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Success response with dictionary of the configuration data.
+
+
+</Accordion>
+
+<Accordion icon="r" title="ead Config">
+
+Read a configuration.
+
+```py
+c_read = c_client.retrieve(
+    config_definition_key="test_config_definition",
+    config_key="test_config",
+)
+```
+<Icon icon="scroll" /> **Parameters**:  
+<ParamField path="config_definition_key" type="string" required>
+   Name of the Configuration table.
+</ParamField> 
+<ParamField path="config_key" type="string" required>
+   Name of the configuration to fetch.
+</ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Dictionary of the configuration data.
+
+
+</Accordion>
+
+<Accordion icon="u" title="pdate Config">
+
+Update a configuration.
+
+```py
+c_update = c_client.update(
+    config_definition_key="test_config_definition",
+    config_key="test_config",
+    data={"test": "dat"}
+)
+```
+
+<Icon icon="scroll" /> **Parameters**:  
+<ParamField path="config_definition_key" type="string" required>
+   Name of the Configuration table.
+</ParamField> 
+<ParamField path="config_key" type="string" required>
+   Name of the configuration.
+</ParamField>
+   `data` : Schema of config.
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Dictionary of the configuration data.
+
+
+</Accordion>
+
+<Accordion icon="d" title="elete Config">
+
+Delete a configuration.
+
+```py
+c_delete = c_client.delete(
+    config_definition_key="test_config_definition",
+    config_key="test_config",
+)
+```
+<Icon icon="scroll" /> **Parameters**:  
+  <ParamField path="config_definition_key" type="string" required>
+   Name of the Configuration table.
+</ParamField> 
+<ParamField path="config_key" type="string" required>
+   Name of the configuration.
+</ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: Successful response.
+
+
+</Accordion>
+
+<Accordion icon="l" title="ist Config">
+
+List a configuration.
+
+```py
+c_list = c_client.list(
+    config_definition_key="test_config_definition",
+    config_key="test_config",
+    page = 1,
+    limit = 10,
+    sort_by = "modified_at",
+    sort_order = "desc",
+    search = None
+)
+```
+<Icon icon="scroll" /> **Parameters**:  
+  <ParamField path="config_definition_key" type="string" required>
+   Name of the Configuration table.
+</ParamField> 
+<ParamField  body="page" type="int" default= "1">
+   Number of pages.
+ </ParamField> 
+ <ParamField  body="limit" type="int" default= "10" >
+   Number of configs in each page.
+ </ParamField> 
+ <ParamField  body="sort_by" type="string" default="modified_at">
+   Sorting condition.
+ </ParamField>
+ <ParamField  body="sort_order" type="string" default="desc">
+   The order to sort by.
+ </ParamField> 
+<ParamField  body="search" type="string" default="None">
+   Search by keywords.
+ </ParamField>
+
+<Icon icon="arrow-turn-down-left" /> **Returns**: List of Dictionary of the configuration data.
+
+
+</Accordion>
+

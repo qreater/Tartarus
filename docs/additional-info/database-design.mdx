@@ -1,0 +1,14 @@
+---
+title: Database and Design
+---
+Tartarus is powered with `PostgreSQL` for maintaining efficient database interactions. The system integrates seamlessly with the FastAPI application through the `psycopg2` library.  
+
+
+Tartarus offers a modular and well-structured database schema for handling application configurations.  An `internal table` stores the configuration definition details.  Each `config-definition` is linked to a dedicated table maintaining its `config` as records. 
+
+### Connection and Execution
+
+The `DataStore` class is at the core of DB operations, managing connections and queries efficiently. It provides a unified interface for handling interactions with the database. This abstraction ensures a clean, modular, and scalable codebase.
+
+To further enhance connection management, Tartarus incorporates `PgBouncer` for connection pooling, improving performance under high-concurrency scenarios.
+

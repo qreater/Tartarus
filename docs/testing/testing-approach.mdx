@@ -1,0 +1,45 @@
+---
+title: Testing
+---
+
+### Running tests Locally
+
+<Note> Ensure [Python](https://www.python.org/downloads/) , [Poetry](https://python-poetry.org/), and [PyTest](https://docs.pytest.org/en/stable/) are installed on your system. </Note>
+
+The test suite is executed using the following command
+
+```bash
+poetry run pytest
+```
+
+### Running tests in Dockerized environment
+
+<Note> Ensure [Docker](https://docs.docker.com/engine/install/) , [Docker Compose](https://docs.docker.com/compose/install/), and [PyTest](https://docs.pytest.org/en/stable/) are installed on your system. </Note>
+
+Check the Container ID of the build image through
+
+```docker
+docker ps
+```
+Copy the Container ID and execute a shell command
+
+```docker
+docker exec -it <CONTAINER_ID> sh
+```
+
+Install dependencies and run `pytest`
+
+```bash
+poetry install
+poetry run pytest
+```
+
+
+
+
+
+
+
+
+
+

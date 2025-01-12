@@ -1,0 +1,126 @@
+---
+title: Error Handling
+---
+
+Tartarus includes a robust error-handling system designed to provide clear, actionable feedback to users while maintaining detailed logs for developers. This system is modularized into three key components.
+
+---
+
+### Custom Responses for Errors
+
+Each error in Tartarus is mapped to a specific `JSON` response, to guarantee consistency and clarity. These responses are customised based on use-cases
+
+<Accordion title="Example: Incorrect Limit">
+```json
+{
+  "errors": [
+    {
+      "type": "validation_error",
+      "msg": "Invalid Page/limit! Page number and limit must be greater than 0."
+    }
+  ]
+}
+```
+Logs:
+```bash
+2024-12-26 13:23:06,413 | INFO | api-logger | [logger.py:38] | API Log: 
+{
+  "request_id": "N/A",
+  "correlation_id": "N/A",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/config_definition/",
+    "query": {
+      "page": "1",
+      "limit": "-10",
+      "sort_by": "modified_at",
+      "sort_order": "desc"
+    }
+  },
+  "response": {
+    "status": 422,
+    "traceback": [
+      {
+        "type": "validation_error",
+        "msg": "Invalid Page/limit! Page number and limit must be greater than 0."
+      }
+    ]
+  },
+  "duration_ms": "1.4938ms",
+  "extras": null
+}
+INFO:     127.0.0.1:56564 - "GET /api/v1/config_definition/?page=1&limit=-10&sort_by=modified_at&sort_order=desc HTTP/1.1" 422 Unprocessable Entity
+```
+</Accordion>
+
+<Accordion title="Example: Incorrect Query parameter">
+```json
+{
+  "errors": [
+    {
+      "type": "validation_error",
+      "msg": "Invalid Sort_by! Sort field must be one of ['config_definition_key', 'created_at', 'modified_at']."
+    }
+  ]
+}
+```
+Logs:
+```bash
+2024-12-26 13:24:54,343 | INFO | api-logger | [logger.py:38] | API Log: 
+{
+  "request_id": "N/A",
+  "correlation_id": "N/A",
+  "request": {
+    "method": "GET",
+    "path": "/api/v1/config_definition/",
+    "query": {
+      "page": "1",
+      "limit": "10",
+      "sort_by": "modified_a",
+      "sort_order": "desc"
+    }
+  },
+  "response": {
+    "status": 422,
+    "traceback": [
+      {
+        "type": "validation_error",
+        "msg": "Invalid Sort_by! Sort field must be one of ['config_definition_key', 'created_at', 'modified_at']."
+      }
+    ]
+  },
+  "duration_ms": "1.6573ms",
+  "extras": null
+}
+INFO:     127.0.0.1:56651 - "GET /api/v1/config_definition/?page=1&limit=10&sort_by=modified_a&sort_order=desc HTTP/1.1" 422 Unprocessable Entity
+```
+</Accordion>
+
+---
+
+### Custom Exception Handlers
+
+Tartarus uses custom exception handlers to intercept and manage errors raised within the application. These handlers:
+
+<Icon icon="check" iconType="solid" /> Convert exceptions into structured `JSON` responses.\
+<Icon icon="check" iconType="solid" /> Map specific exceptions to appropriate `HTTP` status codes.\
+<Icon icon="check" iconType="solid" /> Ensure seamless communication of error details to users.
+
+---
+
+### Middleware for Unified Error Responses
+
+A dedicated middleware intercepts unhandled errors and formats them into a consistent `JSON` structure, presented in a user-friendly format. 
+ 
+---
+
+## Common Errors
+
+| **Status Code**              | **Description**                                                                 |
+|:------------------------------|:---------------------------------------------------------------------------------|
+| **409 Conflict**             | Occurs when a request conflicts with the current state of the server (e.g., duplicate resource). |
+| **404 Not Found**| The requested resource does not exist on the server.                           |
+| **422 Unprocessable Entity** | The request contains invalid or malformed data that cannot be processed.       |
+| **401 Unauthorized** | Authentication credentials are missing or invalid.                             |
+| **500 Internal Server Error** | An unexpected server error occurred. This is usually not the client’s fault.   |
+

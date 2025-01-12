@@ -1,0 +1,27 @@
+---
+title: "Kubernetes (Helm)"
+---
+
+<Note> Ensure [Docker](https://docs.docker.com/engine/install/) , [Minikube](https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download), [kubectl](https://kubernetes.io/docs/tasks/tools/), [Helm](https://helm.sh/docs/intro/install/) and [Git](https://git-scm.com/downloads) are installed on your system.</Note>
+
+<Steps>
+  <Step title="Clone Repository" icon="clone" iconType="duotone">
+    ```bash
+    git clone https://www.github.com/qreater/tartarus.git
+    ```
+  </Step>
+  <Step title="Navigate to Directory" icon="folder" iconType="duotone">
+    ```bash
+    cd tartarus/devops/helm
+    ```
+  </Step>
+  
+  <Step title="Install Tartarus" icon="rocket" iconType="duotone">
+    ```bash
+    helm install tartarus . -n <NAME_SPACE> --create-namespace
+    ```
+  </Step>
+</Steps>
+
+
+

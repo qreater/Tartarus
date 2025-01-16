@@ -9,6 +9,7 @@
 import logging
 import logging.config
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.utils.exceptions.errors import APIError
 from app.utils.exceptions.logger import get_log_config
@@ -25,6 +26,13 @@ app = FastAPI(
 logging.config.dictConfig(get_log_config())
 
 app.add_exception_handler(APIError, api_error_handler)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.add_middleware(ErrorHandlingMiddleware)
 app.include_router(api_router_v1, prefix="/api/v1")
 
